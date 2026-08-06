@@ -94,6 +94,10 @@ section{padding:38px 0}
 .tl-tag{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:4px;margin-top:6px;display:inline-block}
 .tl-tag.hot{background:#FEE2E2;color:var(--s1)}
 .tl-tag.deal{background:#D3F3E6;color:var(--s4)}
+.tl-head{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:13px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.tl-hb{color:#fff;font-size:10px;font-weight:700;padding:4px 11px;border-radius:99px;letter-spacing:.04em}
+.tl-note{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:var(--ink3)}
+.tl-card.deal2{border-color:var(--s4);background:var(--ok-l)}
 .tl-badge{display:inline-block;color:#fff;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;margin-bottom:9px}
 .tl-mid{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);text-decoration:line-through;margin-bottom:1px}
 .tl-strip{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:5px}
@@ -246,7 +250,10 @@ td.n{font-family:'JetBrains Mono',monospace;font-weight:600}
       </div>
     </div>
     <div class="sim-body">
-      <div class="sim-timeline" id="timeline"></div>
+      <div class="tl-head"><span class="tl-hb" style="background:var(--navy)">Escala A</span> 60% → 75% · propuesta actual <span class="tl-note">el ROAS cae por debajo de 2X a partir de 5 meses</span></div>
+      <div class="sim-timeline" id="timelineA"></div>
+      <div class="tl-head" style="margin-top:24px"><span class="tl-hb" style="background:var(--sky)">Escala B</span> 55% → 70% · ROAS más alto en largo plazo <span class="tl-note">a 5 meses el ROAS vuelve a ≥2X en todos los planes</span></div>
+      <div class="sim-timeline" id="timelineB"></div>
       <div class="sim-insight" id="insight"></div>
     </div>
   </div>
@@ -298,6 +305,14 @@ const SCALE=[
   {k:'En 5 meses',sub:'91-180 días',et:'Largo',ec:'var(--s4)',off:72,cls:''},
   {k:'En 1 año',sub:'+270 días',et:'Largo',ec:'var(--s4)',off:75,cls:'deal',tag:'Mejor precio'},
 ];
+const SCALE_B=[
+  {k:'Viaja mañana',sub:'1-5 días',et:'Inmediato',ec:'var(--s1)',off:55,cls:'hot',tag:'Precio más alto'},
+  {k:'En 10 días',sub:'6-15 días',et:'Corto',ec:'var(--s2)',off:58,cls:''},
+  {k:'En 1 mes',sub:'16-30 días',et:'Mediano',ec:'var(--s3)',off:61,cls:''},
+  {k:'En 2 meses',sub:'46-60 días',et:'Mediano',ec:'var(--s3)',off:64,cls:''},
+  {k:'En 5 meses',sub:'91-180 días',et:'Largo',ec:'var(--s4)',off:67,cls:'deal2'},
+  {k:'En 1 año',sub:'+270 días',et:'Largo',ec:'var(--s4)',off:70,cls:'deal',tag:'Mejor precio'},
+];
 let S={plan:'MAX',dias:10,trav:1,extra:0};
 const f=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const f0=n=>'$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
@@ -345,45 +360,51 @@ function pvpFor(){
   let pick=keys[0]; for(const k of keys){if(k<=S.dias)pick=k;}
   return rows[pick];
 }
+function cardHTML(s,pvpT,carrierT,sfT,ex){
+  const stagePrice=pvpT*(1-s.off/100);
+  const price=stagePrice*(1-ex);
+  const mg=price-carrierT;
+  const mgp=price>0?(mg/price*100):0;
+  const roas=carrierT>0?(price/carrierT):0;
+  const rcol=roas>=2.0?'var(--ok)':roas>=1.7?'var(--sky)':'var(--warn)';
+  const pcol=(s.cls==='deal'||s.cls==='deal2')?'var(--ok)':s.cls==='hot'?'var(--s1)':'var(--ink)';
+  return `<div class="tl-card ${s.cls}">
+    <div class="tl-badge" style="background:${s.ec}">${s.et}</div>
+    <div class="tl-when">${s.k}<br><span style="font-weight:400;color:var(--ink3);font-size:9px">${s.sub}</span></div>
+    <div class="tl-off">${s.off}% OFF${ex?` +${S.extra}%`:''}</div>
+    <div class="tl-strike">${f0(pvpT)}</div>
+    ${ex?`<div class="tl-mid">${f0(stagePrice)}</div>`:''}
+    <div class="tl-price" style="color:${pcol}">${f(price)}</div>
+    ${s.tag?`<div class="tl-tag ${s.cls==='deal2'?'deal':s.cls}">${s.tag}</div>`:''}
+    <div class="tl-strip">
+      <div class="tls"><span class="tls-k">Carrier</span><span class="tls-v">${f0(carrierT)}</span></div>
+      <div class="tls"><span class="tls-k">Precio SF</span><span class="tls-v">${f0(sfT)}</span></div>
+      <div class="tls"><span class="tls-k">Margen</span><span class="tls-v" style="color:${mg>0?'var(--ok)':'var(--err)'}">${f0(mg)}<em>${mgp.toFixed(0)}%</em></span></div>
+      <div class="tls tls-roas"><span class="tls-k">ROAS</span><span class="tls-v" style="color:${rcol};font-size:13px">${roas.toFixed(2)}x</span></div>
+    </div>
+  </div>`;
+}
+function drawTL(scale,elId,pvpT,carrierT,sfT,ex){
+  const el=document.getElementById(elId);
+  el.innerHTML=scale.map(s=>cardHTML(s,pvpT,carrierT,sfT,ex)).join('');
+}
 function render(){
   const [carrier,sf,pvp]=pvpFor();
   const n=S.trav, ex=S.extra/100;
   const carrierT=carrier*n, sfT=sf*n, pvpT=pvp*n;
-  const tl=document.getElementById('timeline'); tl.innerHTML='';
-  SCALE.forEach(s=>{
-    const stagePrice=pvpT*(1-s.off/100);
-    const price=stagePrice*(1-ex);            // descuento extra sobre el total
-    const mg=price-carrierT;
-    const mgp=price>0?(mg/price*100):0;
-    const roas=carrierT>0?(price/carrierT):0; // recupero por cada $1 de costo carrier
-    const rcol=roas>=2.5?'var(--ok)':roas>=1.8?'var(--sky)':'var(--warn)';
-    const pcol=s.cls==='deal'?'var(--ok)':s.cls==='hot'?'var(--s1)':'var(--ink)';
-    tl.innerHTML+=`<div class="tl-card ${s.cls}">
-      <div class="tl-badge" style="background:${s.ec}">${s.et}</div>
-      <div class="tl-when">${s.k}<br><span style="font-weight:400;color:var(--ink3);font-size:9px">${s.sub}</span></div>
-      <div class="tl-off">${s.off}% OFF${ex?` +${S.extra}%`:''}</div>
-      <div class="tl-strike">${f0(pvpT)}</div>
-      ${ex?`<div class="tl-mid">${f0(stagePrice)}</div>`:''}
-      <div class="tl-price" style="color:${pcol}">${f(price)}</div>
-      ${s.tag?`<div class="tl-tag ${s.cls}">${s.tag}</div>`:''}
-      <div class="tl-strip">
-        <div class="tls"><span class="tls-k">Carrier</span><span class="tls-v">${f0(carrierT)}</span></div>
-        <div class="tls"><span class="tls-k">Precio SF</span><span class="tls-v">${f0(sfT)}</span></div>
-        <div class="tls"><span class="tls-k">Margen</span><span class="tls-v" style="color:${mg>0?'var(--ok)':'var(--err)'}">${f0(mg)}<em>${mgp.toFixed(0)}%</em></span></div>
-        <div class="tls tls-roas"><span class="tls-k">ROAS</span><span class="tls-v" style="color:${rcol};font-size:13px">${roas.toFixed(2)}x</span></div>
-      </div>
-    </div>`;
-  });
-  const pMax=pvpT*(1-.60)*(1-ex), pMin=pvpT*(1-.75)*(1-ex);
-  const diff=pMax-pMin, pct=(1-pMin/pMax)*100;
+  drawTL(SCALE,'timelineA',pvpT,carrierT,sfT,ex);
+  drawTL(SCALE_B,'timelineB',pvpT,carrierT,sfT,ex);
+  // Insight comparativo: ROAS a 5 meses en cada escala
+  const r5a=(pvpT*(1-.72)*(1-ex))/carrierT, r5b=(pvpT*(1-.67)*(1-ex))/carrierT;
+  const r1a=(pvpT*(1-.75)*(1-ex))/carrierT, r1b=(pvpT*(1-.70)*(1-ex))/carrierT;
   document.getElementById('insight').innerHTML=`
     <div class="si-l">
-      <div class="si-k">La diferencia que ve el cliente</div>
-      <div class="si-t">Con <b>${DATA[S.plan].label}</b> a ${S.dias} días${n>1?' · '+n+' viajeros':''}${ex?` · ${S.extra}% extra`:''}, quien reserva con un año de antelación paga <b>${f(pMin)}</b>; quien lo deja para mañana paga <b>${f(pMax)}</b>. Reservar temprano es la mejor jugada — esperar, la más cara.</div>
+      <div class="si-k">Escala A vs Escala B · cliente a 5+ meses</div>
+      <div class="si-t">Con <b>${DATA[S.plan].label}</b> a ${S.dias} días${n>1?' · '+n+' viajeros':''}${ex?` · ${S.extra}% extra`:''}: a 5 meses la <b>Escala A</b> da <b style="color:${r5a>=2?'#4ADE80':'var(--amber)'}">${r5a.toFixed(2)}x</b> de ROAS; la <b>Escala B</b> lo sube a <b style="color:${r5b>=2?'#4ADE80':'var(--amber)'}">${r5b.toFixed(2)}x</b>. A cambio, el cliente paga un poco más — pero recuperamos mejor el gasto.</div>
     </div>
     <div class="si-r">
-      <div class="si-diff">−${pct.toFixed(0)}%</div>
-      <div class="si-diff-l">reservando con anticipación<br>ahorra ${f(diff)}</div>
+      <div class="si-diff" style="color:${r5b>=2?'#4ADE80':'var(--amber)'}">${r5b.toFixed(2)}x</div>
+      <div class="si-diff-l">ROAS a 5 meses<br>con Escala B (55-70%)</div>
     </div>`;
 }
 function guardUI(){
