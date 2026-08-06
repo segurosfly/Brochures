@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descuento Dinámico por Antelación · Propuesta SegurosFly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0E2A47;--navy2:#16395E;--sky:#1B72C4;--sky-l:#E8F1FA;
+  --amber:#F5A623;--amber-l:#FFF6E6;--paper:#F7F9FC;--white:#fff;
+  --ink:#0E2A47;--ink2:#4A5D75;--ink3:#8FA0B5;--line:#DEE6EF;--line2:#EDF2F7;
+  --ok:#0E9F6E;--ok-l:#E6F7F1;--warn:#D97706;--err:#DC2626;
+  --s1:#DC2626;--s2:#EA580C;--s3:#2563EB;--s4:#0E9F6E;
+  --r:16px;--r-s:10px;--shadow:0 1px 2px rgba(14,42,71,.05),0 10px 30px -14px rgba(14,42,71,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,table{max-width:100%}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:46px 0 40px;position:relative;overflow:hidden}
+.hero::after{content:'✈';position:absolute;right:-30px;top:10px;font-size:190px;opacity:.04;transform:rotate(-15deg)}
+.hero .wrap{position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin-bottom:22px}
+.brand .sw{color:var(--amber);font-size:20px}
+.tag{display:inline-block;background:rgba(245,166,35,.16);color:var(--amber);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:6px 13px;border-radius:99px;margin-bottom:16px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.15;max-width:760px}
+.hero p{color:#C5DCF0;font-size:15px;max-width:680px;margin-top:14px}
+
+/* SECTIONS */
+section{padding:38px 0}
+.s-head{margin-bottom:22px}
+.s-k{font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--sky);margin-bottom:7px}
+.s-t{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.s-d{color:var(--ink2);font-size:14px;margin-top:6px;max-width:760px}
+
+/* PREMISE before/after */
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center}
+.ba-card{background:var(--white);border-radius:var(--r);padding:22px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.ba-card.old{opacity:.85}
+.ba-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.ba-card.old .ba-lbl{color:var(--ink3)}
+.ba-card.new{border:2px solid var(--ok)}
+.ba-card.new .ba-lbl{color:var(--ok)}
+.ba-big{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;margin-bottom:6px}
+.ba-card.old .ba-big{color:var(--ink2)}
+.ba-card.new .ba-big{color:var(--ok)}
+.ba-txt{font-size:13px;color:var(--ink2)}
+.ba-arrow{font-size:26px;color:var(--sky)}
+
+
+/* STAGES */
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stage{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);position:relative}
+.stage-bar{height:5px}
+.stage-in{padding:17px 16px}
+.stage-n{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700}
+.stage-r{font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace;margin-top:2px;margin-bottom:12px}
+.stage-off{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;line-height:1}
+.stage-off small{font-size:13px;font-weight:600}
+.stage-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);font-weight:700;margin-top:3px}
+.stage-meta{margin-top:13px;padding-top:12px;border-top:1px solid var(--line2);font-size:11px;color:var(--ink2);line-height:1.5}
+.stage-cli{display:flex;justify-content:space-between;margin-top:9px;font-size:11px}
+.stage-cli b{font-family:'JetBrains Mono',monospace}
+
+
+/* SIMULATOR */
+.sim{background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}
+.sim-ctrl{background:var(--navy);padding:18px 22px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end}
+.sim-f{display:flex;flex-direction:column;gap:6px}
+.sim-f label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#8FB4DB;font-weight:600}
+.sim-f select,.sim-f input{background:#1D4570;border:1.5px solid #2C5A8C;color:#fff;border-radius:8px;padding:9px 12px;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;min-width:130px}
+.sim-f select:focus,.sim-f input:focus{outline:none;border-color:var(--amber)}
+.sim-chips{display:flex;gap:5px;flex-wrap:wrap}
+.sim-chip{background:#1D4570;border:1px solid #2C5A8C;color:#B8D4EE;border-radius:6px;padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;cursor:pointer}
+.sim-chip:hover{background:var(--sky);color:#fff}
+.sim-chip.on{background:var(--amber);border-color:var(--amber);color:var(--navy)}
+.sim-body{padding:22px}
+.sim-tl{position:relative;margin:10px 0 26px}
+.sim-track{height:6px;background:linear-gradient(90deg,var(--s4),var(--s3),var(--s2),var(--s1));border-radius:99px;position:relative}
+.sim-timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.tl-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 12px;text-align:center;position:relative;transition:.15s}
+.tl-card.hot{border-color:var(--s1);background:#FEF4F2}
+.tl-card.deal{border-color:var(--s4);background:var(--ok-l)}
+.tl-when{font-size:10px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em;min-height:26px;display:flex;align-items:center;justify-content:center}
+.tl-off{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--ink3);margin:6px 0 2px}
+.tl-price{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700}
+.tl-strike{font-size:10px;color:var(--ink3);text-decoration:line-through;font-family:'JetBrains Mono',monospace}
+.tl-tag{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:4px;margin-top:6px;display:inline-block}
+.tl-tag.hot{background:#FEE2E2;color:var(--s1)}
+.tl-tag.deal{background:#D3F3E6;color:var(--s4)}
+.tl-badge{display:inline-block;color:#fff;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;margin-bottom:9px}
+.tl-mid{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);text-decoration:line-through;margin-bottom:1px}
+.tl-strip{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:5px}
+.tls{display:flex;justify-content:space-between;align-items:baseline;font-size:10px}
+.tls-k{color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:8.5px}
+.tls-v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11px;color:var(--ink2)}
+.tls-v em{font-style:normal;font-size:8.5px;color:var(--ink3);margin-left:4px}
+.tls-roas{margin-top:2px;padding-top:6px;border-top:1px solid var(--line2)}
+.tls-roas .tls-k{color:var(--ink2);font-weight:700}
+
+
+.sim-insight{margin-top:20px;background:var(--navy);color:#fff;border-radius:12px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.si-l .si-k{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#8FB4DB;font-weight:600;margin-bottom:4px}
+.si-l .si-t{font-size:14px;max-width:520px;line-height:1.5}
+.si-r{text-align:right}
+.si-diff{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:var(--amber);line-height:1}
+.si-diff-l{font-size:11px;color:#B8D4EE;margin-top:3px}
+
+/* countdown demo */
+.cd{display:inline-flex;gap:5px;align-items:center;background:#FEE2E2;color:var(--s1);border-radius:7px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;margin-top:8px}
+.cd .dot{width:6px;height:6px;border-radius:50%;background:var(--s1);animation:pulse 1.3s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* GUARDRAILS table */
+.tbl-wrap{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:auto;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--paper);text-align:left;padding:12px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--line2)}
+tr:last-child td{border-bottom:none}
+td.n{font-family:'JetBrains Mono',monospace;font-weight:600}
+.pill{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.pill.g{background:var(--ok-l);color:var(--ok)}
+.pill.a{background:var(--amber-l);color:var(--warn)}
+
+/* IMPLEMENTATION steps */
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.step{background:var(--white);border-radius:var(--r-s);padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--line);display:flex;gap:15px}
+.step-n{flex-shrink:0;width:32px;height:32px;border-radius:9px;background:var(--sky-l);color:var(--sky);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center}
+.step-t{font-weight:700;font-size:14px;margin-bottom:4px}
+.step-d{font-size:12.5px;color:var(--ink2);line-height:1.5}
+
+
+.note{background:var(--amber-l);border-left:3px solid var(--amber);border-radius:var(--r-s);padding:15px 18px;font-size:13px;color:#7C4A03;line-height:1.6;margin-top:18px}
+.note b{font-weight:700}
+.foot{background:var(--navy);color:#8FB4DB;text-align:center;padding:24px;font-size:12px;margin-top:20px}
+.foot b{color:#fff}
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media(max-width:860px){
+  .ba{grid-template-columns:1fr;gap:12px}
+  .ba-arrow{transform:rotate(90deg);text-align:center}
+  .stages{grid-template-columns:1fr 1fr}
+  .sim-timeline{grid-template-columns:1fr 1fr 1fr}
+  .steps{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .wrap{padding:0 16px}
+  section{padding:28px 0}
+  .hero{padding:34px 0 30px}
+  h1{font-size:25px}
+  .hero p{font-size:14px}
+  .s-t{font-size:20px}
+  .stages{grid-template-columns:1fr 1fr;gap:10px}
+  .sim-timeline{grid-template-columns:1fr 1fr;gap:8px}
+  /* controles del simulador apilados y a lo ancho */
+  .sim-ctrl{flex-direction:column;align-items:stretch;gap:14px;padding:16px}
+  .sim-f{width:100%}
+  .sim-f select{width:100%;min-width:0}
+  .sim-f input{width:100%;min-width:0}
+  .sim-chips{flex-wrap:wrap}
+  .sim-body{padding:16px}
+  .sim-insight{flex-direction:column;align-items:flex-start;gap:12px}
+  .si-r{text-align:left}
+  .stage-off{font-size:26px}
+  .tl-price{font-size:19px}
+}
+@media(max-width:440px){
+  h1{font-size:22px}
+  .stages{grid-template-columns:1fr}
+  .sim-timeline{grid-template-columns:1fr}
+  .ba-big{font-size:24px}
+  .tl-price{font-size:22px}
+  .tl-card{padding:16px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero"><div class="wrap">
+  <div class="brand"><span class="sw">✈</span> SegurosFly</div>
+  <div class="tag">Propuesta de pricing · Venta online</div>
+  <h1>Descuento dinámico por antelación: convertir el tiempo en urgencia</h1>
+  <p>Hoy todos ven el mismo 65% sin importar cuándo viajan. La propuesta: que el descuento dependa de <b style="color:#fff">cuánta antelación</b> tiene el viaje, de modo que reservar temprano sea siempre el mejor precio — y esperar cueste más.</p>
+</div></div>
+
+<section><div class="wrap">
+  <div class="s-head">
+    <div class="s-k">El cambio de premisa</div>
+    <div class="s-t">De un descuento plano a uno que se mueve con el tiempo</div>
+    <div class="s-d">El 65% actual está calibrado por ROAS para proteger el margen — pero es idéntico si cotizás hoy, mañana o en un mes. No genera ninguna razón para comprar ya.</div>
+  </div>
+  <div class="ba">
+    <div class="ba-card old">
+      <div class="ba-lbl">● Hoy</div>
+      <div class="ba-big">65% fijo</div>
+      <div class="ba-txt">Mismo precio para todos, siempre. El que viaja mañana y el que viaja en un año ven exactamente lo mismo. Sin urgencia, sin escasez.</div>
+    </div>
+    <div class="ba-arrow">→</div>
+    <div class="ba-card new">
+      <div class="ba-lbl">● Propuesta</div>
+      <div class="ba-big">60% → 75%</div>
+      <div class="ba-txt">El descuento sube cuanto más lejos está el viaje: techo del 60% en inmediato, hasta 75% en largo plazo. Reservar temprano bloquea el mejor precio; al acercarse la fecha, el precio sube. Cada cotización lleva vencimiento.</div>
+    </div>
+  </div>
+</div></section>
+
+<section style="background:var(--white)"><div class="wrap">
+  <div class="s-head">
+    <div class="s-k">Las 4 etapas</div>
+    <div class="s-t">Segmentación por antelación al viaje</div>
+    <div class="s-d">Sobre la base actual de clientes. La etapa se define por los días que faltan para viajar al momento de cotizar — no por la duración del viaje.</div>
+  </div>
+  <div class="stages" id="stages"></div>
+  <div class="note"><b>El cuello de botella está en Mediano y Largo plazo.</b> Mediano va de 16 días a 3 meses: son casi 2 meses y medio en los que el descuento queda "oxigenando". Si el precio no se mueve en todo ese lapso, no hay urgencia dentro de la etapa. Por eso aplicamos <b>doble zoom</b>: sub-escalones que suben el descuento gradualmente semana a semana, para que el precio nunca quede plano.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="s-head">
+    <div class="s-k">Simulador</div>
+    <div class="s-t">Mismo viajero, distinto momento de compra</div>
+    <div class="s-d">Cada tarjeta lleva arriba su etapa y abajo el desglose interno (carrier, precio SF y margen). El tabulador de descuento extra aplica un 5/10/15% adicional sobre el total. El PVP es fijo; cambia el descuento por antelación.</div>
+  </div>
+  <div class="sim">
+    <div class="sim-ctrl">
+      <div class="sim-f">
+        <label>Plan</label>
+        <select id="fPlan"></select>
+      </div>
+      <div class="sim-f">
+        <label>Días de viaje</label>
+        <div class="sim-chips" id="fDias"></div>
+      </div>
+      <div class="sim-f">
+        <label>Viajeros</label>
+        <input type="number" id="fTrav" value="1" min="1" max="10">
+      </div>
+      <div class="sim-f">
+        <label>Descuento extra al total</label>
+        <div class="sim-chips" id="fExtra"></div>
+      </div>
+    </div>
+    <div class="sim-body">
+      <div class="sim-timeline" id="timeline"></div>
+      <div class="sim-insight" id="insight"></div>
+    </div>
+  </div>
+</div></section>
+
+<section style="background:var(--white)"><div class="wrap">
+  <div class="s-head">
+    <div class="s-k">Guardarraíles económicos</div>
+    <div class="s-t">Hasta dónde podemos descontar sin perder margen</div>
+    <div class="s-d">El descuento se aplica sobre el PVP y el piso es el costo del carrier. El punto de margen cero está en ~84% en todo el catálogo: el rango 60-75% deja siempre buen margen. La columna Carrier es interna, no la ve el cliente.</div>
+  </div>
+  <div class="tbl-wrap"><table id="guard"></table></div>
+  <div class="note"><b>El 75% es seguro en los 6 planes.</b> El margen mínimo a 75% en todo el catálogo es 34%. El descuento profundo del largo plazo no es pérdida: es inversión en el segmento más grande (Mediano + Largo = 76% de los clientes) para engancharlos antes de que comparen o se enfríen.</div>
+  <div class="note" style="background:var(--sky-l);border-color:var(--sky);color:#0B4A7D"><b>Cómo leer el ROAS.</b> Es cuánto recuperás por cada $1 que le pagás al carrier: <b>precio del cliente ÷ costo carrier</b>. Cuanto más lejos vendés, más descuento das, más barato es el precio y por eso el ROAS cae de 2.x-3.x (inmediato) hacia 1.x (largo plazo). Sigue siendo positivo — recuperás más de lo que cuesta — pero recuperás menos por venta. La apuesta: compensar el ROAS más bajo con más volumen y conversión temprana.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="s-head">
+    <div class="s-k">Implementación</div>
+    <div class="s-t">Cómo llevarlo a la práctica</div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div><div class="step-t">Fecha de viaje en el cotizador</div><div class="step-d">Además de días de viaje, pedir la fecha estimada de salida. Con eso el sistema calcula la antelación y asigna la etapa automáticamente.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div><div class="step-t">Descuento según tabla de etapas</div><div class="step-d">El % se toma de la etapa (con sub-escalones para mediano y largo). Reemplaza al 65% plano (rango 60-75%), manteniendo el piso de margen por ROAS.</div></div></div>
+    <div class="step"><div class="step-n">3</div><div><div class="step-t">Contador de vencimiento por cotización</div><div class="step-d">Cada ficha muestra "Este precio vence en X días" — el momento en que el viaje cruza al siguiente escalón y el descuento baja. Ahí nace la urgencia real.</div></div></div>
+    <div class="step"><div class="step-n">4</div><div><div class="step-t">Re-cotización como usuario nuevo</div><div class="step-d">Si el cliente vuelve después del vencimiento, el sistema recalcula con la antelación actual. Ve un precio "fresco" (ahora menor descuento), sin sensación de precio perdido pero con la pérdida real.</div></div></div>
+    <div class="step"><div class="step-n">5</div><div><div class="step-t">Doble zoom en etapas largas</div><div class="step-d">Mediano y largo se subdividen en tramos de semanas. El descuento decae de a 2 puntos por tramo, evitando que el precio quede congelado 2 meses.</div></div></div>
+    <div class="step"><div class="step-n">6</div><div><div class="step-t">Medir conversión por etapa</div><div class="step-d">La ganancia no está en el precio unitario sino en cuánto sube la conversión por la urgencia. Medir tasa de cierre antes/después por segmento para calibrar los %.</div></div></div>
+  </div>
+</div></section>
+
+<div class="foot">Propuesta interna · basada en <b>Precios Carga Masiva V3 · 15 jul 2026</b> · valores en USD · simulador con fines de modelado</div>
+
+<script>
+const DATA={"LITE":{"label":"USD 10.000","rows":{"3":[1.86,5.58,12.74],"5":[3.1,9.3,21.24],"7":[4.34,13.02,29.73],"10":[6.2,18.6,42.47],"15":[9.3,27.9,63.7],"20":[12.4,37.2,84.94],"30":[18.1,54.3,123.98],"45":[26.3,78.9,180.16],"60":[33.8,101.4,231.53],"90":[46.4,139.2,317.84]}},"SMART":{"label":"USD 30.000","rows":{"3":[2.91,8.44,18.82],"5":[4.85,14.06,31.36],"7":[6.79,19.69,43.91],"10":[9.7,28.13,62.73],"15":[14.55,42.2,94.09],"20":[19.4,56.26,125.45],"30":[28.6,82.94,184.94],"45":[32.8,95.12,212.1],"60":[32.8,95.12,212.1],"90":[34.22,99.24,221.28],"120":[36.08,104.63,233.31],"180":[61.72,178.99,399.11],"270":[100.18,290.52,647.81],"365":[138.95,402.96,898.52]}},"PLUS":{"label":"USD 50.000","rows":{"3":[3.96,11.48,25.61],"5":[6.6,19.14,42.68],"7":[9.24,26.8,59.75],"10":[13.2,38.28,85.36],"15":[19.8,57.42,128.04],"20":[26.4,76.56,170.72],"30":[37.2,107.88,240.55],"45":[37.2,107.88,240.55],"60":[37.2,107.88,240.55],"90":[39.24,113.8,253.75],"120":[40.92,118.67,264.61],"180":[70.01,203.03,452.72],"270":[113.64,329.56,734.85],"365":[157.61,457.07,1019.19]}},"MAX":{"label":"USD 100.000","rows":{"3":[5.55,15.54,33.83],"5":[9.25,25.9,56.39],"7":[12.95,36.26,78.94],"10":[18.5,51.8,112.78],"15":[27.75,77.7,169.16],"20":[37.0,103.6,225.55],"30":[55.2,154.56,336.5],"45":[56.39,157.89,343.75],"60":[56.39,157.89,343.75],"90":[59.4,166.32,362.1],"120":[62.03,173.68,378.13],"180":[106.11,297.11,646.85],"270":[188.39,527.49,1148.43],"365":[261.3,731.64,1592.88]}},"ELITE":{"label":"USD 150.000","rows":{"3":[6.27,17.56,38.22],"5":[10.45,29.26,63.7],"7":[14.63,40.96,89.18],"10":[20.9,58.52,127.41],"15":[31.35,87.78,191.11],"20":[41.8,117.04,254.81],"30":[62.4,174.72,380.39],"45":[84.24,235.87,513.53],"60":[84.24,235.87,513.53],"90":[112.26,314.33,684.34],"120":[143.1,400.68,872.34],"180":[221.18,619.3,1348.31],"270":[346.39,969.89,2111.59],"365":[466.9,1307.32,2846.22]}},"INFINITY":{"label":"USD 250.000","rows":{"3":[7.11,19.91,43.34],"5":[11.85,33.18,72.24],"7":[16.59,46.45,101.13],"10":[23.7,66.36,144.48],"15":[35.55,99.54,216.71],"20":[47.4,132.72,288.95],"30":[70.8,198.24,431.6],"45":[105.9,296.52,645.57],"60":[112.08,313.82,683.24],"90":[168.13,470.76,1024.92],"120":[224.17,627.68,1366.54],"180":[336.25,941.5,2049.78],"270":[504.38,1412.26,3074.7],"365":[672.51,1883.03,4099.62]}}};
+const DIAS=[3,5,7,10,15,20,30,45,60,90,120,180,365];
+const STAGES=[
+  {n:'Inmediato',r:'1-5 días',off:60,col:'var(--s1)',cli:67,val:3606,logic:'Urgencia natural. Compra sí o sí — techo del 60%.'},
+  {n:'Corto plazo',r:'6-15 días',off:63,col:'var(--s2)',cli:139,val:8374,logic:'Empieza a comparar. Empujón moderado.'},
+  {n:'Mediano plazo',r:'16-60 días',off:69,col:'var(--s3)',cli:507,val:26018,logic:'El segmento más grande. Sub-escalones semanales.'},
+  {n:'Largo plazo',r:'+60 días',off:75,col:'var(--s4)',cli:144,val:10700,logic:'Enganche temprano. Precio bloqueado con deadline.'},
+];
+// escala de antelación → descuento (techo 60%, con doble zoom) · cada punto lleva su etapa
+const SCALE=[
+  {k:'Viaja mañana',sub:'1-5 días',et:'Inmediato',ec:'var(--s1)',off:60,cls:'hot',tag:'Precio más alto'},
+  {k:'En 10 días',sub:'6-15 días',et:'Corto',ec:'var(--s2)',off:63,cls:''},
+  {k:'En 1 mes',sub:'16-30 días',et:'Mediano',ec:'var(--s3)',off:66,cls:''},
+  {k:'En 2 meses',sub:'46-60 días',et:'Mediano',ec:'var(--s3)',off:69,cls:''},
+  {k:'En 5 meses',sub:'91-180 días',et:'Largo',ec:'var(--s4)',off:72,cls:''},
+  {k:'En 1 año',sub:'+270 días',et:'Largo',ec:'var(--s4)',off:75,cls:'deal',tag:'Mejor precio'},
+];
+let S={plan:'MAX',dias:10,trav:1,extra:0};
+const f=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const f0=n=>'$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+
+function stagesUI(){
+  const c=document.getElementById('stages'); c.innerHTML='';
+  STAGES.forEach(s=>{
+    c.innerHTML+=`<div class="stage">
+      <div class="stage-bar" style="background:${s.col}"></div>
+      <div class="stage-in">
+        <div class="stage-n">${s.n}</div>
+        <div class="stage-r">${s.r} de antelación</div>
+        <div class="stage-off" style="color:${s.col}">${s.off}<small>% OFF</small></div>
+        <div class="stage-lbl">Descuento máximo</div>
+        <div class="stage-meta">${s.logic}</div>
+        <div class="stage-cli"><span style="color:var(--ink3)">Clientes base</span><b>${s.cli}</b></div>
+        <div class="stage-cli"><span style="color:var(--ink3)">Valor</span><b>${f0(s.val)}</b></div>
+      </div>
+    </div>`;
+  });
+}
+function initSim(){
+  const ps=document.getElementById('fPlan');
+  Object.keys(DATA).forEach(k=>{ps.innerHTML+=`<option value="${k}">${DATA[k].label} · ${k}</option>`;});
+  ps.value='MAX'; ps.onchange=e=>{S.plan=e.target.value;render();};
+  const dc=document.getElementById('fDias');
+  DIAS.forEach(d=>{
+    const b=document.createElement('button'); b.className='sim-chip'+(d===10?' on':''); b.textContent=d+'d';
+    b.onclick=()=>{S.dias=d;[...dc.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');render();};
+    dc.appendChild(b);
+  });
+  document.getElementById('fTrav').oninput=e=>{S.trav=Math.max(1,+e.target.value||1);render();};
+  const ec=document.getElementById('fExtra');
+  [0,5,10,15].forEach(x=>{
+    const b=document.createElement('button'); b.className='sim-chip'+(x===0?' on':'');
+    b.textContent=x===0?'Sin extra':x+'%';
+    b.onclick=()=>{S.extra=x;[...ec.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');render();};
+    ec.appendChild(b);
+  });
+}
+function pvpFor(){
+  const rows=DATA[S.plan].rows;
+  if(rows[S.dias]) return rows[S.dias];
+  const keys=Object.keys(rows).map(Number).sort((a,b)=>a-b);
+  let pick=keys[0]; for(const k of keys){if(k<=S.dias)pick=k;}
+  return rows[pick];
+}
+function render(){
+  const [carrier,sf,pvp]=pvpFor();
+  const n=S.trav, ex=S.extra/100;
+  const carrierT=carrier*n, sfT=sf*n, pvpT=pvp*n;
+  const tl=document.getElementById('timeline'); tl.innerHTML='';
+  SCALE.forEach(s=>{
+    const stagePrice=pvpT*(1-s.off/100);
+    const price=stagePrice*(1-ex);            // descuento extra sobre el total
+    const mg=price-carrierT;
+    const mgp=price>0?(mg/price*100):0;
+    const roas=carrierT>0?(price/carrierT):0; // recupero por cada $1 de costo carrier
+    const rcol=roas>=2.5?'var(--ok)':roas>=1.8?'var(--sky)':'var(--warn)';
+    const pcol=s.cls==='deal'?'var(--ok)':s.cls==='hot'?'var(--s1)':'var(--ink)';
+    tl.innerHTML+=`<div class="tl-card ${s.cls}">
+      <div class="tl-badge" style="background:${s.ec}">${s.et}</div>
+      <div class="tl-when">${s.k}<br><span style="font-weight:400;color:var(--ink3);font-size:9px">${s.sub}</span></div>
+      <div class="tl-off">${s.off}% OFF${ex?` +${S.extra}%`:''}</div>
+      <div class="tl-strike">${f0(pvpT)}</div>
+      ${ex?`<div class="tl-mid">${f0(stagePrice)}</div>`:''}
+      <div class="tl-price" style="color:${pcol}">${f(price)}</div>
+      ${s.tag?`<div class="tl-tag ${s.cls}">${s.tag}</div>`:''}
+      <div class="tl-strip">
+        <div class="tls"><span class="tls-k">Carrier</span><span class="tls-v">${f0(carrierT)}</span></div>
+        <div class="tls"><span class="tls-k">Precio SF</span><span class="tls-v">${f0(sfT)}</span></div>
+        <div class="tls"><span class="tls-k">Margen</span><span class="tls-v" style="color:${mg>0?'var(--ok)':'var(--err)'}">${f0(mg)}<em>${mgp.toFixed(0)}%</em></span></div>
+        <div class="tls tls-roas"><span class="tls-k">ROAS</span><span class="tls-v" style="color:${rcol};font-size:13px">${roas.toFixed(2)}x</span></div>
+      </div>
+    </div>`;
+  });
+  const pMax=pvpT*(1-.60)*(1-ex), pMin=pvpT*(1-.75)*(1-ex);
+  const diff=pMax-pMin, pct=(1-pMin/pMax)*100;
+  document.getElementById('insight').innerHTML=`
+    <div class="si-l">
+      <div class="si-k">La diferencia que ve el cliente</div>
+      <div class="si-t">Con <b>${DATA[S.plan].label}</b> a ${S.dias} días${n>1?' · '+n+' viajeros':''}${ex?` · ${S.extra}% extra`:''}, quien reserva con un año de antelación paga <b>${f(pMin)}</b>; quien lo deja para mañana paga <b>${f(pMax)}</b>. Reservar temprano es la mejor jugada — esperar, la más cara.</div>
+    </div>
+    <div class="si-r">
+      <div class="si-diff">−${pct.toFixed(0)}%</div>
+      <div class="si-diff-l">reservando con anticipación<br>ahorra ${f(diff)}</div>
+    </div>`;
+}
+function guardUI(){
+  const t=document.getElementById('guard');
+  const plans=['LITE','MAX','INFINITY'], ds=[10,30,90,180];
+  let h='<thead><tr><th>Plan</th><th>Días</th><th>Carrier</th><th>PVP</th><th>60% OFF</th><th>75% OFF</th><th>ROAS 60%</th><th>ROAS 75%</th><th>Margen 0</th></tr></thead><tbody>';
+  plans.forEach(k=>{
+    ds.forEach((d,i)=>{
+      const r=DATA[k].rows[d]; if(!r)return;
+      const [c,sf,pvp]=r;
+      const p60=pvp*.40, p75=pvp*.25, dmax=(1-c/pvp)*100;
+      const r60=p60/c, r75=p75/c;
+      h+=`<tr>${i===0?`<td rowspan="4" style="font-weight:700;font-family:Space Grotesk">${DATA[k].label}</td>`:''}
+        <td class="n">${d}d</td>
+        <td class="n" style="color:var(--ink3)">${f0(c)}</td>
+        <td class="n">${f0(pvp)}</td>
+        <td class="n" style="color:var(--ink3)">${f0(p60)}</td>
+        <td class="n" style="color:var(--ok)">${f0(p75)}</td>
+        <td><span class="pill g">${r60.toFixed(2)}x</span></td>
+        <td><span class="pill ${r75>=1.8?'g':'a'}">${r75.toFixed(2)}x</span></td>
+        <td class="n" style="color:var(--warn)">${dmax.toFixed(0)}%</td>
+      </tr>`;
+    });
+  });
+  t.innerHTML=h+'</tbody>';
+}
+stagesUI(); initSim(); render(); guardUI();
+</script>
+</body>
+</html>
