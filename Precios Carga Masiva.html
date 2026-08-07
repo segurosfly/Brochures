@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precios Carga Masiva · SegurosFly</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0E2A47;--sky:#1B72C4;--sky-l:#E8F1FA;--amber:#F5A623;--amber-l:#FFF6E6;
+--paper:#F7F9FC;--white:#fff;--ink:#0E2A47;--ink2:#4A5D75;--ink3:#8FA0B5;--line:#DEE6EF;--line2:#EDF2F7;
+--ok:#0E9F6E;--ok-l:#E6F7F1;--warn:#D97706;--err:#DC2626;--err-l:#FEF2F2;
+--r:14px;--sh:0 1px 2px rgba(14,42,71,.05),0 10px 30px -14px rgba(14,42,71,.2)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.hdr{background:var(--navy);color:#fff;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:60}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.logo .sw{color:var(--amber);font-size:19px}
+.btn{background:var(--amber);color:var(--navy);border:none;border-radius:8px;padding:9px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+.btn:hover{filter:brightness(1.06)}
+.btn.g{background:#1D4570;color:#B8D4EE;border:1px solid #2C5A8C}
+.btn.sm{padding:6px 11px;font-size:11px}
+.wrap{max-width:1400px;margin:0 auto;padding:20px}
+.tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:5px;margin-bottom:18px;box-shadow:var(--sh);overflow-x:auto}
+.tab{flex:1;min-width:132px;background:none;border:none;border-radius:9px;padding:11px 12px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.tab:hover{background:var(--paper)}.tab.on{background:var(--navy);color:#fff}
+.pane{display:none}.pane.on{display:block}
+.al{border-radius:9px;padding:15px 18px;margin-bottom:18px;font-size:13px;line-height:1.55}
+.al-r{background:var(--err-l);border-left:3px solid var(--err);color:#7F1D1D}
+.al-b{background:var(--sky-l);border-left:3px solid var(--sky);color:#0B4A7D}
+.al-a{background:var(--amber-l);border-left:3px solid var(--amber);color:#7C4A03}
+.al-g{background:var(--ok-l);border-left:3px solid var(--ok);color:#0B5F49}
+.al-t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;margin-bottom:5px}
+.al b{font-weight:700}.al ul{margin:8px 0 0 18px}.al li{margin-bottom:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh)}
+.kpi-k{font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);font-weight:700;margin-bottom:6px}
+.kpi-v{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;line-height:1}
+.kpi-s{font-size:11px;color:var(--ink2);margin-top:4px}
+.bar{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:15px 18px;margin-bottom:16px;box-shadow:var(--sh)}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);font-weight:700}
+.f select,.f input{border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--white)}
+.f select{cursor:pointer;min-width:180px}.f input{width:92px;font-family:'JetBrains Mono',monospace}
+.f select:focus,.f input:focus{outline:none;border-color:var(--sky)}
+.chks{display:flex;gap:6px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--ink2);background:var(--paper);border:1.5px solid var(--line);border-radius:7px;padding:7px 10px}
+.chk input{accent-color:var(--amber);width:14px;height:14px;cursor:pointer}
+.chk.on{background:var(--amber-l);border-color:var(--amber);color:#B45309}
+.tg{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;font-weight:600;color:var(--ink2);background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:9px 13px}
+.tg input{accent-color:var(--ok);width:15px;height:15px;cursor:pointer}
+.tg.on{background:var(--ok-l);border-color:#BBF0DC;color:#0B7355}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px}
+.card-h{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.card-t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14.5px}
+.card-s{font-size:11px;color:var(--ink3);margin-top:2px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:700px}
+th{background:var(--paper);text-align:left;padding:9px 10px;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink3);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+th.sf{background:var(--sky-l);color:#0B4A7D}
+th.pv{background:var(--amber-l);color:#B45309}
+td{padding:8px 10px;border-bottom:1px solid var(--line2)}
+tr:last-child td{border-bottom:none}
+tr.leak td{background:var(--err-l)}tr.fix td{background:var(--ok-l)}
+td.n{font-family:'JetBrains Mono',monospace;font-weight:600}
+td.sf{background:#F4F9FE;font-family:'JetBrains Mono',monospace;font-size:11px}
+td.pv{background:#FFFCF5;font-family:'JetBrains Mono',monospace;font-size:11px}
+.tr{font-weight:700;font-family:'JetBrains Mono',monospace}
+.in{width:60px;border:1.5px solid var(--line);border-radius:6px;padding:5px 7px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-align:center;color:var(--sky)}
+.in:focus{outline:none;border-color:var(--sky);background:var(--sky-l)}
+.pl{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.pl.g{background:var(--ok-l);color:var(--ok)}.pl.a{background:var(--amber-l);color:var(--warn)}.pl.r{background:var(--err-l);color:var(--err)}
+h2{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:6px}
+.sub{color:var(--ink2);font-size:13px;margin-bottom:16px;max-width:880px}
+.rm{font-size:9px;color:var(--ink3);display:block;font-weight:600}
+.emo{font-size:15px;margin-right:5px}
+.log-empty{padding:36px;text-align:center;color:var(--ink3);font-size:13px}
+@media(max-width:720px){.bar{flex-direction:column;align-items:stretch}.f select,.f input{width:100%;min-width:0}.btn span{display:none}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="logo"><span class="sw">✈</span> Precios Carga Masiva</div>
+  <div style="display:flex;gap:8px">
+    <button class="btn g" onclick="resetAll()">↺ <span>Restaurar</span></button>
+    <button class="btn" onclick="exportPlan()">⬇ <span>Exportar plan</span></button>
+  </div>
+</div>
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab on" onclick="tab(this,'vp')">✈️ Viajes Puntuales</button>
+    <button class="tab" onclick="tab(this,'mv')">🌍 Múltiples Viajes</button>
+    <button class="tab" onclick="tab(this,'sr')">👵 Adultos Mayores</button>
+    <button class="tab" onclick="tab(this,'nac')">🚌 Viaje Nacional</button>
+    <button class="tab" onclick="tab(this,'netas')">📋 Netas LE</button>
+    <button class="tab" onclick="tab(this,'aj')">🔧 Ajuste 61-89</button>
+    <button class="tab" onclick="tab(this,'exp')">⬇ Exportar</button>
+  </div>
+
+  <div class="al al-b">
+    <div class="al-t">Cómo se calcula el ROAS acá</div>
+    El ROAS siempre sale de <b>Precio SF ÷ Costo Carrier</b>. El PVP es solo la ficha que se publica en la web para mostrar el precio tachado. Los descuentos de <b>5, 10, 15, 20 y 25%</b> se aplican sobre el Precio SF; los de <b>55 a 75%</b> se aplican sobre el PVP, que es el descuento que ve el cliente. <b>Meta: 3,3x</b> — por cada dólar que cobra el carrier, facturar 3,30. En verde los que llegan, en ámbar los que quedan entre 2,6 y 3,3, y en rojo los que no alcanzan.
+  </div>
+
+  <!-- VIAJES PUNTUALES -->
+  <div class="pane on" id="p-vp">
+    <h2><span class="emo">✈️</span>Viajes Puntuales y Larga Estadía</h2>
+    <div class="sub">Tramos por plan y rango de edad. El rango Longevo (76-85 años) solo aplica en Plus y Max.</div>
+    <div class="bar">
+      <div class="f"><label>Plan</label><select id="fp" onchange="render()"></select></div>
+      <div class="f"><label>Rango de edad</label><select id="fa" onchange="render()"></select></div>
+      <div class="f"><label>Descuento sobre PVP (el que ve el cliente)</label>
+        <div class="chks" id="chkpvp"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t" id="t-vp">—</div><div class="card-s" id="s-vp">—</div></div><div id="k-vp"></div></div>
+      <div class="tw"><table><thead id="th-vp"></thead><tbody id="tb-vp"></tbody></table></div>
+    </div>
+    <div class="al al-a">En azul, los descuentos sobre <b>Precio SF</b>. En ámbar, el precio final con el descuento sobre <b>PVP</b>. Debajo de cada precio, en gris, el ROAS que queda.</div>
+  </div>
+
+  <!-- MULTIPLES VIAJES -->
+  <div class="pane" id="p-mv">
+    <h2><span class="emo">🌍</span>Múltiples Viajes (Anual)</h2>
+    <div class="sub">Vigencia de 365 días con tope de días por viaje. Mismo criterio de ROAS sobre Precio SF.</div>
+    <div class="bar"><div class="f"><label>Descuento sobre PVP</label><div class="chks" id="chkpvp2"></div></div></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Planes anuales multiviajes</div><div class="card-s">Rango 0-65 años</div></div></div>
+      <div class="tw"><table><thead id="th-mv"></thead><tbody id="tb-mv"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- SENIOR -->
+  <div class="pane" id="p-sr">
+    <h2><span class="emo">👵</span>Adultos Mayores (86 a 99 años)</h2>
+    <div class="sub">Plan único de cobertura USD 35.000 con tarifa propia por día.</div>
+    <div class="bar"><div class="f"><label>Descuento sobre PVP</label><div class="chks" id="chkpvp4"></div></div></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Plan Adultos Mayores · USD 35.000</div><div class="card-s">planid 95152 · 86 a 99 años</div></div><div id="k-sr"></div></div>
+      <div class="tw"><table><thead id="th-sr"></thead><tbody id="tb-sr"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- NACIONAL -->
+  <div class="pane" id="p-nac">
+    <h2><span class="emo">🚌</span>Viaje Nacional</h2>
+    <div class="sub">Plan único para Suramérica. Admite el rango Longevo con recargo del 50%.</div>
+    <div class="al al-b">
+      <div class="al-t">Condiciones del plan nacional</div>
+      <ul>
+        <li>Límite de edad en viajes cortos: <b>75 años</b>. De 76 a 85 años aplica un <b>recargo del 50%</b>.</li>
+        <li>Mínimo <b>1 día</b> por viaje · Máximo <b>90 días</b> por viaje.</li>
+        <li>Tarifa neta 1 día: <b>USD 1,52</b> · 2 días: <b>USD 1,52</b> · por día adicional: <b>USD 0,51</b>.</li>
+      </ul>
+    </div>
+    <div class="bar">
+      <div class="f"><label>Rango de edad</label><select id="fanac" onchange="renderNac()"></select></div>
+      <div class="f"><label>Descuento sobre PVP</label><div class="chks" id="chkpvp3"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Fly Nacional · USD 10.000</div><div class="card-s" id="s-nac">planid 95346</div></div><div id="k-nac"></div></div>
+      <div class="tw"><table><thead id="th-nac"></thead><tbody id="tb-nac"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- NETAS -->
+  <div class="pane" id="p-netas">
+    <h2>📋 Netas de larga estadía</h2>
+    <div class="sub">Costo neto del carrier por tramo. La última fila es el cargo por cada 7 días que excedan el tramo.</div>
+    <div class="card"><div class="card-h"><div><div class="card-t">Tabla de netas</div><div class="card-s">Valores en USD, tal cual los entrega el carrier</div></div></div>
+      <div class="tw"><table id="tb-netas"></table></div></div>
+    <div class="al al-a">
+      <div class="al-t">Qué es un tramo y qué es el cargo de 7 días</div>
+      Un <b>tramo</b> es un bloque de días que comparte precio: 60, 90, 120, 150 y así. Quien viaja 74 días no paga "74 días", paga el precio del bloque que lo contiene. El <b>cargo de 7 días</b> es lo que suma el carrier por cada semana que el viaje exceda el tramo contratado, y va de USD 6,40 a USD 14,01 según la cobertura.
+    </div>
+  </div>
+
+  <!-- AJUSTE -->
+  <div class="pane" id="p-aj">
+    <h2>🔧 Propuesta · reportar cada viaje en el tramo cerrado que convenga</h2>
+    <div class="sub">Al carrier se le informa un tramo cerrado (90, 120, 150, 180…); en el certificado al cliente van sus días reales. La regla compara siempre las dos opciones y toma la más barata.</div>
+    <div class="al al-g">
+      <div class="al-t">Cómo funciona la regla</div>
+      Para cada viaje se comparan dos caminos y se toma el más barato: <b>(A)</b> el tramo que contiene los días más el cargo por cada 7 días de exceso, o <b>(B)</b> el siguiente tramo cerrado.
+      <ul>
+        <li><b>Ejemplo Plus a 115 días.</b> Camino A: tramo 90 ($39,24) + 4 semanas × $8 = <b>$71,24</b>. Camino B: tramo 120 = <b>$40,92</b>. Se reporta como 120 días y se ahorran $30,32, un 43% menos.</li>
+        <li><b>Se elimina el cargo de 7 días</b> en la mayoría de los casos, que es donde hoy se va el margen.</li>
+        <li><b>Extensión sin trámite.</b> Si el cliente quiere estirar el viaje y le quedan días dentro del tramo ya reportado, no hay que pedir extensión al carrier: se le cobra a él y ese ingreso queda para nosotros.</li>
+        <li><b>Meta de ROAS: 3,3x.</b> Por cada dólar que cobra el carrier deberíamos facturar 3,30. Las celdas en verde ya alcanzan esa meta.</li>
+      </ul>
+    </div>
+    <div class="al al-a">
+      <div class="al-t">Pendiente de validar con Juan y con el carrier</div>
+      Confirmar que acepten recibir ventas reportadas en un tramo cerrado cuando la duración real es menor. Por ejemplo, enviar 10 ventas como tramo de 120 días cuando las duraciones reales fueron 92, 105 y 115 días. Si lo aceptan, el ahorro y la mejora de ROAS son los de la tabla. Si exigen que la duración reportada coincida con la real, hay que rehacer el cálculo de tramos.
+    </div>
+    <div class="bar">
+      <div class="f"><label>Plan</label><select id="fp2" onchange="render()"></select></div>
+      <div class="f"><label>Rango de edad</label><select id="fa2" onchange="render()"></select></div>
+      <div class="f"><label>Cargo +7 días</label><input type="number" id="fadd" step="0.01" oninput="render()"></div>
+      <label class="tg on" id="tg1"><input type="checkbox" id="fix" checked onchange="render()"><span>Reportar 61-89 como tramo 90</span></label>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t" id="t-aj">—</div><div class="card-s" id="s-aj">—</div></div><div id="k-aj"></div></div>
+      <div class="tw"><table><thead><tr>
+        <th>Días reales</th><th>Se reporta como</th><th>Costo hoy</th><th>Costo ajustado</th><th>Ahorro</th>
+        <th>Precio SF</th><th>ROAS hoy</th><th>ROAS ajustado</th><th>Estado</th><th>Cargo +7 días</th>
+      </tr></thead><tbody id="tb-aj"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- EXPORTAR -->
+  <div class="pane" id="p-exp">
+    <h2>⬇ Exportar al CMS</h2>
+    <div class="sub">Excel día por día con el formato exacto del CMS: dias · ageId · carrierId · planid · precioCarrier · precioSf · precioVentaPublico</div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Planes disponibles</div><div class="card-s">Con el ajuste 61-89 aplicado si está activo</div></div>
+      <button class="btn" onclick="exportAll()">⬇ Exportar todos</button></div>
+      <div class="tw"><table><thead><tr><th>Plan</th><th>Cobertura</th><th>planid</th><th>Edades</th><th>Tramos</th><th></th></tr></thead><tbody id="tb-exp"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Bitácora de cambios</div><div class="card-s">Registro de qué se exportó, con qué ajustes y en qué fecha</div></div>
+      <button class="btn g" onclick="exportLog()">⬇ Descargar bitácora</button></div>
+      <div class="tw"><table><thead><tr><th>Fecha y hora</th><th>Plan</th><th>Producto</th><th>planid</th><th>Ajuste de tramos</th><th>Precios editados</th><th>Filas</th></tr></thead><tbody id="tb-log"></tbody></table></div>
+      <div class="log-empty" id="log-empty">Todavía no se exportó ningún plan en esta sesión.</div>
+    </div>
+    <div class="al al-a">La bitácora vive en esta sesión. Descargala antes de cerrar para dejar registro de los cambios.</div>
+  </div>
+</div>
+
+<script>
+const D={"vp":{"Lite":{"cov":"USD 10.000","planid":94626,"add7":6.4,"ed":{"7":[{"d":1,"c":1.86,"sf":5.58,"p":12.74,"h":3},{"d":4,"c":2.48,"sf":7.44,"p":16.99,"h":4},{"d":5,"c":3.1,"sf":9.3,"p":21.23,"h":5},{"d":6,"c":3.72,"sf":11.16,"p":25.48,"h":6},{"d":7,"c":4.34,"sf":13.02,"p":29.73,"h":7},{"d":8,"c":4.96,"sf":14.88,"p":33.98,"h":8},{"d":9,"c":5.58,"sf":16.74,"p":38.22,"h":9},{"d":10,"c":6.2,"sf":18.6,"p":42.47,"h":10},{"d":11,"c":6.82,"sf":20.46,"p":46.72,"h":11},{"d":12,"c":7.44,"sf":22.32,"p":50.96,"h":12},{"d":13,"c":8.06,"sf":24.18,"p":55.21,"h":13},{"d":14,"c":8.68,"sf":26.04,"p":59.46,"h":14},{"d":15,"c":9.3,"sf":27.9,"p":63.7,"h":15},{"d":16,"c":9.92,"sf":29.76,"p":67.95,"h":16},{"d":17,"c":10.54,"sf":31.62,"p":72.2,"h":17},{"d":18,"c":11.16,"sf":33.48,"p":76.45,"h":18},{"d":19,"c":11.78,"sf":35.34,"p":80.69,"h":19},{"d":20,"c":12.4,"sf":37.2,"p":84.94,"h":20},{"d":21,"c":12.97,"sf":38.91,"p":88.84,"h":21},{"d":22,"c":13.54,"sf":40.62,"p":92.75,"h":22},{"d":23,"c":14.11,"sf":42.33,"p":96.65,"h":23},{"d":24,"c":14.68,"sf":44.04,"p":100.56,"h":24},{"d":25,"c":15.25,"sf":45.75,"p":104.46,"h":25},{"d":26,"c":15.82,"sf":47.46,"p":108.37,"h":26},{"d":27,"c":16.39,"sf":49.17,"p":112.27,"h":27},{"d":28,"c":16.96,"sf":50.88,"p":116.18,"h":28},{"d":29,"c":17.53,"sf":52.59,"p":120.08,"h":29},{"d":30,"c":18.1,"sf":54.3,"p":123.98,"h":30},{"d":31,"c":18.67,"sf":56.01,"p":127.89,"h":31},{"d":32,"c":19.24,"sf":57.72,"p":131.79,"h":32},{"d":33,"c":19.81,"sf":59.43,"p":135.7,"h":33},{"d":34,"c":20.38,"sf":61.14,"p":139.6,"h":34},{"d":35,"c":20.95,"sf":62.85,"p":143.51,"h":35},{"d":36,"c":21.52,"sf":64.56,"p":147.41,"h":36},{"d":37,"c":22.09,"sf":66.27,"p":151.32,"h":37},{"d":38,"c":22.66,"sf":67.98,"p":155.22,"h":38},{"d":39,"c":23.23,"sf":69.69,"p":159.13,"h":39},{"d":40,"c":23.8,"sf":71.4,"p":163.03,"h":40},{"d":41,"c":24.3,"sf":72.9,"p":166.46,"h":41},{"d":42,"c":24.8,"sf":74.4,"p":169.88,"h":42},{"d":43,"c":25.3,"sf":75.9,"p":173.31,"h":43},{"d":44,"c":25.8,"sf":77.4,"p":176.73,"h":44},{"d":45,"c":26.3,"sf":78.9,"p":180.16,"h":45},{"d":46,"c":26.8,"sf":80.4,"p":183.58,"h":46},{"d":47,"c":27.3,"sf":81.9,"p":187.0,"h":47},{"d":48,"c":27.8,"sf":83.4,"p":190.43,"h":48},{"d":49,"c":28.3,"sf":84.9,"p":193.85,"h":49},{"d":50,"c":28.8,"sf":86.4,"p":197.28,"h":50},{"d":51,"c":29.3,"sf":87.9,"p":200.71,"h":51},{"d":52,"c":29.8,"sf":89.4,"p":204.13,"h":52},{"d":53,"c":30.3,"sf":90.9,"p":207.56,"h":53},{"d":54,"c":30.8,"sf":92.4,"p":210.98,"h":54},{"d":55,"c":31.3,"sf":93.9,"p":214.41,"h":55},{"d":56,"c":31.8,"sf":95.4,"p":217.83,"h":56},{"d":57,"c":32.3,"sf":96.9,"p":221.25,"h":57},{"d":58,"c":32.8,"sf":98.4,"p":224.68,"h":58},{"d":59,"c":33.3,"sf":99.9,"p":228.1,"h":59},{"d":60,"c":33.8,"sf":101.4,"p":231.53,"h":60},{"d":61,"c":34.22,"sf":102.66,"p":234.41,"h":61},{"d":62,"c":34.64,"sf":103.92,"p":237.28,"h":62},{"d":63,"c":35.06,"sf":105.18,"p":240.16,"h":63},{"d":64,"c":35.48,"sf":106.44,"p":243.04,"h":64},{"d":65,"c":35.9,"sf":107.7,"p":245.91,"h":65},{"d":66,"c":36.32,"sf":108.96,"p":248.79,"h":66},{"d":67,"c":36.74,"sf":110.22,"p":251.67,"h":67},{"d":68,"c":37.16,"sf":111.48,"p":254.55,"h":68},{"d":69,"c":37.58,"sf":112.74,"p":257.42,"h":69},{"d":70,"c":38.0,"sf":114.0,"p":260.3,"h":70},{"d":71,"c":38.42,"sf":115.26,"p":263.18,"h":71},{"d":72,"c":38.84,"sf":116.52,"p":266.05,"h":72},{"d":73,"c":39.26,"sf":117.78,"p":268.93,"h":73},{"d":74,"c":39.68,"sf":119.04,"p":271.81,"h":74},{"d":75,"c":40.1,"sf":120.3,"p":274.69,"h":75},{"d":76,"c":40.52,"sf":121.56,"p":277.56,"h":76},{"d":77,"c":40.94,"sf":122.82,"p":280.44,"h":77},{"d":78,"c":41.36,"sf":124.08,"p":283.32,"h":78},{"d":79,"c":41.78,"sf":125.34,"p":286.19,"h":79},{"d":80,"c":42.2,"sf":126.6,"p":289.07,"h":80},{"d":81,"c":42.62,"sf":127.86,"p":291.95,"h":81},{"d":82,"c":43.04,"sf":129.12,"p":294.82,"h":82},{"d":83,"c":43.46,"sf":130.38,"p":297.7,"h":83},{"d":84,"c":43.88,"sf":131.64,"p":300.58,"h":84},{"d":85,"c":44.3,"sf":132.9,"p":303.45,"h":85},{"d":86,"c":44.72,"sf":134.16,"p":306.33,"h":86},{"d":87,"c":45.14,"sf":135.42,"p":309.21,"h":87},{"d":88,"c":45.56,"sf":136.68,"p":312.09,"h":88},{"d":89,"c":45.98,"sf":137.94,"p":314.96,"h":89},{"d":90,"c":46.4,"sf":139.2,"p":317.84,"h":90}],"8":[{"d":1,"c":2.79,"sf":8.37,"p":19.11,"h":3},{"d":4,"c":3.72,"sf":11.16,"p":25.48,"h":4},{"d":5,"c":4.65,"sf":13.95,"p":31.85,"h":5},{"d":6,"c":5.58,"sf":16.74,"p":38.22,"h":6},{"d":7,"c":6.51,"sf":19.53,"p":44.59,"h":7},{"d":8,"c":7.44,"sf":22.32,"p":50.96,"h":8},{"d":9,"c":8.37,"sf":25.11,"p":57.33,"h":9},{"d":10,"c":9.3,"sf":27.9,"p":63.7,"h":10},{"d":11,"c":10.23,"sf":30.69,"p":70.08,"h":11},{"d":12,"c":11.16,"sf":33.48,"p":76.45,"h":12},{"d":13,"c":12.09,"sf":36.27,"p":82.82,"h":13},{"d":14,"c":13.02,"sf":39.06,"p":89.19,"h":14},{"d":15,"c":13.95,"sf":41.85,"p":95.56,"h":15},{"d":16,"c":14.88,"sf":44.64,"p":101.93,"h":16},{"d":17,"c":15.81,"sf":47.43,"p":108.3,"h":17},{"d":18,"c":16.74,"sf":50.22,"p":114.67,"h":18},{"d":19,"c":17.67,"sf":53.01,"p":121.04,"h":19},{"d":20,"c":18.6,"sf":55.8,"p":127.41,"h":20},{"d":21,"c":19.45,"sf":58.37,"p":133.27,"h":21},{"d":22,"c":20.31,"sf":60.93,"p":139.12,"h":22},{"d":23,"c":21.16,"sf":63.49,"p":144.98,"h":23},{"d":24,"c":22.02,"sf":66.06,"p":150.84,"h":24},{"d":25,"c":22.88,"sf":68.62,"p":156.69,"h":25},{"d":26,"c":23.73,"sf":71.19,"p":162.55,"h":26},{"d":27,"c":24.59,"sf":73.75,"p":168.41,"h":27},{"d":28,"c":25.44,"sf":76.32,"p":174.26,"h":28},{"d":29,"c":26.3,"sf":78.89,"p":180.12,"h":29},{"d":30,"c":27.15,"sf":81.45,"p":185.98,"h":30},{"d":31,"c":28.0,"sf":84.02,"p":191.83,"h":31},{"d":32,"c":28.86,"sf":86.58,"p":197.69,"h":32},{"d":33,"c":29.71,"sf":89.14,"p":203.55,"h":33},{"d":34,"c":30.57,"sf":91.71,"p":209.4,"h":34},{"d":35,"c":31.43,"sf":94.28,"p":215.26,"h":35},{"d":36,"c":32.28,"sf":96.84,"p":221.12,"h":36},{"d":37,"c":33.13,"sf":99.41,"p":226.97,"h":37},{"d":38,"c":33.99,"sf":101.97,"p":232.83,"h":38},{"d":39,"c":34.84,"sf":104.53,"p":238.69,"h":39},{"d":40,"c":35.7,"sf":107.1,"p":244.54,"h":40},{"d":41,"c":36.45,"sf":109.35,"p":249.68,"h":41},{"d":42,"c":37.2,"sf":111.6,"p":254.82,"h":42},{"d":43,"c":37.95,"sf":113.85,"p":259.96,"h":43},{"d":44,"c":38.7,"sf":116.1,"p":265.1,"h":44},{"d":45,"c":39.45,"sf":118.35,"p":270.23,"h":45},{"d":46,"c":40.2,"sf":120.6,"p":275.37,"h":46},{"d":47,"c":40.95,"sf":122.85,"p":280.51,"h":47},{"d":48,"c":41.7,"sf":125.1,"p":285.64,"h":48},{"d":49,"c":42.45,"sf":127.35,"p":290.78,"h":49},{"d":50,"c":43.2,"sf":129.6,"p":295.92,"h":50},{"d":51,"c":43.95,"sf":131.85,"p":301.06,"h":51},{"d":52,"c":44.7,"sf":134.1,"p":306.19,"h":52},{"d":53,"c":45.45,"sf":136.35,"p":311.33,"h":53},{"d":54,"c":46.2,"sf":138.6,"p":316.47,"h":54},{"d":55,"c":46.95,"sf":140.85,"p":321.61,"h":55},{"d":56,"c":47.7,"sf":143.1,"p":326.75,"h":56},{"d":57,"c":48.45,"sf":145.35,"p":331.88,"h":57},{"d":58,"c":49.2,"sf":147.6,"p":337.02,"h":58},{"d":59,"c":49.95,"sf":149.85,"p":342.16,"h":59},{"d":60,"c":50.7,"sf":152.1,"p":347.3,"h":60},{"d":61,"c":51.33,"sf":153.99,"p":351.61,"h":61},{"d":62,"c":51.96,"sf":155.88,"p":355.93,"h":62},{"d":63,"c":52.59,"sf":157.77,"p":360.24,"h":63},{"d":64,"c":53.22,"sf":159.66,"p":364.56,"h":64},{"d":65,"c":53.85,"sf":161.55,"p":368.87,"h":65},{"d":66,"c":54.48,"sf":163.44,"p":373.19,"h":66},{"d":67,"c":55.11,"sf":165.33,"p":377.5,"h":67},{"d":68,"c":55.74,"sf":167.22,"p":381.82,"h":68},{"d":69,"c":56.37,"sf":169.11,"p":386.13,"h":69},{"d":70,"c":57.0,"sf":171.0,"p":390.45,"h":70},{"d":71,"c":57.63,"sf":172.89,"p":394.77,"h":71},{"d":72,"c":58.26,"sf":174.78,"p":399.08,"h":72},{"d":73,"c":58.89,"sf":176.67,"p":403.4,"h":73},{"d":74,"c":59.52,"sf":178.56,"p":407.71,"h":74},{"d":75,"c":60.15,"sf":180.45,"p":412.03,"h":75},{"d":76,"c":60.78,"sf":182.34,"p":416.34,"h":76},{"d":77,"c":61.41,"sf":184.23,"p":420.66,"h":77},{"d":78,"c":62.04,"sf":186.12,"p":424.97,"h":78},{"d":79,"c":62.67,"sf":188.01,"p":429.29,"h":79},{"d":80,"c":63.3,"sf":189.9,"p":433.61,"h":80},{"d":81,"c":63.93,"sf":191.79,"p":437.92,"h":81},{"d":82,"c":64.56,"sf":193.68,"p":442.24,"h":82},{"d":83,"c":65.19,"sf":195.57,"p":446.55,"h":83},{"d":84,"c":65.82,"sf":197.46,"p":450.87,"h":84},{"d":85,"c":66.45,"sf":199.35,"p":455.18,"h":85},{"d":86,"c":67.08,"sf":201.24,"p":459.5,"h":86},{"d":87,"c":67.71,"sf":203.13,"p":463.81,"h":87},{"d":88,"c":68.34,"sf":205.02,"p":468.13,"h":88},{"d":89,"c":68.97,"sf":206.91,"p":472.44,"h":89},{"d":90,"c":69.6,"sf":208.8,"p":476.76,"h":90}]}},"Smart":{"cov":"USD 30.000","planid":94636,"add7":6.8,"ed":{"7":[{"d":1,"c":2.91,"sf":8.44,"p":18.82,"h":3},{"d":4,"c":3.88,"sf":11.25,"p":25.09,"h":4},{"d":5,"c":4.85,"sf":14.06,"p":31.36,"h":5},{"d":6,"c":5.82,"sf":16.88,"p":37.64,"h":6},{"d":7,"c":6.79,"sf":19.69,"p":43.91,"h":7},{"d":8,"c":7.76,"sf":22.5,"p":50.18,"h":8},{"d":9,"c":8.73,"sf":25.32,"p":56.45,"h":9},{"d":10,"c":9.7,"sf":28.13,"p":62.73,"h":10},{"d":11,"c":10.67,"sf":30.94,"p":69.0,"h":11},{"d":12,"c":11.64,"sf":33.76,"p":75.27,"h":12},{"d":13,"c":12.61,"sf":36.57,"p":81.54,"h":13},{"d":14,"c":13.58,"sf":39.38,"p":87.82,"h":14},{"d":15,"c":14.55,"sf":42.2,"p":94.09,"h":15},{"d":16,"c":15.52,"sf":45.01,"p":100.36,"h":16},{"d":17,"c":16.49,"sf":47.82,"p":106.63,"h":17},{"d":18,"c":17.46,"sf":50.63,"p":112.91,"h":18},{"d":19,"c":18.43,"sf":53.45,"p":119.18,"h":19},{"d":20,"c":19.4,"sf":56.26,"p":125.45,"h":20},{"d":21,"c":20.32,"sf":58.93,"p":131.4,"h":21},{"d":22,"c":21.24,"sf":61.6,"p":137.35,"h":22},{"d":23,"c":22.16,"sf":64.26,"p":143.3,"h":23},{"d":24,"c":23.08,"sf":66.93,"p":149.25,"h":24},{"d":25,"c":24.0,"sf":69.6,"p":155.2,"h":25},{"d":26,"c":24.92,"sf":72.27,"p":161.15,"h":26},{"d":27,"c":25.84,"sf":74.94,"p":167.09,"h":27},{"d":28,"c":26.76,"sf":77.6,"p":173.04,"h":28},{"d":29,"c":27.68,"sf":80.27,"p":178.99,"h":29},{"d":30,"c":28.6,"sf":82.94,"p":184.94,"h":30},{"d":31,"c":29.52,"sf":85.61,"p":190.89,"h":31},{"d":32,"c":30.44,"sf":88.28,"p":196.84,"h":32},{"d":33,"c":31.36,"sf":90.94,"p":202.79,"h":33},{"d":34,"c":32.28,"sf":93.61,"p":208.74,"h":34},{"d":35,"c":32.8,"sf":95.12,"p":212.1,"h":60},{"d":61,"c":34.22,"sf":99.24,"p":221.28,"h":90},{"d":91,"c":36.08,"sf":104.63,"p":233.31,"h":120},{"d":121,"c":47.25,"sf":137.03,"p":305.54,"h":150},{"d":151,"c":61.72,"sf":178.99,"p":399.11,"h":180},{"d":181,"c":74.53,"sf":216.14,"p":481.95,"h":210},{"d":211,"c":87.36,"sf":253.34,"p":564.91,"h":240},{"d":241,"c":100.18,"sf":290.52,"p":647.81,"h":270},{"d":271,"c":113.0,"sf":327.7,"p":730.71,"h":300},{"d":301,"c":125.82,"sf":364.88,"p":813.62,"h":330},{"d":331,"c":138.95,"sf":402.95,"p":898.52,"h":365}],"8":[{"d":1,"c":4.37,"sf":12.66,"p":28.23,"h":3},{"d":4,"c":5.82,"sf":16.88,"p":37.64,"h":4},{"d":5,"c":7.28,"sf":21.1,"p":47.04,"h":5},{"d":6,"c":8.73,"sf":25.32,"p":56.45,"h":6},{"d":7,"c":10.19,"sf":29.54,"p":65.86,"h":7},{"d":8,"c":11.64,"sf":33.76,"p":75.27,"h":8},{"d":9,"c":13.1,"sf":37.98,"p":84.68,"h":9},{"d":10,"c":14.55,"sf":42.2,"p":94.09,"h":10},{"d":11,"c":16.0,"sf":46.41,"p":103.5,"h":11},{"d":12,"c":17.46,"sf":50.63,"p":112.91,"h":12},{"d":13,"c":18.91,"sf":54.85,"p":122.31,"h":13},{"d":14,"c":20.37,"sf":59.07,"p":131.72,"h":14},{"d":15,"c":21.82,"sf":63.29,"p":141.13,"h":15},{"d":16,"c":23.28,"sf":67.51,"p":150.54,"h":16},{"d":17,"c":24.73,"sf":71.73,"p":159.95,"h":17},{"d":18,"c":26.19,"sf":75.95,"p":169.36,"h":18},{"d":19,"c":27.64,"sf":80.17,"p":178.77,"h":19},{"d":20,"c":29.1,"sf":84.39,"p":188.18,"h":20},{"d":21,"c":30.48,"sf":88.39,"p":197.1,"h":21},{"d":22,"c":31.86,"sf":92.39,"p":206.02,"h":22},{"d":23,"c":33.24,"sf":96.4,"p":214.95,"h":23},{"d":24,"c":34.62,"sf":100.4,"p":223.87,"h":24},{"d":25,"c":36.0,"sf":104.4,"p":232.79,"h":25},{"d":26,"c":37.38,"sf":108.4,"p":241.72,"h":26},{"d":27,"c":38.76,"sf":112.4,"p":250.64,"h":27},{"d":28,"c":40.14,"sf":116.41,"p":259.57,"h":28},{"d":29,"c":41.52,"sf":120.41,"p":268.49,"h":29},{"d":30,"c":42.9,"sf":124.41,"p":277.41,"h":30},{"d":31,"c":44.28,"sf":128.41,"p":286.34,"h":31},{"d":32,"c":45.66,"sf":132.41,"p":295.26,"h":32},{"d":33,"c":47.04,"sf":136.42,"p":304.18,"h":33},{"d":34,"c":48.42,"sf":140.42,"p":313.11,"h":34},{"d":35,"c":49.2,"sf":142.68,"p":318.15,"h":60},{"d":61,"c":51.33,"sf":148.86,"p":331.93,"h":90},{"d":91,"c":54.12,"sf":156.95,"p":349.97,"h":120},{"d":121,"c":70.88,"sf":205.54,"p":458.31,"h":150},{"d":151,"c":92.58,"sf":268.48,"p":598.67,"h":180}]}},"Plus":{"cov":"USD 50.000","planid":94656,"add7":8.0,"ed":{"7":[{"d":1,"c":3.96,"sf":11.48,"p":25.61,"h":3},{"d":4,"c":5.28,"sf":15.31,"p":34.14,"h":4},{"d":5,"c":6.6,"sf":19.14,"p":42.68,"h":5},{"d":6,"c":7.92,"sf":22.97,"p":51.21,"h":6},{"d":7,"c":9.24,"sf":26.8,"p":59.75,"h":7},{"d":8,"c":10.56,"sf":30.62,"p":68.29,"h":8},{"d":9,"c":11.88,"sf":34.45,"p":76.82,"h":9},{"d":10,"c":13.2,"sf":38.28,"p":85.36,"h":10},{"d":11,"c":14.52,"sf":42.11,"p":93.89,"h":11},{"d":12,"c":15.84,"sf":45.94,"p":102.43,"h":12},{"d":13,"c":17.16,"sf":49.76,"p":110.97,"h":13},{"d":14,"c":18.48,"sf":53.59,"p":119.5,"h":14},{"d":15,"c":19.8,"sf":57.42,"p":128.04,"h":15},{"d":16,"c":21.12,"sf":61.25,"p":136.57,"h":16},{"d":17,"c":22.44,"sf":65.08,"p":145.11,"h":17},{"d":18,"c":23.76,"sf":68.9,"p":153.64,"h":18},{"d":19,"c":25.08,"sf":72.73,"p":162.18,"h":19},{"d":20,"c":26.4,"sf":76.56,"p":170.72,"h":20},{"d":21,"c":27.61,"sf":80.07,"p":178.54,"h":21},{"d":22,"c":28.82,"sf":83.58,"p":186.36,"h":22},{"d":23,"c":30.03,"sf":87.09,"p":194.19,"h":23},{"d":24,"c":31.24,"sf":90.6,"p":202.01,"h":24},{"d":25,"c":32.45,"sf":94.11,"p":209.84,"h":25},{"d":26,"c":33.66,"sf":97.61,"p":217.66,"h":26},{"d":27,"c":34.87,"sf":101.12,"p":225.49,"h":27},{"d":28,"c":36.08,"sf":104.63,"p":233.31,"h":28},{"d":29,"c":37.29,"sf":108.14,"p":241.14,"h":29},{"d":30,"c":37.2,"sf":107.88,"p":240.55,"h":60},{"d":61,"c":39.24,"sf":113.8,"p":253.75,"h":90},{"d":91,"c":40.92,"sf":118.67,"p":264.61,"h":120},{"d":121,"c":53.6,"sf":155.44,"p":346.6,"h":150},{"d":151,"c":70.01,"sf":203.03,"p":452.72,"h":180},{"d":181,"c":84.54,"sf":245.17,"p":546.68,"h":210},{"d":211,"c":99.09,"sf":287.36,"p":640.77,"h":240},{"d":241,"c":113.64,"sf":329.56,"p":734.85,"h":270},{"d":271,"c":128.18,"sf":371.72,"p":828.88,"h":300},{"d":301,"c":142.72,"sf":413.89,"p":922.9,"h":330},{"d":331,"c":157.61,"sf":457.07,"p":1019.19,"h":365}],"8":[{"d":1,"c":5.94,"sf":17.23,"p":38.41,"h":3},{"d":4,"c":7.92,"sf":22.97,"p":51.21,"h":4},{"d":5,"c":9.9,"sf":28.71,"p":64.02,"h":5},{"d":6,"c":11.88,"sf":34.45,"p":76.82,"h":6},{"d":7,"c":13.86,"sf":40.19,"p":89.63,"h":7},{"d":8,"c":15.84,"sf":45.94,"p":102.43,"h":8},{"d":9,"c":17.82,"sf":51.68,"p":115.23,"h":9},{"d":10,"c":19.8,"sf":57.42,"p":128.04,"h":10},{"d":11,"c":21.78,"sf":63.16,"p":140.84,"h":11},{"d":12,"c":23.76,"sf":68.9,"p":153.64,"h":12},{"d":13,"c":25.74,"sf":74.65,"p":166.45,"h":13},{"d":14,"c":27.72,"sf":80.39,"p":179.25,"h":14},{"d":15,"c":29.7,"sf":86.13,"p":192.06,"h":15},{"d":16,"c":31.68,"sf":91.87,"p":204.86,"h":16},{"d":17,"c":33.66,"sf":97.61,"p":217.66,"h":17},{"d":18,"c":35.64,"sf":103.36,"p":230.47,"h":18},{"d":19,"c":37.62,"sf":109.1,"p":243.27,"h":19},{"d":20,"c":39.6,"sf":114.84,"p":256.07,"h":20},{"d":21,"c":41.41,"sf":120.1,"p":267.81,"h":21},{"d":22,"c":43.23,"sf":125.37,"p":279.55,"h":22},{"d":23,"c":45.05,"sf":130.63,"p":291.28,"h":23},{"d":24,"c":46.86,"sf":135.89,"p":303.02,"h":24},{"d":25,"c":48.67,"sf":141.16,"p":314.76,"h":25},{"d":26,"c":50.49,"sf":146.42,"p":326.49,"h":26},{"d":27,"c":52.3,"sf":151.68,"p":338.23,"h":27},{"d":28,"c":54.12,"sf":156.95,"p":349.97,"h":28},{"d":29,"c":55.94,"sf":162.21,"p":361.7,"h":29},{"d":30,"c":55.8,"sf":161.82,"p":360.83,"h":60},{"d":61,"c":58.86,"sf":170.69,"p":380.62,"h":90},{"d":91,"c":61.38,"sf":178.0,"p":396.91,"h":120},{"d":121,"c":80.4,"sf":233.16,"p":519.91,"h":150},{"d":151,"c":105.02,"sf":304.54,"p":679.08,"h":180}],"9":[{"d":1,"c":5.94,"sf":17.23,"p":38.41,"h":3},{"d":4,"c":7.92,"sf":22.97,"p":51.21,"h":4},{"d":5,"c":9.9,"sf":28.71,"p":64.02,"h":5},{"d":6,"c":11.88,"sf":34.45,"p":76.82,"h":6},{"d":7,"c":13.86,"sf":40.19,"p":89.63,"h":7},{"d":8,"c":15.84,"sf":45.94,"p":102.43,"h":8},{"d":9,"c":17.82,"sf":51.68,"p":115.23,"h":9},{"d":10,"c":19.8,"sf":57.42,"p":128.04,"h":10},{"d":11,"c":21.78,"sf":63.16,"p":140.84,"h":11},{"d":12,"c":23.76,"sf":68.9,"p":153.64,"h":12},{"d":13,"c":25.74,"sf":74.65,"p":166.45,"h":13},{"d":14,"c":27.72,"sf":80.39,"p":179.25,"h":14},{"d":15,"c":29.7,"sf":86.13,"p":192.06,"h":15},{"d":16,"c":31.68,"sf":91.87,"p":204.86,"h":16},{"d":17,"c":33.66,"sf":97.61,"p":217.66,"h":17},{"d":18,"c":35.64,"sf":103.36,"p":230.47,"h":18},{"d":19,"c":37.62,"sf":109.1,"p":243.27,"h":19},{"d":20,"c":39.6,"sf":114.84,"p":256.07,"h":20},{"d":21,"c":41.41,"sf":120.1,"p":267.81,"h":21},{"d":22,"c":43.23,"sf":125.37,"p":279.55,"h":22},{"d":23,"c":45.05,"sf":130.63,"p":291.28,"h":23},{"d":24,"c":46.86,"sf":135.89,"p":303.02,"h":24},{"d":25,"c":48.67,"sf":141.16,"p":314.76,"h":25},{"d":26,"c":50.49,"sf":146.42,"p":326.49,"h":26},{"d":27,"c":52.3,"sf":151.68,"p":338.23,"h":27},{"d":28,"c":54.12,"sf":156.95,"p":349.97,"h":28},{"d":29,"c":55.94,"sf":162.21,"p":361.7,"h":29},{"d":30,"c":55.8,"sf":161.82,"p":360.83,"h":60},{"d":61,"c":58.86,"sf":170.69,"p":380.62,"h":90},{"d":91,"c":61.38,"sf":178.0,"p":396.91,"h":120},{"d":121,"c":80.4,"sf":233.16,"p":519.91,"h":150},{"d":151,"c":105.02,"sf":304.54,"p":679.08,"h":180}]}},"Max":{"cov":"USD 100.000","planid":94639,"add7":9.99,"ed":{"7":[{"d":1,"c":5.55,"sf":15.54,"p":33.83,"h":3},{"d":4,"c":7.4,"sf":20.72,"p":45.11,"h":4},{"d":5,"c":9.25,"sf":25.9,"p":56.39,"h":5},{"d":6,"c":11.1,"sf":31.08,"p":67.67,"h":6},{"d":7,"c":12.95,"sf":36.26,"p":78.94,"h":7},{"d":8,"c":14.8,"sf":41.44,"p":90.22,"h":8},{"d":9,"c":16.65,"sf":46.62,"p":101.5,"h":9},{"d":10,"c":18.5,"sf":51.8,"p":112.78,"h":10},{"d":11,"c":20.35,"sf":56.98,"p":124.05,"h":11},{"d":12,"c":22.2,"sf":62.16,"p":135.33,"h":12},{"d":13,"c":24.05,"sf":67.34,"p":146.61,"h":13},{"d":14,"c":25.9,"sf":72.52,"p":157.89,"h":14},{"d":15,"c":27.75,"sf":77.7,"p":169.16,"h":15},{"d":16,"c":29.6,"sf":82.88,"p":180.44,"h":16},{"d":17,"c":31.45,"sf":88.06,"p":191.72,"h":17},{"d":18,"c":33.3,"sf":93.24,"p":203.0,"h":18},{"d":19,"c":35.15,"sf":98.42,"p":214.27,"h":19},{"d":20,"c":37.0,"sf":103.6,"p":225.55,"h":20},{"d":21,"c":38.82,"sf":108.7,"p":236.65,"h":21},{"d":22,"c":40.64,"sf":113.79,"p":247.74,"h":22},{"d":23,"c":42.46,"sf":118.89,"p":258.84,"h":23},{"d":24,"c":44.28,"sf":123.98,"p":269.93,"h":24},{"d":25,"c":46.1,"sf":129.08,"p":281.03,"h":25},{"d":26,"c":47.92,"sf":134.18,"p":292.12,"h":26},{"d":27,"c":49.74,"sf":139.27,"p":303.22,"h":27},{"d":28,"c":51.56,"sf":144.37,"p":314.31,"h":28},{"d":29,"c":53.38,"sf":149.46,"p":325.4,"h":29},{"d":30,"c":55.2,"sf":154.56,"p":336.5,"h":30},{"d":31,"c":57.02,"sf":159.66,"p":347.59,"h":31},{"d":32,"c":58.84,"sf":164.75,"p":358.69,"h":32},{"d":33,"c":56.39,"sf":157.89,"p":343.75,"h":60},{"d":61,"c":59.4,"sf":166.32,"p":362.1,"h":90},{"d":91,"c":62.03,"sf":173.68,"p":378.13,"h":120},{"d":121,"c":82.26,"sf":230.33,"p":501.46,"h":150},{"d":151,"c":106.11,"sf":297.11,"p":646.85,"h":180},{"d":181,"c":132.15,"sf":370.02,"p":805.59,"h":210},{"d":211,"c":164.28,"sf":459.98,"p":1001.45,"h":240},{"d":241,"c":188.39,"sf":527.49,"p":1148.43,"h":270},{"d":271,"c":212.5,"sf":595.0,"p":1295.4,"h":300},{"d":301,"c":236.62,"sf":662.54,"p":1442.44,"h":330},{"d":331,"c":261.3,"sf":731.64,"p":1592.88,"h":365}],"8":[{"d":1,"c":8.32,"sf":23.31,"p":50.75,"h":3},{"d":4,"c":11.1,"sf":31.08,"p":67.67,"h":4},{"d":5,"c":13.88,"sf":38.85,"p":84.58,"h":5},{"d":6,"c":16.65,"sf":46.62,"p":101.5,"h":6},{"d":7,"c":19.43,"sf":54.39,"p":118.41,"h":7},{"d":8,"c":22.2,"sf":62.16,"p":135.33,"h":8},{"d":9,"c":24.98,"sf":69.93,"p":152.25,"h":9},{"d":10,"c":27.75,"sf":77.7,"p":169.16,"h":10},{"d":11,"c":30.52,"sf":85.47,"p":186.08,"h":11},{"d":12,"c":33.3,"sf":93.24,"p":203.0,"h":12},{"d":13,"c":36.08,"sf":101.01,"p":219.91,"h":13},{"d":14,"c":38.85,"sf":108.78,"p":236.83,"h":14},{"d":15,"c":41.62,"sf":116.55,"p":253.75,"h":15},{"d":16,"c":44.4,"sf":124.32,"p":270.66,"h":16},{"d":17,"c":47.17,"sf":132.09,"p":287.58,"h":17},{"d":18,"c":49.95,"sf":139.86,"p":304.5,"h":18},{"d":19,"c":52.73,"sf":147.63,"p":321.41,"h":19},{"d":20,"c":55.5,"sf":155.4,"p":338.33,"h":20},{"d":21,"c":58.23,"sf":163.04,"p":354.97,"h":21},{"d":22,"c":60.96,"sf":170.69,"p":371.61,"h":22},{"d":23,"c":63.69,"sf":178.33,"p":388.25,"h":23},{"d":24,"c":66.42,"sf":185.98,"p":404.9,"h":24},{"d":25,"c":69.15,"sf":193.62,"p":421.54,"h":25},{"d":26,"c":71.88,"sf":201.26,"p":438.18,"h":26},{"d":27,"c":74.61,"sf":208.91,"p":454.82,"h":27},{"d":28,"c":77.34,"sf":216.55,"p":471.46,"h":28},{"d":29,"c":80.07,"sf":224.2,"p":488.11,"h":29},{"d":30,"c":82.8,"sf":231.84,"p":504.75,"h":30},{"d":31,"c":85.53,"sf":239.48,"p":521.39,"h":31},{"d":32,"c":88.26,"sf":247.13,"p":538.03,"h":32},{"d":33,"c":84.58,"sf":236.84,"p":515.63,"h":60},{"d":61,"c":89.1,"sf":249.48,"p":543.15,"h":90},{"d":91,"c":93.05,"sf":260.53,"p":567.2,"h":120},{"d":121,"c":123.39,"sf":345.49,"p":752.19,"h":150},{"d":151,"c":159.16,"sf":445.66,"p":970.27,"h":180}],"9":[{"d":1,"c":8.32,"sf":23.31,"p":50.75,"h":3},{"d":4,"c":11.1,"sf":31.08,"p":67.67,"h":4},{"d":5,"c":13.88,"sf":38.85,"p":84.58,"h":5},{"d":6,"c":16.65,"sf":46.62,"p":101.5,"h":6},{"d":7,"c":19.43,"sf":54.39,"p":118.41,"h":7},{"d":8,"c":22.2,"sf":62.16,"p":135.33,"h":8},{"d":9,"c":24.98,"sf":69.93,"p":152.25,"h":9},{"d":10,"c":27.75,"sf":77.7,"p":169.16,"h":10},{"d":11,"c":30.52,"sf":85.47,"p":186.08,"h":11},{"d":12,"c":33.3,"sf":93.24,"p":203.0,"h":12},{"d":13,"c":36.08,"sf":101.01,"p":219.91,"h":13},{"d":14,"c":38.85,"sf":108.78,"p":236.83,"h":14},{"d":15,"c":41.62,"sf":116.55,"p":253.75,"h":15},{"d":16,"c":44.4,"sf":124.32,"p":270.66,"h":16},{"d":17,"c":47.17,"sf":132.09,"p":287.58,"h":17},{"d":18,"c":49.95,"sf":139.86,"p":304.5,"h":18},{"d":19,"c":52.73,"sf":147.63,"p":321.41,"h":19},{"d":20,"c":55.5,"sf":155.4,"p":338.33,"h":20},{"d":21,"c":58.23,"sf":163.04,"p":354.97,"h":21},{"d":22,"c":60.96,"sf":170.69,"p":371.61,"h":22},{"d":23,"c":63.69,"sf":178.33,"p":388.25,"h":23},{"d":24,"c":66.42,"sf":185.98,"p":404.9,"h":24},{"d":25,"c":69.15,"sf":193.62,"p":421.54,"h":25},{"d":26,"c":71.88,"sf":201.26,"p":438.18,"h":26},{"d":27,"c":74.61,"sf":208.91,"p":454.82,"h":27},{"d":28,"c":77.34,"sf":216.55,"p":471.46,"h":28},{"d":29,"c":80.07,"sf":224.2,"p":488.11,"h":29},{"d":30,"c":82.8,"sf":231.84,"p":504.75,"h":30},{"d":31,"c":85.53,"sf":239.48,"p":521.39,"h":31},{"d":32,"c":88.26,"sf":247.13,"p":538.03,"h":32},{"d":33,"c":84.58,"sf":236.84,"p":515.63,"h":60},{"d":61,"c":89.1,"sf":249.48,"p":543.15,"h":90},{"d":91,"c":93.05,"sf":260.53,"p":567.2,"h":120},{"d":121,"c":123.39,"sf":345.49,"p":752.19,"h":150},{"d":151,"c":159.16,"sf":445.66,"p":970.27,"h":180}]}},"Elite":{"cov":"USD 150.000","planid":94640,"add7":12.0,"ed":{"7":[{"d":1,"c":6.27,"sf":17.56,"p":38.22,"h":3},{"d":4,"c":8.36,"sf":23.41,"p":50.96,"h":4},{"d":5,"c":10.45,"sf":29.26,"p":63.7,"h":5},{"d":6,"c":12.54,"sf":35.11,"p":76.44,"h":6},{"d":7,"c":14.63,"sf":40.96,"p":89.18,"h":7},{"d":8,"c":16.72,"sf":46.82,"p":101.93,"h":8},{"d":9,"c":18.81,"sf":52.67,"p":114.67,"h":9},{"d":10,"c":20.9,"sf":58.52,"p":127.41,"h":10},{"d":11,"c":22.99,"sf":64.37,"p":140.15,"h":11},{"d":12,"c":25.08,"sf":70.22,"p":152.89,"h":12},{"d":13,"c":27.17,"sf":76.08,"p":165.63,"h":13},{"d":14,"c":29.26,"sf":81.93,"p":178.37,"h":14},{"d":15,"c":31.35,"sf":87.78,"p":191.11,"h":15},{"d":16,"c":33.44,"sf":93.63,"p":203.85,"h":16},{"d":17,"c":35.53,"sf":99.48,"p":216.59,"h":17},{"d":18,"c":37.62,"sf":105.34,"p":229.33,"h":18},{"d":19,"c":39.71,"sf":111.19,"p":242.07,"h":19},{"d":20,"c":41.8,"sf":117.04,"p":254.81,"h":20},{"d":21,"c":43.86,"sf":122.81,"p":267.37,"h":21},{"d":22,"c":45.92,"sf":128.58,"p":279.93,"h":22},{"d":23,"c":47.98,"sf":134.34,"p":292.49,"h":23},{"d":24,"c":50.04,"sf":140.11,"p":305.04,"h":24},{"d":25,"c":52.1,"sf":145.88,"p":317.6,"h":25},{"d":26,"c":54.16,"sf":151.65,"p":330.16,"h":26},{"d":27,"c":56.22,"sf":157.42,"p":342.72,"h":27},{"d":28,"c":58.28,"sf":163.18,"p":355.27,"h":28},{"d":29,"c":60.34,"sf":168.95,"p":367.83,"h":29},{"d":30,"c":62.4,"sf":174.72,"p":380.39,"h":30},{"d":31,"c":64.46,"sf":180.49,"p":392.95,"h":31},{"d":32,"c":66.52,"sf":186.26,"p":405.51,"h":32},{"d":33,"c":68.58,"sf":192.02,"p":418.06,"h":33},{"d":34,"c":70.64,"sf":197.79,"p":430.62,"h":34},{"d":35,"c":72.7,"sf":203.56,"p":443.18,"h":35},{"d":36,"c":74.76,"sf":209.33,"p":455.74,"h":36},{"d":37,"c":76.82,"sf":215.1,"p":468.29,"h":37},{"d":38,"c":78.88,"sf":220.86,"p":480.85,"h":38},{"d":39,"c":80.94,"sf":226.63,"p":493.41,"h":39},{"d":40,"c":84.24,"sf":235.87,"p":513.53,"h":60},{"d":61,"c":112.26,"sf":314.33,"p":684.34,"h":90},{"d":91,"c":143.1,"sf":400.68,"p":872.34,"h":120},{"d":121,"c":181.23,"sf":507.44,"p":1104.78,"h":150},{"d":151,"c":221.18,"sf":619.3,"p":1348.31,"h":180},{"d":181,"c":262.22,"sf":734.22,"p":1598.49,"h":210},{"d":211,"c":306.31,"sf":857.67,"p":1867.27,"h":240},{"d":241,"c":346.39,"sf":969.89,"p":2111.59,"h":270},{"d":271,"c":386.46,"sf":1082.09,"p":2355.86,"h":300},{"d":301,"c":426.54,"sf":1194.31,"p":2600.19,"h":330},{"d":331,"c":466.9,"sf":1307.32,"p":2846.22,"h":365}],"8":[{"d":1,"c":9.4,"sf":26.33,"p":57.33,"h":3},{"d":4,"c":12.54,"sf":35.11,"p":76.44,"h":4},{"d":5,"c":15.68,"sf":43.89,"p":95.55,"h":5},{"d":6,"c":18.81,"sf":52.67,"p":114.67,"h":6},{"d":7,"c":21.95,"sf":61.45,"p":133.78,"h":7},{"d":8,"c":25.08,"sf":70.22,"p":152.89,"h":8},{"d":9,"c":28.21,"sf":79.0,"p":172.0,"h":9},{"d":10,"c":31.35,"sf":87.78,"p":191.11,"h":10},{"d":11,"c":34.48,"sf":96.56,"p":210.22,"h":11},{"d":12,"c":37.62,"sf":105.34,"p":229.33,"h":12},{"d":13,"c":40.76,"sf":114.11,"p":248.44,"h":13},{"d":14,"c":43.89,"sf":122.89,"p":267.55,"h":14},{"d":15,"c":47.02,"sf":131.67,"p":286.66,"h":15},{"d":16,"c":50.16,"sf":140.45,"p":305.78,"h":16},{"d":17,"c":53.3,"sf":149.23,"p":324.89,"h":17},{"d":18,"c":56.43,"sf":158.0,"p":344.0,"h":18},{"d":19,"c":59.56,"sf":166.78,"p":363.11,"h":19},{"d":20,"c":62.7,"sf":175.56,"p":382.22,"h":20},{"d":21,"c":65.79,"sf":184.21,"p":401.06,"h":21},{"d":22,"c":68.88,"sf":192.86,"p":419.89,"h":22},{"d":23,"c":71.97,"sf":201.52,"p":438.73,"h":23},{"d":24,"c":75.06,"sf":210.17,"p":457.57,"h":24},{"d":25,"c":78.15,"sf":218.82,"p":476.4,"h":25},{"d":26,"c":81.24,"sf":227.47,"p":495.24,"h":26},{"d":27,"c":84.33,"sf":236.12,"p":514.08,"h":27},{"d":28,"c":87.42,"sf":244.78,"p":532.91,"h":28},{"d":29,"c":90.51,"sf":253.43,"p":551.75,"h":29},{"d":30,"c":93.6,"sf":262.08,"p":570.59,"h":30},{"d":31,"c":96.69,"sf":270.73,"p":589.42,"h":31},{"d":32,"c":99.78,"sf":279.38,"p":608.26,"h":32},{"d":33,"c":102.87,"sf":288.04,"p":627.1,"h":33},{"d":34,"c":105.96,"sf":296.69,"p":645.93,"h":34},{"d":35,"c":109.05,"sf":305.34,"p":664.77,"h":35},{"d":36,"c":112.14,"sf":313.99,"p":683.61,"h":36},{"d":37,"c":115.23,"sf":322.64,"p":702.44,"h":37},{"d":38,"c":118.32,"sf":331.3,"p":721.28,"h":38},{"d":39,"c":121.41,"sf":339.95,"p":740.12,"h":39},{"d":40,"c":126.36,"sf":353.81,"p":770.29,"h":60},{"d":61,"c":168.39,"sf":471.49,"p":1026.51,"h":90},{"d":91,"c":214.65,"sf":601.02,"p":1308.51,"h":120},{"d":121,"c":271.85,"sf":761.17,"p":1657.17,"h":150},{"d":151,"c":331.77,"sf":928.96,"p":2022.47,"h":180}]}},"Infinity":{"cov":"USD 250.000","planid":94641,"add7":14.01,"ed":{"7":[{"d":1,"c":7.11,"sf":19.91,"p":43.34,"h":3},{"d":4,"c":9.48,"sf":26.54,"p":57.79,"h":4},{"d":5,"c":11.85,"sf":33.18,"p":72.24,"h":5},{"d":6,"c":14.22,"sf":39.82,"p":86.69,"h":6},{"d":7,"c":16.59,"sf":46.45,"p":101.13,"h":7},{"d":8,"c":18.96,"sf":53.09,"p":115.58,"h":8},{"d":9,"c":21.33,"sf":59.72,"p":130.03,"h":9},{"d":10,"c":23.7,"sf":66.36,"p":144.48,"h":10},{"d":11,"c":26.07,"sf":73.0,"p":158.92,"h":11},{"d":12,"c":28.44,"sf":79.63,"p":173.37,"h":12},{"d":13,"c":30.81,"sf":86.27,"p":187.82,"h":13},{"d":14,"c":33.18,"sf":92.9,"p":202.27,"h":14},{"d":15,"c":35.55,"sf":99.54,"p":216.71,"h":15},{"d":16,"c":37.92,"sf":106.18,"p":231.16,"h":16},{"d":17,"c":40.29,"sf":112.81,"p":245.61,"h":17},{"d":18,"c":42.66,"sf":119.45,"p":260.06,"h":18},{"d":19,"c":45.03,"sf":126.08,"p":274.5,"h":19},{"d":20,"c":47.4,"sf":132.72,"p":288.95,"h":20},{"d":21,"c":49.74,"sf":139.27,"p":303.22,"h":21},{"d":22,"c":52.08,"sf":145.82,"p":317.48,"h":22},{"d":23,"c":54.42,"sf":152.38,"p":331.74,"h":23},{"d":24,"c":56.76,"sf":158.93,"p":346.01,"h":24},{"d":25,"c":59.1,"sf":165.48,"p":360.27,"h":25},{"d":26,"c":61.44,"sf":172.03,"p":374.54,"h":26},{"d":27,"c":63.78,"sf":178.58,"p":388.8,"h":27},{"d":28,"c":66.12,"sf":185.14,"p":403.07,"h":28},{"d":29,"c":68.46,"sf":191.69,"p":417.33,"h":29},{"d":30,"c":70.8,"sf":198.24,"p":431.6,"h":30},{"d":31,"c":73.14,"sf":204.79,"p":445.86,"h":31},{"d":32,"c":75.48,"sf":211.34,"p":460.13,"h":32},{"d":33,"c":77.82,"sf":217.9,"p":474.39,"h":33},{"d":34,"c":80.16,"sf":224.45,"p":488.66,"h":34},{"d":35,"c":82.5,"sf":231.0,"p":502.92,"h":35},{"d":36,"c":84.84,"sf":237.55,"p":517.18,"h":36},{"d":37,"c":87.18,"sf":244.1,"p":531.45,"h":37},{"d":38,"c":89.52,"sf":250.66,"p":545.71,"h":38},{"d":39,"c":91.86,"sf":257.21,"p":559.98,"h":39},{"d":40,"c":94.2,"sf":263.76,"p":574.24,"h":40},{"d":41,"c":96.54,"sf":270.31,"p":588.51,"h":41},{"d":42,"c":98.88,"sf":276.86,"p":602.77,"h":42},{"d":43,"c":101.22,"sf":283.42,"p":617.04,"h":43},{"d":44,"c":103.56,"sf":289.97,"p":631.3,"h":44},{"d":45,"c":105.9,"sf":296.52,"p":645.57,"h":45},{"d":46,"c":108.24,"sf":303.07,"p":659.83,"h":46},{"d":47,"c":110.58,"sf":309.62,"p":674.1,"h":47},{"d":48,"c":112.08,"sf":313.82,"p":683.24,"h":60},{"d":61,"c":168.13,"sf":470.76,"p":1024.92,"h":90},{"d":91,"c":224.17,"sf":627.68,"p":1366.54,"h":120},{"d":121,"c":280.21,"sf":784.59,"p":1708.16,"h":150},{"d":151,"c":336.25,"sf":941.5,"p":2049.78,"h":180},{"d":181,"c":392.29,"sf":1098.41,"p":2391.4,"h":210},{"d":211,"c":448.34,"sf":1255.35,"p":2733.08,"h":240},{"d":241,"c":504.38,"sf":1412.26,"p":3074.7,"h":270},{"d":271,"c":560.42,"sf":1569.18,"p":3416.32,"h":300},{"d":301,"c":616.46,"sf":1726.09,"p":3757.94,"h":330},{"d":331,"c":672.51,"sf":1883.03,"p":4099.62,"h":365}],"8":[{"d":1,"c":10.66,"sf":29.86,"p":65.01,"h":3},{"d":4,"c":14.22,"sf":39.82,"p":86.69,"h":4},{"d":5,"c":17.77,"sf":49.77,"p":108.36,"h":5},{"d":6,"c":21.33,"sf":59.72,"p":130.03,"h":6},{"d":7,"c":24.89,"sf":69.68,"p":151.7,"h":7},{"d":8,"c":28.44,"sf":79.63,"p":173.37,"h":8},{"d":9,"c":32.0,"sf":89.59,"p":195.04,"h":9},{"d":10,"c":35.55,"sf":99.54,"p":216.71,"h":10},{"d":11,"c":39.1,"sf":109.49,"p":238.38,"h":11},{"d":12,"c":42.66,"sf":119.45,"p":260.06,"h":12},{"d":13,"c":46.22,"sf":129.4,"p":281.73,"h":13},{"d":14,"c":49.77,"sf":139.36,"p":303.4,"h":14},{"d":15,"c":53.33,"sf":149.31,"p":325.07,"h":15},{"d":16,"c":56.88,"sf":159.26,"p":346.74,"h":16},{"d":17,"c":60.44,"sf":169.22,"p":368.41,"h":17},{"d":18,"c":63.99,"sf":179.17,"p":390.08,"h":18},{"d":19,"c":67.55,"sf":189.13,"p":411.75,"h":19},{"d":20,"c":71.1,"sf":199.08,"p":433.43,"h":20},{"d":21,"c":74.61,"sf":208.91,"p":454.82,"h":21},{"d":22,"c":78.12,"sf":218.74,"p":476.22,"h":22},{"d":23,"c":81.63,"sf":228.56,"p":497.62,"h":23},{"d":24,"c":85.14,"sf":238.39,"p":519.01,"h":24},{"d":25,"c":88.65,"sf":248.22,"p":540.41,"h":25},{"d":26,"c":92.16,"sf":258.05,"p":561.81,"h":26},{"d":27,"c":95.67,"sf":267.88,"p":583.2,"h":27},{"d":28,"c":99.18,"sf":277.7,"p":604.6,"h":28},{"d":29,"c":102.69,"sf":287.53,"p":626.0,"h":29},{"d":30,"c":106.2,"sf":297.36,"p":647.4,"h":30},{"d":31,"c":109.71,"sf":307.19,"p":668.79,"h":31},{"d":32,"c":113.22,"sf":317.02,"p":690.19,"h":32},{"d":33,"c":116.73,"sf":326.84,"p":711.59,"h":33},{"d":34,"c":120.24,"sf":336.67,"p":732.98,"h":34},{"d":35,"c":123.75,"sf":346.5,"p":754.38,"h":35},{"d":36,"c":127.26,"sf":356.33,"p":775.78,"h":36},{"d":37,"c":130.77,"sf":366.16,"p":797.17,"h":37},{"d":38,"c":134.28,"sf":375.98,"p":818.57,"h":38},{"d":39,"c":137.79,"sf":385.81,"p":839.97,"h":39},{"d":40,"c":141.3,"sf":395.64,"p":861.36,"h":40},{"d":41,"c":144.81,"sf":405.47,"p":882.76,"h":41},{"d":42,"c":148.32,"sf":415.3,"p":904.16,"h":42},{"d":43,"c":151.83,"sf":425.12,"p":925.56,"h":43},{"d":44,"c":155.34,"sf":434.95,"p":946.95,"h":44},{"d":45,"c":158.85,"sf":444.78,"p":968.35,"h":45},{"d":46,"c":162.36,"sf":454.61,"p":989.75,"h":46},{"d":47,"c":165.87,"sf":464.44,"p":1011.14,"h":47},{"d":48,"c":168.12,"sf":470.74,"p":1024.86,"h":60},{"d":61,"c":252.19,"sf":706.15,"p":1537.38,"h":90},{"d":91,"c":336.25,"sf":941.51,"p":2049.81,"h":120},{"d":121,"c":420.31,"sf":1176.88,"p":2562.24,"h":150},{"d":151,"c":504.38,"sf":1412.25,"p":3074.67,"h":180}]}}},"mv":{"Smart":{"cov":"USD 30.000","t":{"30":{"7":[30.49,91.47,208.86,94664],"8":[30.49,91.47,208.86,94664],"9":[45.74,137.21,313.28,94664]},"45":{"7":[58.04,174.12,397.57,94665],"8":[58.04,174.12,397.57,94665],"9":[87.06,261.18,596.36,94665]},"60":{"7":[69.14,207.42,473.61,94666],"8":[69.14,207.42,473.61,94666],"9":[103.71,311.13,710.41,94666]},"90":{"7":[89.64,268.92,614.03,94667],"8":[89.64,268.92,614.03,94667],"9":[134.46,403.38,921.05,94667]}}},"Plus":{"cov":"USD 50.000","t":{"30":{"7":[45.94,137.82,314.69,94672],"8":[45.94,137.82,314.69,94672],"9":[68.91,206.73,472.03,94672]},"45":{"7":[81.52,244.56,558.41,94673],"8":[81.52,244.56,558.41,94673],"9":[122.28,366.84,837.62,94673]},"60":{"7":[94.71,284.13,648.76,94674],"8":[94.71,284.13,648.76,94674],"9":[142.06,426.2,973.15,94674]},"90":{"7":[121.07,363.21,829.33,94675],"8":[121.07,363.21,829.33,94675],"9":[181.6,544.82,1243.99,94675]}}},"Max":{"cov":"USD 100.000","t":{"30":{"7":[58.61,175.83,401.48,94676],"8":[58.61,175.83,401.48,94676],"9":[87.92,263.74,602.22,94676]},"45":{"7":[109.49,328.47,750.01,94677],"8":[109.49,328.47,750.01,94677],"9":[164.24,492.7,1125.01,94677]},"60":{"7":[126.61,379.83,867.28,94678],"8":[126.61,379.83,867.28,94678],"9":[189.92,569.74,1300.92,94678]},"90":{"7":[186.25,558.75,1275.81,94679],"8":[186.25,558.75,1275.81,94679],"9":[279.38,838.12,1913.72,94679]}}},"Elite":{"cov":"USD 150.000","t":{"30":{"7":[91.08,273.24,623.9,94681],"8":[91.08,273.24,623.9,94681]},"45":{"7":[131.58,394.74,901.32,94682],"8":[131.58,394.74,901.32,94682]},"60":{"7":[152.15,456.45,1042.23,94684],"8":[152.15,456.45,1042.23,94684]},"90":{"7":[223.83,671.49,1533.24,94685],"8":[223.83,671.49,1533.24,94685]}}},"Infinity":{"cov":"USD 250.000","t":{"30":{"7":[101.71,305.13,696.71,94687],"8":[101.71,305.13,696.71,94687]},"45":{"7":[153.66,460.98,1052.57,94689],"8":[153.66,460.98,1052.57,94689]},"60":{"7":[177.69,533.07,1217.18,94690],"8":[177.69,533.07,1217.18,94690]},"90":{"7":[261.4,784.2,1790.59,94691],"8":[261.4,784.2,1790.59,94691]}}}},"nac":{"cov":"USD 10.000","planid":95346,"ed":{"7":[{"d":1,"c":1.52,"sf":7.6,"p":12.54,"h":2},{"d":3,"c":2.03,"sf":10.15,"p":16.75,"h":3},{"d":4,"c":2.54,"sf":12.7,"p":20.96,"h":4},{"d":5,"c":3.05,"sf":15.25,"p":25.16,"h":5},{"d":6,"c":3.56,"sf":17.8,"p":29.37,"h":6},{"d":7,"c":4.07,"sf":20.35,"p":33.58,"h":7},{"d":8,"c":4.58,"sf":22.9,"p":37.78,"h":8},{"d":9,"c":5.09,"sf":25.45,"p":41.99,"h":9},{"d":10,"c":5.6,"sf":28.0,"p":46.2,"h":10},{"d":11,"c":6.11,"sf":30.55,"p":50.41,"h":11},{"d":12,"c":6.62,"sf":33.1,"p":54.62,"h":12},{"d":13,"c":7.13,"sf":35.65,"p":58.82,"h":13},{"d":14,"c":7.64,"sf":38.2,"p":63.03,"h":14},{"d":15,"c":8.15,"sf":40.75,"p":67.24,"h":15},{"d":16,"c":8.66,"sf":43.3,"p":71.44,"h":16},{"d":17,"c":9.17,"sf":45.85,"p":75.65,"h":17},{"d":18,"c":9.68,"sf":48.4,"p":79.86,"h":18},{"d":19,"c":10.19,"sf":50.95,"p":84.07,"h":19},{"d":20,"c":10.7,"sf":53.5,"p":88.28,"h":20},{"d":21,"c":11.21,"sf":56.05,"p":92.48,"h":21},{"d":22,"c":11.72,"sf":58.6,"p":96.69,"h":22},{"d":23,"c":12.23,"sf":61.15,"p":100.9,"h":23},{"d":24,"c":12.74,"sf":63.7,"p":105.1,"h":24},{"d":25,"c":13.25,"sf":66.25,"p":109.31,"h":25},{"d":26,"c":13.76,"sf":68.8,"p":113.52,"h":26},{"d":27,"c":14.27,"sf":71.35,"p":117.73,"h":27},{"d":28,"c":14.78,"sf":73.9,"p":121.94,"h":28},{"d":29,"c":15.29,"sf":76.45,"p":126.14,"h":29},{"d":30,"c":15.8,"sf":79.0,"p":130.35,"h":30},{"d":31,"c":16.31,"sf":81.55,"p":134.56,"h":31},{"d":32,"c":16.82,"sf":84.1,"p":138.76,"h":32},{"d":33,"c":17.33,"sf":86.65,"p":142.97,"h":33},{"d":34,"c":17.84,"sf":89.2,"p":147.18,"h":34},{"d":35,"c":18.35,"sf":91.75,"p":151.39,"h":35},{"d":36,"c":18.86,"sf":94.3,"p":155.6,"h":36},{"d":37,"c":19.37,"sf":96.85,"p":159.8,"h":37},{"d":38,"c":19.88,"sf":99.4,"p":164.01,"h":38},{"d":39,"c":20.39,"sf":101.95,"p":168.22,"h":39},{"d":40,"c":20.9,"sf":104.5,"p":172.42,"h":40},{"d":41,"c":21.41,"sf":107.05,"p":176.63,"h":41},{"d":42,"c":21.92,"sf":109.6,"p":180.84,"h":42},{"d":43,"c":22.43,"sf":112.15,"p":185.05,"h":43},{"d":44,"c":22.94,"sf":114.7,"p":189.26,"h":44},{"d":45,"c":23.45,"sf":117.25,"p":193.46,"h":45},{"d":46,"c":23.96,"sf":119.8,"p":197.67,"h":46},{"d":47,"c":24.47,"sf":122.35,"p":201.88,"h":47},{"d":48,"c":24.98,"sf":124.9,"p":206.08,"h":48},{"d":49,"c":25.49,"sf":127.45,"p":210.29,"h":49},{"d":50,"c":26.0,"sf":130.0,"p":214.5,"h":50},{"d":51,"c":26.51,"sf":132.55,"p":218.71,"h":51},{"d":52,"c":27.02,"sf":135.1,"p":222.92,"h":52},{"d":53,"c":27.53,"sf":137.65,"p":227.12,"h":53},{"d":54,"c":28.04,"sf":140.2,"p":231.33,"h":54},{"d":55,"c":28.55,"sf":142.75,"p":235.54,"h":55},{"d":56,"c":29.06,"sf":145.3,"p":239.74,"h":56},{"d":57,"c":29.57,"sf":147.85,"p":243.95,"h":57},{"d":58,"c":30.08,"sf":150.4,"p":248.16,"h":58},{"d":59,"c":30.59,"sf":152.95,"p":252.37,"h":59},{"d":60,"c":31.1,"sf":155.5,"p":256.58,"h":60},{"d":61,"c":31.61,"sf":158.05,"p":260.78,"h":61},{"d":62,"c":32.12,"sf":160.6,"p":264.99,"h":62},{"d":63,"c":32.63,"sf":163.15,"p":269.2,"h":63},{"d":64,"c":33.14,"sf":165.7,"p":273.4,"h":64},{"d":65,"c":33.65,"sf":168.25,"p":277.61,"h":65},{"d":66,"c":34.16,"sf":170.8,"p":281.82,"h":66},{"d":67,"c":34.67,"sf":173.35,"p":286.03,"h":67},{"d":68,"c":35.18,"sf":175.9,"p":290.24,"h":68},{"d":69,"c":35.69,"sf":178.45,"p":294.44,"h":69},{"d":70,"c":36.2,"sf":181.0,"p":298.65,"h":70},{"d":71,"c":36.71,"sf":183.55,"p":302.86,"h":71},{"d":72,"c":37.22,"sf":186.1,"p":307.06,"h":72},{"d":73,"c":37.73,"sf":188.65,"p":311.27,"h":73},{"d":74,"c":38.24,"sf":191.2,"p":315.48,"h":74},{"d":75,"c":38.75,"sf":193.75,"p":319.69,"h":75},{"d":76,"c":39.26,"sf":196.3,"p":323.9,"h":76},{"d":77,"c":39.77,"sf":198.85,"p":328.1,"h":77},{"d":78,"c":40.28,"sf":201.4,"p":332.31,"h":78},{"d":79,"c":40.79,"sf":203.95,"p":336.52,"h":79},{"d":80,"c":41.3,"sf":206.5,"p":340.72,"h":80},{"d":81,"c":41.81,"sf":209.05,"p":344.93,"h":81},{"d":82,"c":42.32,"sf":211.6,"p":349.14,"h":82},{"d":83,"c":42.83,"sf":214.15,"p":353.35,"h":83},{"d":84,"c":43.34,"sf":216.7,"p":357.56,"h":84},{"d":85,"c":43.85,"sf":219.25,"p":361.76,"h":85},{"d":86,"c":44.36,"sf":221.8,"p":365.97,"h":86},{"d":87,"c":44.87,"sf":224.35,"p":370.18,"h":87},{"d":88,"c":45.38,"sf":226.9,"p":374.38,"h":88},{"d":89,"c":45.89,"sf":229.45,"p":378.59,"h":89},{"d":90,"c":46.4,"sf":232.0,"p":382.8,"h":90}],"8":[{"d":1,"c":1.52,"sf":7.6,"p":12.54,"h":2},{"d":3,"c":2.03,"sf":10.15,"p":16.75,"h":3},{"d":4,"c":2.54,"sf":12.7,"p":20.96,"h":4},{"d":5,"c":3.05,"sf":15.25,"p":25.16,"h":5},{"d":6,"c":3.56,"sf":17.8,"p":29.37,"h":6},{"d":7,"c":4.07,"sf":20.35,"p":33.58,"h":7},{"d":8,"c":4.58,"sf":22.9,"p":37.78,"h":8},{"d":9,"c":5.09,"sf":25.45,"p":41.99,"h":9},{"d":10,"c":5.6,"sf":28.0,"p":46.2,"h":10},{"d":11,"c":6.11,"sf":30.55,"p":50.41,"h":11},{"d":12,"c":6.62,"sf":33.1,"p":54.62,"h":12},{"d":13,"c":7.13,"sf":35.65,"p":58.82,"h":13},{"d":14,"c":7.64,"sf":38.2,"p":63.03,"h":14},{"d":15,"c":8.15,"sf":40.75,"p":67.24,"h":15},{"d":16,"c":8.66,"sf":43.3,"p":71.44,"h":16},{"d":17,"c":9.17,"sf":45.85,"p":75.65,"h":17},{"d":18,"c":9.68,"sf":48.4,"p":79.86,"h":18},{"d":19,"c":10.19,"sf":50.95,"p":84.07,"h":19},{"d":20,"c":10.7,"sf":53.5,"p":88.28,"h":20},{"d":21,"c":11.21,"sf":56.05,"p":92.48,"h":21},{"d":22,"c":11.72,"sf":58.6,"p":96.69,"h":22},{"d":23,"c":12.23,"sf":61.15,"p":100.9,"h":23},{"d":24,"c":12.74,"sf":63.7,"p":105.1,"h":24},{"d":25,"c":13.25,"sf":66.25,"p":109.31,"h":25},{"d":26,"c":13.76,"sf":68.8,"p":113.52,"h":26},{"d":27,"c":14.27,"sf":71.35,"p":117.73,"h":27},{"d":28,"c":14.78,"sf":73.9,"p":121.94,"h":28},{"d":29,"c":15.29,"sf":76.45,"p":126.14,"h":29},{"d":30,"c":15.8,"sf":79.0,"p":130.35,"h":30},{"d":31,"c":16.31,"sf":81.55,"p":134.56,"h":31},{"d":32,"c":16.82,"sf":84.1,"p":138.76,"h":32},{"d":33,"c":17.33,"sf":86.65,"p":142.97,"h":33},{"d":34,"c":17.84,"sf":89.2,"p":147.18,"h":34},{"d":35,"c":18.35,"sf":91.75,"p":151.39,"h":35},{"d":36,"c":18.86,"sf":94.3,"p":155.6,"h":36},{"d":37,"c":19.37,"sf":96.85,"p":159.8,"h":37},{"d":38,"c":19.88,"sf":99.4,"p":164.01,"h":38},{"d":39,"c":20.39,"sf":101.95,"p":168.22,"h":39},{"d":40,"c":20.9,"sf":104.5,"p":172.42,"h":40},{"d":41,"c":21.41,"sf":107.05,"p":176.63,"h":41},{"d":42,"c":21.92,"sf":109.6,"p":180.84,"h":42},{"d":43,"c":22.43,"sf":112.15,"p":185.05,"h":43},{"d":44,"c":22.94,"sf":114.7,"p":189.26,"h":44},{"d":45,"c":23.45,"sf":117.25,"p":193.46,"h":45},{"d":46,"c":23.96,"sf":119.8,"p":197.67,"h":46},{"d":47,"c":24.47,"sf":122.35,"p":201.88,"h":47},{"d":48,"c":24.98,"sf":124.9,"p":206.08,"h":48},{"d":49,"c":25.49,"sf":127.45,"p":210.29,"h":49},{"d":50,"c":26.0,"sf":130.0,"p":214.5,"h":50},{"d":51,"c":26.51,"sf":132.55,"p":218.71,"h":51},{"d":52,"c":27.02,"sf":135.1,"p":222.92,"h":52},{"d":53,"c":27.53,"sf":137.65,"p":227.12,"h":53},{"d":54,"c":28.04,"sf":140.2,"p":231.33,"h":54},{"d":55,"c":28.55,"sf":142.75,"p":235.54,"h":55},{"d":56,"c":29.06,"sf":145.3,"p":239.74,"h":56},{"d":57,"c":29.57,"sf":147.85,"p":243.95,"h":57},{"d":58,"c":30.08,"sf":150.4,"p":248.16,"h":58},{"d":59,"c":30.59,"sf":152.95,"p":252.37,"h":59},{"d":60,"c":31.1,"sf":155.5,"p":256.58,"h":60},{"d":61,"c":31.61,"sf":158.05,"p":260.78,"h":61},{"d":62,"c":32.12,"sf":160.6,"p":264.99,"h":62},{"d":63,"c":32.63,"sf":163.15,"p":269.2,"h":63},{"d":64,"c":33.14,"sf":165.7,"p":273.4,"h":64},{"d":65,"c":33.65,"sf":168.25,"p":277.61,"h":65},{"d":66,"c":34.16,"sf":170.8,"p":281.82,"h":66},{"d":67,"c":34.67,"sf":173.35,"p":286.03,"h":67},{"d":68,"c":35.18,"sf":175.9,"p":290.24,"h":68},{"d":69,"c":35.69,"sf":178.45,"p":294.44,"h":69},{"d":70,"c":36.2,"sf":181.0,"p":298.65,"h":70},{"d":71,"c":36.71,"sf":183.55,"p":302.86,"h":71},{"d":72,"c":37.22,"sf":186.1,"p":307.06,"h":72},{"d":73,"c":37.73,"sf":188.65,"p":311.27,"h":73},{"d":74,"c":38.24,"sf":191.2,"p":315.48,"h":74},{"d":75,"c":38.75,"sf":193.75,"p":319.69,"h":75},{"d":76,"c":39.26,"sf":196.3,"p":323.9,"h":76},{"d":77,"c":39.77,"sf":198.85,"p":328.1,"h":77},{"d":78,"c":40.28,"sf":201.4,"p":332.31,"h":78},{"d":79,"c":40.79,"sf":203.95,"p":336.52,"h":79},{"d":80,"c":41.3,"sf":206.5,"p":340.72,"h":80},{"d":81,"c":41.81,"sf":209.05,"p":344.93,"h":81},{"d":82,"c":42.32,"sf":211.6,"p":349.14,"h":82},{"d":83,"c":42.83,"sf":214.15,"p":353.35,"h":83},{"d":84,"c":43.34,"sf":216.7,"p":357.56,"h":84},{"d":85,"c":43.85,"sf":219.25,"p":361.76,"h":85},{"d":86,"c":44.36,"sf":221.8,"p":365.97,"h":86},{"d":87,"c":44.87,"sf":224.35,"p":370.18,"h":87},{"d":88,"c":45.38,"sf":226.9,"p":374.38,"h":88},{"d":89,"c":45.89,"sf":229.45,"p":378.59,"h":89},{"d":90,"c":46.4,"sf":232.0,"p":382.8,"h":90}],"9":[{"d":1,"c":2.28,"sf":11.4,"p":18.81,"h":2},{"d":3,"c":3.04,"sf":15.22,"p":25.12,"h":3},{"d":4,"c":3.81,"sf":19.05,"p":31.43,"h":4},{"d":5,"c":4.58,"sf":22.88,"p":37.74,"h":5},{"d":6,"c":5.34,"sf":26.7,"p":44.06,"h":6},{"d":7,"c":6.1,"sf":30.52,"p":50.37,"h":7},{"d":8,"c":6.87,"sf":34.35,"p":56.68,"h":8},{"d":9,"c":7.64,"sf":38.17,"p":62.99,"h":9},{"d":10,"c":8.4,"sf":42.0,"p":69.3,"h":10},{"d":11,"c":9.16,"sf":45.82,"p":75.61,"h":11},{"d":12,"c":9.93,"sf":49.65,"p":81.92,"h":12},{"d":13,"c":10.7,"sf":53.48,"p":88.23,"h":13},{"d":14,"c":11.46,"sf":57.3,"p":94.54,"h":14},{"d":15,"c":12.22,"sf":61.12,"p":100.86,"h":15},{"d":16,"c":12.99,"sf":64.95,"p":107.17,"h":16},{"d":17,"c":13.76,"sf":68.78,"p":113.48,"h":17},{"d":18,"c":14.52,"sf":72.6,"p":119.79,"h":18},{"d":19,"c":15.28,"sf":76.42,"p":126.1,"h":19},{"d":20,"c":16.05,"sf":80.25,"p":132.41,"h":20},{"d":21,"c":16.82,"sf":84.08,"p":138.72,"h":21},{"d":22,"c":17.58,"sf":87.9,"p":145.04,"h":22},{"d":23,"c":18.34,"sf":91.72,"p":151.35,"h":23},{"d":24,"c":19.11,"sf":95.55,"p":157.66,"h":24},{"d":25,"c":19.88,"sf":99.38,"p":163.97,"h":25},{"d":26,"c":20.64,"sf":103.2,"p":170.28,"h":26},{"d":27,"c":21.4,"sf":107.02,"p":176.59,"h":27},{"d":28,"c":22.17,"sf":110.85,"p":182.9,"h":28},{"d":29,"c":22.94,"sf":114.68,"p":189.21,"h":29},{"d":30,"c":23.7,"sf":118.5,"p":195.52,"h":30},{"d":31,"c":24.46,"sf":122.32,"p":201.84,"h":31},{"d":32,"c":25.23,"sf":126.15,"p":208.15,"h":32},{"d":33,"c":26.0,"sf":129.98,"p":214.46,"h":33},{"d":34,"c":26.76,"sf":133.8,"p":220.77,"h":34},{"d":35,"c":27.52,"sf":137.62,"p":227.08,"h":35},{"d":36,"c":28.29,"sf":141.45,"p":233.39,"h":36},{"d":37,"c":29.06,"sf":145.28,"p":239.7,"h":37},{"d":38,"c":29.82,"sf":149.1,"p":246.02,"h":38},{"d":39,"c":30.58,"sf":152.93,"p":252.33,"h":39},{"d":40,"c":31.35,"sf":156.75,"p":258.64,"h":40},{"d":41,"c":32.12,"sf":160.57,"p":264.95,"h":41},{"d":42,"c":32.88,"sf":164.4,"p":271.26,"h":42},{"d":43,"c":33.65,"sf":168.22,"p":277.57,"h":43},{"d":44,"c":34.41,"sf":172.05,"p":283.88,"h":44},{"d":45,"c":35.17,"sf":175.88,"p":290.19,"h":45},{"d":46,"c":35.94,"sf":179.7,"p":296.5,"h":46},{"d":47,"c":36.7,"sf":183.52,"p":302.82,"h":47},{"d":48,"c":37.47,"sf":187.35,"p":309.13,"h":48},{"d":49,"c":38.24,"sf":191.18,"p":315.44,"h":49},{"d":50,"c":39.0,"sf":195.0,"p":321.75,"h":50},{"d":51,"c":39.76,"sf":198.82,"p":328.06,"h":51},{"d":52,"c":40.53,"sf":202.65,"p":334.37,"h":52},{"d":53,"c":41.3,"sf":206.48,"p":340.68,"h":53},{"d":54,"c":42.06,"sf":210.3,"p":347.0,"h":54},{"d":55,"c":42.82,"sf":214.12,"p":353.31,"h":55},{"d":56,"c":43.59,"sf":217.95,"p":359.62,"h":56},{"d":57,"c":44.36,"sf":221.78,"p":365.93,"h":57},{"d":58,"c":45.12,"sf":225.6,"p":372.24,"h":58},{"d":59,"c":45.88,"sf":229.42,"p":378.55,"h":59},{"d":60,"c":46.65,"sf":233.25,"p":384.86,"h":60},{"d":61,"c":47.42,"sf":237.08,"p":391.17,"h":61},{"d":62,"c":48.18,"sf":240.9,"p":397.48,"h":62},{"d":63,"c":48.94,"sf":244.72,"p":403.8,"h":63},{"d":64,"c":49.71,"sf":248.55,"p":410.11,"h":64},{"d":65,"c":50.48,"sf":252.38,"p":416.42,"h":65},{"d":66,"c":51.24,"sf":256.2,"p":422.73,"h":66},{"d":67,"c":52.0,"sf":260.02,"p":429.04,"h":67},{"d":68,"c":52.77,"sf":263.85,"p":435.35,"h":68},{"d":69,"c":53.54,"sf":267.68,"p":441.66,"h":69},{"d":70,"c":54.3,"sf":271.5,"p":447.98,"h":70},{"d":71,"c":55.06,"sf":275.32,"p":454.29,"h":71},{"d":72,"c":55.83,"sf":279.15,"p":460.6,"h":72},{"d":73,"c":56.6,"sf":282.98,"p":466.91,"h":73},{"d":74,"c":57.36,"sf":286.8,"p":473.22,"h":74},{"d":75,"c":58.12,"sf":290.62,"p":479.53,"h":75},{"d":76,"c":58.89,"sf":294.45,"p":485.84,"h":76},{"d":77,"c":59.66,"sf":298.27,"p":492.15,"h":77},{"d":78,"c":60.42,"sf":302.1,"p":498.46,"h":78},{"d":79,"c":61.18,"sf":305.92,"p":504.78,"h":79},{"d":80,"c":61.95,"sf":309.75,"p":511.09,"h":80},{"d":81,"c":62.72,"sf":313.58,"p":517.4,"h":81},{"d":82,"c":63.48,"sf":317.4,"p":523.71,"h":82},{"d":83,"c":64.24,"sf":321.23,"p":530.02,"h":83},{"d":84,"c":65.01,"sf":325.05,"p":536.33,"h":84},{"d":85,"c":65.78,"sf":328.88,"p":542.64,"h":85},{"d":86,"c":66.54,"sf":332.7,"p":548.96,"h":86},{"d":87,"c":67.31,"sf":336.52,"p":555.27,"h":87},{"d":88,"c":68.07,"sf":340.35,"p":561.58,"h":88},{"d":89,"c":68.83,"sf":344.18,"p":567.89,"h":89},{"d":90,"c":69.6,"sf":348.0,"p":574.2,"h":90}]}},"sr":{"cov":"USD 35.000","planid":95152,"ed":{"1":[{"d":1,"c":3.32,"sf":10.62,"p":25.42,"h":1},{"d":2,"c":6.64,"sf":21.25,"p":50.84,"h":2},{"d":3,"c":9.96,"sf":31.87,"p":76.25,"h":3},{"d":4,"c":13.28,"sf":42.5,"p":101.67,"h":4},{"d":5,"c":16.6,"sf":53.12,"p":127.09,"h":5},{"d":6,"c":19.92,"sf":63.74,"p":152.51,"h":6},{"d":7,"c":23.24,"sf":74.37,"p":177.93,"h":7},{"d":8,"c":26.56,"sf":84.99,"p":203.34,"h":8},{"d":9,"c":29.88,"sf":95.62,"p":228.76,"h":9},{"d":10,"c":33.2,"sf":106.24,"p":254.18,"h":10},{"d":11,"c":36.52,"sf":116.86,"p":279.6,"h":11},{"d":12,"c":39.84,"sf":127.49,"p":305.02,"h":12},{"d":13,"c":43.16,"sf":138.11,"p":330.43,"h":13},{"d":14,"c":46.48,"sf":148.74,"p":355.85,"h":14},{"d":15,"c":49.8,"sf":159.36,"p":381.27,"h":15},{"d":16,"c":53.12,"sf":169.98,"p":406.69,"h":16},{"d":17,"c":56.44,"sf":180.61,"p":432.1,"h":17},{"d":18,"c":59.76,"sf":191.23,"p":457.52,"h":18},{"d":19,"c":63.08,"sf":201.86,"p":482.94,"h":19},{"d":20,"c":66.4,"sf":212.48,"p":508.36,"h":20},{"d":21,"c":69.72,"sf":223.1,"p":533.78,"h":21},{"d":22,"c":73.04,"sf":233.73,"p":559.19,"h":22},{"d":23,"c":76.36,"sf":244.35,"p":584.61,"h":23},{"d":24,"c":79.68,"sf":254.98,"p":610.03,"h":24},{"d":25,"c":83.0,"sf":265.6,"p":635.45,"h":25},{"d":26,"c":86.32,"sf":276.22,"p":660.87,"h":26},{"d":27,"c":89.64,"sf":286.85,"p":686.28,"h":27},{"d":28,"c":92.96,"sf":297.47,"p":711.7,"h":28},{"d":29,"c":96.28,"sf":308.1,"p":737.12,"h":29},{"d":30,"c":99.6,"sf":318.72,"p":762.54,"h":30},{"d":31,"c":102.92,"sf":329.34,"p":787.96,"h":31},{"d":32,"c":106.24,"sf":339.97,"p":813.37,"h":32},{"d":33,"c":109.56,"sf":350.59,"p":838.79,"h":33},{"d":34,"c":112.88,"sf":361.22,"p":864.21,"h":34},{"d":35,"c":116.2,"sf":371.84,"p":889.63,"h":35},{"d":36,"c":119.52,"sf":382.46,"p":915.05,"h":36},{"d":37,"c":122.84,"sf":393.09,"p":940.46,"h":37},{"d":38,"c":126.16,"sf":403.71,"p":965.88,"h":38},{"d":39,"c":129.48,"sf":414.34,"p":991.3,"h":39},{"d":40,"c":132.8,"sf":424.96,"p":1016.72,"h":40},{"d":41,"c":136.12,"sf":435.58,"p":1042.13,"h":41},{"d":42,"c":139.44,"sf":446.21,"p":1067.55,"h":42},{"d":43,"c":142.76,"sf":456.83,"p":1092.97,"h":43},{"d":44,"c":146.08,"sf":467.46,"p":1118.39,"h":44},{"d":45,"c":149.4,"sf":478.08,"p":1143.81,"h":45},{"d":46,"c":152.72,"sf":488.7,"p":1169.22,"h":46},{"d":47,"c":156.04,"sf":499.33,"p":1194.64,"h":47},{"d":48,"c":159.36,"sf":509.95,"p":1220.06,"h":48},{"d":49,"c":162.68,"sf":520.58,"p":1245.48,"h":49},{"d":50,"c":166.0,"sf":531.2,"p":1270.9,"h":50},{"d":51,"c":169.32,"sf":541.82,"p":1296.31,"h":51},{"d":52,"c":172.64,"sf":552.45,"p":1321.73,"h":52},{"d":53,"c":175.96,"sf":563.07,"p":1347.15,"h":53},{"d":54,"c":179.28,"sf":573.7,"p":1372.57,"h":54},{"d":55,"c":182.6,"sf":584.32,"p":1397.99,"h":55},{"d":56,"c":185.92,"sf":594.94,"p":1423.4,"h":56},{"d":57,"c":189.24,"sf":605.57,"p":1448.82,"h":57},{"d":58,"c":192.56,"sf":616.19,"p":1474.24,"h":58},{"d":59,"c":195.88,"sf":626.82,"p":1499.66,"h":59},{"d":60,"c":199.2,"sf":637.44,"p":1525.08,"h":60},{"d":61,"c":202.52,"sf":648.06,"p":1550.49,"h":61},{"d":62,"c":205.84,"sf":658.69,"p":1575.91,"h":62},{"d":63,"c":209.16,"sf":669.31,"p":1601.33,"h":63},{"d":64,"c":212.48,"sf":679.94,"p":1626.75,"h":64},{"d":65,"c":215.8,"sf":690.56,"p":1652.16,"h":65},{"d":66,"c":219.12,"sf":701.18,"p":1677.58,"h":66},{"d":67,"c":222.44,"sf":711.81,"p":1703.0,"h":67},{"d":68,"c":225.76,"sf":722.43,"p":1728.42,"h":68},{"d":69,"c":229.08,"sf":733.06,"p":1753.84,"h":69},{"d":70,"c":232.4,"sf":743.68,"p":1779.25,"h":70},{"d":71,"c":235.72,"sf":754.3,"p":1804.67,"h":71},{"d":72,"c":239.04,"sf":764.93,"p":1830.09,"h":72},{"d":73,"c":242.36,"sf":775.55,"p":1855.51,"h":73},{"d":74,"c":245.68,"sf":786.18,"p":1880.93,"h":74},{"d":75,"c":249.0,"sf":796.8,"p":1906.34,"h":75},{"d":76,"c":252.32,"sf":807.42,"p":1931.76,"h":76},{"d":77,"c":255.64,"sf":818.05,"p":1957.18,"h":77},{"d":78,"c":258.96,"sf":828.67,"p":1982.6,"h":78},{"d":79,"c":262.28,"sf":839.3,"p":2008.02,"h":79},{"d":80,"c":265.6,"sf":849.92,"p":2033.43,"h":80},{"d":81,"c":268.92,"sf":860.54,"p":2058.85,"h":81},{"d":82,"c":272.24,"sf":871.17,"p":2084.27,"h":82},{"d":83,"c":275.56,"sf":881.79,"p":2109.69,"h":83},{"d":84,"c":278.88,"sf":892.42,"p":2135.11,"h":84},{"d":85,"c":282.2,"sf":903.04,"p":2160.52,"h":85},{"d":86,"c":285.52,"sf":913.66,"p":2185.94,"h":86},{"d":87,"c":288.84,"sf":924.29,"p":2211.36,"h":87},{"d":88,"c":292.16,"sf":934.91,"p":2236.78,"h":88},{"d":89,"c":295.48,"sf":945.54,"p":2262.19,"h":89},{"d":90,"c":298.8,"sf":956.16,"p":2287.61,"h":90},{"d":91,"c":302.12,"sf":966.78,"p":2313.03,"h":91},{"d":92,"c":305.44,"sf":977.41,"p":2338.45,"h":92},{"d":93,"c":308.76,"sf":988.03,"p":2363.87,"h":93},{"d":94,"c":312.08,"sf":998.66,"p":2389.28,"h":94},{"d":95,"c":315.4,"sf":1009.28,"p":2414.7,"h":95},{"d":96,"c":318.72,"sf":1019.9,"p":2440.12,"h":96},{"d":97,"c":322.04,"sf":1030.53,"p":2465.54,"h":97},{"d":98,"c":325.36,"sf":1041.15,"p":2490.96,"h":98},{"d":99,"c":328.68,"sf":1051.78,"p":2516.37,"h":99},{"d":100,"c":332.0,"sf":1062.4,"p":2541.79,"h":100},{"d":101,"c":335.32,"sf":1073.02,"p":2567.21,"h":101},{"d":102,"c":338.64,"sf":1083.65,"p":2592.63,"h":102},{"d":103,"c":341.96,"sf":1094.27,"p":2618.05,"h":103},{"d":104,"c":345.28,"sf":1104.9,"p":2643.46,"h":104},{"d":105,"c":348.6,"sf":1115.52,"p":2668.88,"h":105},{"d":106,"c":351.92,"sf":1126.14,"p":2694.3,"h":106},{"d":107,"c":355.24,"sf":1136.77,"p":2719.72,"h":107},{"d":108,"c":358.56,"sf":1147.39,"p":2745.14,"h":108},{"d":109,"c":361.88,"sf":1158.02,"p":2770.55,"h":109},{"d":110,"c":365.2,"sf":1168.64,"p":2795.97,"h":110},{"d":111,"c":368.52,"sf":1179.26,"p":2821.39,"h":111},{"d":112,"c":371.84,"sf":1189.89,"p":2846.81,"h":112},{"d":113,"c":375.16,"sf":1200.51,"p":2872.22,"h":113},{"d":114,"c":378.48,"sf":1211.14,"p":2897.64,"h":114},{"d":115,"c":381.8,"sf":1221.76,"p":2923.06,"h":115},{"d":116,"c":385.12,"sf":1232.38,"p":2948.48,"h":116},{"d":117,"c":388.44,"sf":1243.01,"p":2973.9,"h":117},{"d":118,"c":391.76,"sf":1253.63,"p":2999.31,"h":118},{"d":119,"c":395.08,"sf":1264.26,"p":3024.73,"h":119},{"d":120,"c":398.4,"sf":1274.88,"p":3050.15,"h":120},{"d":121,"c":401.72,"sf":1285.5,"p":3075.57,"h":121},{"d":122,"c":405.04,"sf":1296.13,"p":3100.99,"h":122},{"d":123,"c":408.36,"sf":1306.75,"p":3126.4,"h":123},{"d":124,"c":411.68,"sf":1317.38,"p":3151.82,"h":124},{"d":125,"c":415.0,"sf":1328.0,"p":3177.24,"h":125},{"d":126,"c":418.32,"sf":1338.62,"p":3202.66,"h":126},{"d":127,"c":421.64,"sf":1349.25,"p":3228.08,"h":127},{"d":128,"c":424.96,"sf":1359.87,"p":3253.49,"h":128},{"d":129,"c":428.28,"sf":1370.5,"p":3278.91,"h":129},{"d":130,"c":431.6,"sf":1381.12,"p":3304.33,"h":130},{"d":131,"c":434.92,"sf":1391.74,"p":3329.75,"h":131},{"d":132,"c":438.24,"sf":1402.37,"p":3355.17,"h":132},{"d":133,"c":441.56,"sf":1412.99,"p":3380.58,"h":133},{"d":134,"c":444.88,"sf":1423.62,"p":3406.0,"h":134},{"d":135,"c":448.2,"sf":1434.24,"p":3431.42,"h":135},{"d":136,"c":451.52,"sf":1444.86,"p":3456.84,"h":136},{"d":137,"c":454.84,"sf":1455.49,"p":3482.26,"h":137},{"d":138,"c":458.16,"sf":1466.11,"p":3507.67,"h":138},{"d":139,"c":461.48,"sf":1476.74,"p":3533.09,"h":139},{"d":140,"c":464.8,"sf":1487.36,"p":3558.51,"h":140},{"d":141,"c":468.12,"sf":1497.98,"p":3583.93,"h":141},{"d":142,"c":471.44,"sf":1508.61,"p":3609.34,"h":142},{"d":143,"c":474.76,"sf":1519.23,"p":3634.76,"h":143},{"d":144,"c":478.08,"sf":1529.86,"p":3660.18,"h":144},{"d":145,"c":481.4,"sf":1540.48,"p":3685.6,"h":145},{"d":146,"c":484.72,"sf":1551.1,"p":3711.02,"h":146},{"d":147,"c":488.04,"sf":1561.73,"p":3736.43,"h":147},{"d":148,"c":491.36,"sf":1572.35,"p":3761.85,"h":148},{"d":149,"c":494.68,"sf":1582.98,"p":3787.27,"h":149},{"d":150,"c":498.0,"sf":1593.6,"p":3812.69,"h":150},{"d":151,"c":501.32,"sf":1604.22,"p":3838.11,"h":151},{"d":152,"c":504.64,"sf":1614.85,"p":3863.52,"h":152},{"d":153,"c":507.96,"sf":1625.47,"p":3888.94,"h":153},{"d":154,"c":511.28,"sf":1636.1,"p":3914.36,"h":154},{"d":155,"c":514.6,"sf":1646.72,"p":3939.78,"h":155},{"d":156,"c":517.92,"sf":1657.34,"p":3965.2,"h":156},{"d":157,"c":521.24,"sf":1667.97,"p":3990.61,"h":157},{"d":158,"c":524.56,"sf":1678.59,"p":4016.03,"h":158},{"d":159,"c":527.88,"sf":1689.22,"p":4041.45,"h":159},{"d":160,"c":531.2,"sf":1699.84,"p":4066.87,"h":160},{"d":161,"c":534.52,"sf":1710.46,"p":4092.29,"h":161},{"d":162,"c":537.84,"sf":1721.09,"p":4117.7,"h":162},{"d":163,"c":541.16,"sf":1731.71,"p":4143.12,"h":163},{"d":164,"c":544.48,"sf":1742.34,"p":4168.54,"h":164},{"d":165,"c":547.8,"sf":1752.96,"p":4193.96,"h":165},{"d":166,"c":551.12,"sf":1763.58,"p":4219.37,"h":166},{"d":167,"c":554.44,"sf":1774.21,"p":4244.79,"h":167},{"d":168,"c":557.76,"sf":1784.83,"p":4270.21,"h":168},{"d":169,"c":561.08,"sf":1795.46,"p":4295.63,"h":169},{"d":170,"c":564.4,"sf":1806.08,"p":4321.05,"h":170},{"d":171,"c":567.72,"sf":1816.7,"p":4346.46,"h":171},{"d":172,"c":571.04,"sf":1827.33,"p":4371.88,"h":172},{"d":173,"c":574.36,"sf":1837.95,"p":4397.3,"h":173},{"d":174,"c":577.68,"sf":1848.58,"p":4422.72,"h":174},{"d":175,"c":581.0,"sf":1859.2,"p":4448.14,"h":175},{"d":176,"c":584.32,"sf":1869.82,"p":4473.55,"h":176},{"d":177,"c":587.64,"sf":1880.45,"p":4498.97,"h":177},{"d":178,"c":590.96,"sf":1891.07,"p":4524.39,"h":178},{"d":179,"c":594.28,"sf":1901.7,"p":4549.81,"h":179},{"d":180,"c":597.6,"sf":1912.32,"p":4575.23,"h":180}]}},"netas":{"dias":[60,90,120,150,180,210,240,270,300,330,365],"cols":["USD 25.000","USD 30.000","USD 35.000","USD 50.000","USD 100.000","USD 150.000","USD 250.000"],"v":[[31.33,32.8,34.26,37.2,56.39,84.24,112.08],[32.54,34.22,35.89,39.24,59.4,112.26,168.13],[34.46,36.08,37.69,40.92,62.03,143.1,224.17],[45.13,47.25,49.36,53.6,82.26,181.23,280.21],[58.95,61.72,64.48,70.01,106.11,221.18,336.25],[71.2,74.53,77.87,84.54,132.15,262.22,392.29],[83.45,87.36,91.27,99.09,164.28,306.31,448.34],[95.69,100.18,104.67,113.64,188.39,346.39,504.38],[107.94,113.0,118.06,128.18,212.5,386.46,560.42],[120.19,125.82,131.46,142.72,236.62,426.54,616.46],[132.73,138.95,145.17,157.61,261.3,466.9,672.51]],"add7":[6.4,6.8,7.19,8.0,9.99,12.0,14.01]}};
+const AGEL={1:'86-99 años',7:'0-65 años',8:'66-75 años',9:'76-85 años (Longevo)'};
+const DSF=[5,10,15,20,25];      // sobre Precio SF
+const DPV=[55,60,65,70,75];     // sobre PVP
+let EDIT={},LOG=[],S={plan:'Max',age:'7'},PVSEL={65:true};
+const f=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function tab(el,id){document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');el.classList.add('on');}
+function trIdx(tr,d){let i=0;for(let j=0;j<tr.length;j++){if(d>=tr[j].d)i=j;}return i;}
+function sfOf(n,a,i){const e=EDIT[n]?.[a]?.[i];if(e!=null)return e;return D.vp[n].ed[a][i].sf;}
+// Regla general: desde 60 días, comparar "tramo actual + semanas extra" contra
+// "siguiente tramo cerrado" y quedarse con el más barato.
+function tramoAsig(tr,d,add,fix){
+  const i=trIdx(tr,d);
+  if(!fix||d<60||!add) return {i,modo:'directo',costA:tr[i].c,costB:null,sem:0};
+  const t=tr[i];
+  if(d===t.d) return {i,modo:'exacto',costA:t.c,costB:null,sem:0};
+  const sem=Math.ceil((d-t.d)/7), costA=+(t.c+sem*add).toFixed(2);
+  const j=Math.min(i+1,tr.length-1), costB=tr[j].c;
+  return costB<=costA ? {i:j,modo:'sube',costA,costB,sem} : {i,modo:'extras',costA,costB,sem};
+}
+function selPV(){return DPV.filter(d=>PVSEL[d]);}
+
+function chkHTML(id){
+  return DPV.map(d=>`<label class="chk ${PVSEL[d]?'on':''}"><input type="checkbox" ${PVSEL[d]?'checked':''} onchange="togPV(${d})">${d}%</label>`).join('');
+}
+function togPV(d){PVSEL[d]=!PVSEL[d];renderAll();}
+function initSels(){
+  ['fp','fp2'].forEach(id=>{const s=document.getElementById(id);
+    Object.keys(D.vp).forEach(n=>{s.innerHTML+=`<option value="${n}">${n} · ${D.vp[n].cov}</option>`;});s.value='Max';});
+  const sn=document.getElementById('fanac');
+  Object.keys(D.nac.ed).forEach(a=>{sn.innerHTML+=`<option value="${a}">${AGEL[a]}</option>`;});
+  fillAges();
+}
+function fillAges(){
+  const ages=Object.keys(D.vp[S.plan].ed);
+  ['fa','fa2'].forEach(id=>{const s=document.getElementById(id);s.innerHTML='';
+    ages.forEach(a=>{s.innerHTML+=`<option value="${a}">${AGEL[a]}</option>`;});});
+  S.age=ages[0];
+}
+function sync(){
+  const t=event&&event.target?event.target.id:'';
+  if(t==='fp2')document.getElementById('fp').value=document.getElementById('fp2').value;
+  else if(t==='fp')document.getElementById('fp2').value=document.getElementById('fp').value;
+  S.plan=document.getElementById('fp').value;
+  if(!Object.keys(D.vp[S.plan].ed).includes(document.getElementById('fa').value))fillAges();
+  if(t==='fa2')document.getElementById('fa').value=document.getElementById('fa2').value;
+  else if(t==='fa')document.getElementById('fa2').value=document.getElementById('fa').value;
+  S.age=document.getElementById('fa').value;
+}
+function headVP(){
+  let h='<tr><th>Tramo</th><th>Carrier</th><th>Precio SF</th><th>ROAS</th><th>PVP web</th>';
+  DSF.forEach(d=>h+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>h+=`<th class="pv">PVP −${d}%</th>`);
+  return h+'</tr>';
+}
+function rowCells(c,sf,pvp){
+  let s='';DSF.forEach(d=>{const v=sf*(1-d/100);s+=`<td class="sf">${f(v)}<span class="rm">${(v/c).toFixed(2)}x</span></td>`;});
+  selPV().forEach(d=>{const v=pvp*(1-d/100);s+=`<td class="pv">${f(v)}<span class="rm">${(v/c).toFixed(2)}x</span></td>`;});
+  return s;
+}
+function render(){
+  sync();
+  const P=D.vp[S.plan],tr=P.ed[S.age];
+  const ai=document.getElementById('fadd');if(document.activeElement!==ai)ai.value=P.add7;
+  const add=parseFloat(ai.value)||0,fix=document.getElementById('fix').checked;
+  document.getElementById('tg1').classList.toggle('on',fix);
+  document.getElementById('chkpvp').innerHTML=chkHTML();
+  document.getElementById('t-vp').textContent=`${S.plan} · ${P.cov}`;
+  document.getElementById('s-vp').textContent=`planid ${P.planid} · ${AGEL[S.age]} · ${tr.length} tramos`;
+  document.getElementById('th-vp').innerHTML=headVP();
+  const tb=document.getElementById('tb-vp');tb.innerHTML='';let rs=0;
+  tr.forEach((t,i)=>{const sf=sfOf(S.plan,S.age,i),roas=sf/t.c;rs+=roas;
+    tb.innerHTML+=`<tr><td class="tr">${t.d}–${t.h}</td>
+      <td class="n" style="color:var(--ink3)">${f(t.c)}</td>
+      <td><input class="in" type="number" step="0.01" value="${sf.toFixed(2)}" onchange="setSF(${i},this.value)"></td>
+      <td><span class="pl ${roas>=3.3?'g':roas>=2.6?'a':'r'}">${roas.toFixed(2)}x</span></td>
+      <td class="n" style="color:var(--ink3)">${f(t.p)}</td>${rowCells(t.c,sf,t.p)}</tr>`;});
+  document.getElementById('k-vp').innerHTML=`<span class="pl g" style="font-size:12px">ROAS prom ${(rs/tr.length).toFixed(2)}x</span>`;
+
+  // AJUSTE
+  document.getElementById('t-aj').textContent=`${S.plan} · ${P.cov}`;
+  document.getElementById('s-aj').textContent=`Cargo por 7 días: ${f(add)} · ${fix?'ajuste activo':'sin ajuste'}`;
+  const ta=document.getElementById('tb-aj');ta.innerHTML='';let ah=0;
+  const DIAS=[62,75,92,115,128,155,175,200,250,320];
+  DIAS.forEach(d=>{
+    const maxD=tr[tr.length-1].h; if(d>maxD)return;
+    const r=tramoAsig(tr,d,add,fix);
+    const sinAj=tramoAsig(tr,d,add,false);
+    const base=tr[sinAj.i];
+    const sem=d>base.d?Math.ceil((d-base.d)/7):0;
+    const cargo=sem*add;
+    const hoy=+(base.c+cargo).toFixed(2);      // costo sin ajuste: tramo que lo contiene + extras
+    const aj=tr[r.i].c;                        // costo con la regla aplicada
+    const dif=+(hoy-aj).toFixed(2); if(dif>0)ah+=dif;
+    const sf=sfOf(S.plan,S.age,r.i);
+    const rHoy=sf/hoy, rAj=sf/aj;
+    ta.innerHTML+=`<tr class="${dif>0?'fix':''}">
+      <td class="tr">${d} días</td>
+      <td>${fix&&r.modo==='sube'?`<span class="pl g">Tramo ${tr[r.i].d}</span>`:`<span class="pl a">Tramo ${base.d}${sem?' + '+sem+' sem':''}</span>`}</td>
+      <td class="n" style="color:var(--ink3)">${f(hoy)}</td>
+      <td class="n" style="color:${dif>0?'var(--ok)':'var(--ink3)'};font-weight:700">${f(aj)}</td>
+      <td class="n" style="color:${dif>0?'var(--ok)':'var(--ink3)'}">${dif>0?'+'+f(dif):'—'}</td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+      <td><span class="pl ${rHoy>=3.3?'g':rHoy>=2.6?'a':'r'}">${rHoy.toFixed(2)}x</span></td>
+      <td><span class="pl ${rAj>=3.3?'g':rAj>=2.6?'a':'r'}">${rAj.toFixed(2)}x</span></td>
+      <td>${dif>0?'<span class="pl g">Mejora</span>':'<span class="pl a">Sin cambio</span>'}</td>
+      <td class="n" style="color:${cargo>0?'var(--err)':'var(--ink3)'}">${sem?`${sem} × ${f(add)} = ${f(cargo)}`:'—'}</td></tr>`;});
+  document.getElementById('k-aj').innerHTML=ah>0?`<span class="pl g" style="font-size:12px">Ahorro acumulado ${f(ah)}</span>`:'';
+}
+function setSF(i,v){const n=parseFloat(v);if(isNaN(n))return;
+  EDIT[S.plan]=EDIT[S.plan]||{};EDIT[S.plan][S.age]=EDIT[S.plan][S.age]||{};EDIT[S.plan][S.age][i]=n;render();}
+function resetAll(){EDIT={};renderAll();}
+
+function renderMV(){
+  document.getElementById('chkpvp2').innerHTML=chkHTML();
+  let h='<tr><th>Plan</th><th>Cobertura</th><th>Máx días</th><th>planid</th><th>Carrier</th><th>Precio SF</th><th>ROAS</th><th>PVP web</th>';
+  DSF.forEach(d=>h+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>h+=`<th class="pv">PVP −${d}%</th>`);
+  document.getElementById('th-mv').innerHTML=h+'</tr>';
+  const tb=document.getElementById('tb-mv');tb.innerHTML='';
+  Object.keys(D.mv).forEach(n=>{const P=D.mv[n];
+    Object.keys(P.t).sort((a,b)=>a-b).forEach(mx=>{
+      const r=P.t[mx][7];if(!r)return;const [c,sf,pvp,pid]=r;
+      tb.innerHTML+=`<tr><td style="font-weight:700">${n}</td><td>${P.cov}</td>
+        <td class="n">${mx}d</td><td class="n" style="color:var(--ink3)">${pid}</td>
+        <td class="n" style="color:var(--ink3)">${f(c)}</td><td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+        <td><span class="pl ${sf/c>=3.3?'g':sf/c>=2.6?'a':'r'}">${(sf/c).toFixed(2)}x</span></td>
+        <td class="n" style="color:var(--ink3)">${f(pvp)}</td>${rowCells(c,sf,pvp)}</tr>`;});});
+}
+function renderSR(){
+  document.getElementById('chkpvp4').innerHTML=chkHTML();
+  const tr=D.sr.ed[1];
+  let h='<tr><th>Tramo</th><th>Carrier</th><th>Precio SF</th><th>ROAS</th><th>PVP web</th>';
+  DSF.forEach(d=>h+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>h+=`<th class="pv">PVP −${d}%</th>`);
+  document.getElementById('th-sr').innerHTML=h+'</tr>';
+  const tb=document.getElementById('tb-sr');tb.innerHTML='';let rs=0;
+  tr.forEach(t=>{rs+=t.sf/t.c;
+    tb.innerHTML+=`<tr><td class="tr">${t.d}–${t.h}</td><td class="n" style="color:var(--ink3)">${f(t.c)}</td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(t.sf)}</td>
+      <td><span class="pl ${t.sf/t.c>=3.3?'g':t.sf/t.c>=2.6?'a':'r'}">${(t.sf/t.c).toFixed(2)}x</span></td>
+      <td class="n" style="color:var(--ink3)">${f(t.p)}</td>${rowCells(t.c,t.sf,t.p)}</tr>`;});
+  document.getElementById('k-sr').innerHTML=`<span class="pl g" style="font-size:12px">ROAS prom ${(rs/tr.length).toFixed(2)}x</span>`;
+}
+function renderNac(){
+  document.getElementById('chkpvp3').innerHTML=chkHTML();
+  const a=document.getElementById('fanac').value||Object.keys(D.nac.ed)[0];
+  const tr=D.nac.ed[a];
+  document.getElementById('s-nac').textContent=`planid ${D.nac.planid} · ${AGEL[a]} · ${tr.length} tramos`;
+  let h='<tr><th>Tramo</th><th>Carrier</th><th>Precio SF</th><th>ROAS</th><th>PVP web</th>';
+  DSF.forEach(d=>h+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>h+=`<th class="pv">PVP −${d}%</th>`);
+  document.getElementById('th-nac').innerHTML=h+'</tr>';
+  const tb=document.getElementById('tb-nac');tb.innerHTML='';let rs=0;
+  tr.forEach(t=>{rs+=t.sf/t.c;
+    tb.innerHTML+=`<tr><td class="tr">${t.d}–${t.h}</td><td class="n" style="color:var(--ink3)">${f(t.c)}</td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(t.sf)}</td>
+      <td><span class="pl ${t.sf/t.c>=3.3?'g':t.sf/t.c>=2.6?'a':'r'}">${(t.sf/t.c).toFixed(2)}x</span></td>
+      <td class="n" style="color:var(--ink3)">${f(t.p)}</td>${rowCells(t.c,t.sf,t.p)}</tr>`;});
+  document.getElementById('k-nac').innerHTML=`<span class="pl g" style="font-size:12px">ROAS prom ${(rs/tr.length).toFixed(2)}x</span>`;
+}
+function renderNetas(){
+  const N=D.netas;let h='<thead><tr><th>Días</th>'+N.cols.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>';
+  N.dias.forEach((d,i)=>{h+=`<tr${d===60||d===90?' style="background:var(--sky-l)"':''}><td class="tr">${d}</td>`+
+    N.v[i].map(v=>`<td class="n">${f(v)}</td>`).join('')+'</tr>';});
+  h+=`<tr style="background:var(--amber-l)"><td class="tr" style="color:#B45309">7 días adicionales</td>`+
+     N.add7.map(v=>`<td class="n" style="color:#B45309">${f(v)}</td>`).join('')+'</tr>';
+  document.getElementById('tb-netas').innerHTML=h+'</tbody>';
+}
+function renderAll(){render();renderMV();renderSR();renderNac();}
+
+// EXPORT + BITÁCORA
+const HEAD=['dias','ageId','carrierId','planid','precioCarrier','precioSf','precioVentaPublico'];
+// Viajes puntuales / larga estadía
+function rowsFor(name,fix){
+  const P=D.vp[name],add=P.add7,rows=[HEAD.slice()];
+  Object.keys(P.ed).forEach(age=>{
+    const tr=P.ed[age],maxD=tr[tr.length-1].h;
+    for(let d=1;d<=maxD;d++){
+      const r=tramoAsig(tr,d,add,fix),t=tr[r.i];
+      const sf=sfOf(name,age,r.i),pvp=+(t.p*(sf/t.sf)).toFixed(2);
+      rows.push([d,+age,1,P.planid,t.c,+sf.toFixed(2),pvp]);}});
+  return rows;
+}
+// Nacional
+function rowsNac(){
+  const P=D.nac,rows=[HEAD.slice()];
+  Object.keys(P.ed).forEach(age=>{
+    const tr=P.ed[age],maxD=tr[tr.length-1].h;
+    for(let d=1;d<=maxD;d++){const t=tr[trIdx(tr,d)];
+      rows.push([d,+age,1,P.planid,t.c,t.sf,t.p]);}});
+  return rows;
+}
+// Adultos mayores
+function rowsSr(){
+  const P=D.sr,rows=[HEAD.slice()],tr=P.ed[1],maxD=tr[tr.length-1].h;
+  for(let d=1;d<=maxD;d++){const t=tr[trIdx(tr,d)];
+    rows.push([d,1,1,P.planid,t.c,t.sf,t.p]);}
+  return rows;
+}
+// Anual multiviajes: una fila por edad en el tope de días
+function rowsMv(plan,mx){
+  const P=D.mv[plan],rows=[HEAD.slice()],byAge=P.t[mx];
+  Object.keys(byAge).forEach(age=>{const [c,sf,pvp,pid]=byAge[age];
+    rows.push([+mx,+age,1,pid,c,sf,pvp]);});
+  return rows;
+}
+function logIt(label,pid,fix,rows,tipo){
+  let mods=0;Object.keys(EDIT[label]||{}).forEach(a=>{mods+=Object.keys(EDIT[label][a]).length;});
+  LOG.unshift({t:new Date().toLocaleString('es-CO'),p:label,tipo,id:pid,fix:fix?'Sí':'No',mods,rows:rows.length-1});
+  renderLog();
+}
+function renderLog(){
+  const tb=document.getElementById('tb-log'),e=document.getElementById('log-empty');
+  if(!LOG.length){tb.innerHTML='';e.style.display='block';return;}
+  e.style.display='none';
+  tb.innerHTML=LOG.map(l=>`<tr><td class="n" style="font-size:11px">${l.t}</td>
+    <td style="font-weight:700">${l.p}</td><td style="font-size:11px;color:var(--ink2)">${l.tipo}</td>
+    <td class="n" style="color:var(--ink3)">${l.id}</td>
+    <td>${l.fix==='Sí'?'<span class="pl g">Aplicado</span>':'<span class="pl a">—</span>'}</td>
+    <td class="n">${l.mods}</td><td class="n">${l.rows}</td></tr>`).join('');
+}
+function dl(label,pid,rows,fix,tipo){
+  const ws=XLSX.utils.aoa_to_sheet(rows),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Precios');
+  const safe=label.replace(/[^a-zA-Z0-9]/g,'_');
+  XLSX.writeFile(wb,`CMS_${safe}_${pid}${fix?'_ajustado':''}.xlsx`);
+  logIt(label,pid,fix,rows,tipo);
+}
+function dlVP(n){const fix=document.getElementById('fix').checked;dl(n,D.vp[n].planid,rowsFor(n,fix),fix,'Viajes Puntuales');}
+function dlNac(){dl('Fly_Nacional',D.nac.planid,rowsNac(),false,'Viaje Nacional');}
+function dlSr(){dl('Adultos_Mayores',D.sr.planid,rowsSr(),false,'Adultos Mayores');}
+function dlMv(p,mx){const pid=D.mv[p].t[mx][Object.keys(D.mv[p].t[mx])[0]][3];
+  dl(`${p}_Anual_${mx}d`,pid,rowsMv(p,mx),false,'Múltiples Viajes');}
+function exportPlan(){dlVP(S.plan);}
+function exportAll(){
+  let i=0;const step=380;
+  Object.keys(D.vp).forEach(n=>setTimeout(()=>dlVP(n),(i++)*step));
+  Object.keys(D.mv).forEach(p=>Object.keys(D.mv[p].t).sort((a,b)=>a-b).forEach(mx=>setTimeout(()=>dlMv(p,mx),(i++)*step)));
+  setTimeout(()=>dlSr(),(i++)*step);
+  setTimeout(()=>dlNac(),(i++)*step);
+}
+function exportLog(){
+  if(!LOG.length){alert('Todavía no hay cambios registrados en esta sesión.');return;}
+  const rows=[['Fecha y hora','Plan','Producto','planid','Ajuste de tramos','Precios editados','Filas generadas']]
+    .concat(LOG.map(l=>[l.t,l.p,l.tipo,l.id,l.fix,l.mods,l.rows]));
+  const ws=XLSX.utils.aoa_to_sheet(rows),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Bitacora');
+  XLSX.writeFile(wb,`Bitacora_cambios_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+function buildExp(){
+  const tb=document.getElementById('tb-exp');let h='';
+  h+=`<tr style="background:var(--sky-l)"><td colspan="6" style="font-weight:700;font-size:11px;color:#0B4A7D">✈️ VIAJES PUNTUALES Y LARGA ESTADÍA</td></tr>`;
+  Object.keys(D.vp).forEach(n=>{const P=D.vp[n];
+    h+=`<tr><td style="font-weight:700">${n}</td><td>${P.cov}</td>
+      <td class="n" style="color:var(--ink3)">${P.planid}</td>
+      <td style="font-size:11px">${Object.keys(P.ed).map(a=>AGEL[a]).join(' · ')}</td>
+      <td class="n">${P.ed[Object.keys(P.ed)[0]].length} tramos</td>
+      <td><button class="btn sm" onclick="dlVP('${n}')">⬇ Excel</button></td></tr>`;});
+  h+=`<tr style="background:var(--amber-l)"><td colspan="6" style="font-weight:700;font-size:11px;color:#B45309">🌍 MÚLTIPLES VIAJES (ANUAL)</td></tr>`;
+  Object.keys(D.mv).forEach(p=>{const P=D.mv[p];
+    Object.keys(P.t).sort((a,b)=>a-b).forEach(mx=>{
+      const ages=Object.keys(P.t[mx]),pid=P.t[mx][ages[0]][3];
+      h+=`<tr><td style="font-weight:700">${p} Anual</td><td>${P.cov}</td>
+        <td class="n" style="color:var(--ink3)">${pid}</td>
+        <td style="font-size:11px">${ages.map(a=>AGEL[a]).join(' · ')}</td>
+        <td class="n">máx ${mx}d</td>
+        <td><button class="btn sm" onclick="dlMv('${p}','${mx}')">⬇ Excel</button></td></tr>`;});});
+  h+=`<tr style="background:var(--ok-l)"><td colspan="6" style="font-weight:700;font-size:11px;color:#0B5F49">👵 ADULTOS MAYORES · 🚌 VIAJE NACIONAL</td></tr>`;
+  h+=`<tr><td style="font-weight:700">Adultos Mayores</td><td>${D.sr.cov}</td>
+    <td class="n" style="color:var(--ink3)">${D.sr.planid}</td><td style="font-size:11px">86-99 años</td>
+    <td class="n">${D.sr.ed[1].length} tramos</td>
+    <td><button class="btn sm" onclick="dlSr()">⬇ Excel</button></td></tr>`;
+  h+=`<tr><td style="font-weight:700">Fly Nacional</td><td>${D.nac.cov}</td>
+    <td class="n" style="color:var(--ink3)">${D.nac.planid}</td>
+    <td style="font-size:11px">${Object.keys(D.nac.ed).map(a=>AGEL[a]).join(' · ')}</td>
+    <td class="n">${D.nac.ed[Object.keys(D.nac.ed)[0]].length} tramos</td>
+    <td><button class="btn sm" onclick="dlNac()">⬇ Excel</button></td></tr>`;
+  tb.innerHTML=h;
+}
+initSels();renderNetas();buildExp();renderAll();renderLog();
+</script>
+</body>
+</html>
