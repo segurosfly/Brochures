@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precios Carga Masiva · SegurosFly</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0E2A47;--sky:#1B72C4;--sky-l:#E8F1FA;--amber:#F5A623;--amber-l:#FFF6E6;
+--paper:#F7F9FC;--white:#fff;--ink:#0E2A47;--ink2:#4A5D75;--ink3:#8FA0B5;--line:#DEE6EF;--line2:#EDF2F7;
+--ok:#0E9F6E;--ok-l:#E6F7F1;--warn:#D97706;--err:#DC2626;--err-l:#FEF2F2;
+--r:14px;--sh:0 1px 2px rgba(14,42,71,.05),0 10px 30px -14px rgba(14,42,71,.2)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.hdr{background:var(--navy);color:#fff;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:60}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.logo .sw{color:var(--amber);font-size:19px}
+.btn{background:var(--amber);color:var(--navy);border:none;border-radius:8px;padding:9px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+.btn:hover{filter:brightness(1.06)}
+.btn.g{background:#1D4570;color:#B8D4EE;border:1px solid #2C5A8C}
+.btn.sm{padding:6px 11px;font-size:11px}
+.wrap{max-width:1420px;margin:0 auto;padding:20px}
+.tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:5px;margin-bottom:18px;box-shadow:var(--sh);overflow-x:auto}
+.tab{flex:1;min-width:130px;background:none;border:none;border-radius:9px;padding:11px 12px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.tab:hover{background:var(--paper)}.tab.on{background:var(--navy);color:#fff}
+.pane{display:none}.pane.on{display:block}
+.al{border-radius:9px;padding:15px 18px;margin-bottom:18px;font-size:13px;line-height:1.55}
+.al-r{background:var(--err-l);border-left:3px solid var(--err);color:#7F1D1D}
+.al-b{background:var(--sky-l);border-left:3px solid var(--sky);color:#0B4A7D}
+.al-a{background:var(--amber-l);border-left:3px solid var(--amber);color:#7C4A03}
+.al-g{background:var(--ok-l);border-left:3px solid var(--ok);color:#0B5F49}
+.al-t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;margin-bottom:5px}
+.al b{font-weight:700}.al ul{margin:8px 0 0 18px}.al li{margin-bottom:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh)}
+.kpi-k{font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);font-weight:700;margin-bottom:6px}
+.kpi-v{font-family:'Space Grotesk',sans-serif;font-size:23px;font-weight:700;line-height:1}
+.kpi-s{font-size:11px;color:var(--ink2);margin-top:4px}
+.bar{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:15px 18px;margin-bottom:16px;box-shadow:var(--sh)}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);font-weight:700}
+.f select,.f input{border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--white)}
+.f select{cursor:pointer;min-width:180px}.f input{width:92px;font-family:'JetBrains Mono',monospace}
+.f select:focus,.f input:focus{outline:none;border-color:var(--sky)}
+.chks{display:flex;gap:6px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--ink2);background:var(--paper);border:1.5px solid var(--line);border-radius:7px;padding:7px 10px}
+.chk input[type=checkbox]{accent-color:var(--amber);width:14px;height:14px;cursor:pointer}
+.chk.on{background:var(--amber-l);border-color:var(--amber);color:#B45309}
+.sci{width:52px;border:1.5px solid var(--line);border-radius:5px;padding:3px 5px;font-family:'JetBrains Mono',monospace;font-weight:700;text-align:center;font-size:12px;color:var(--sky)}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px}
+.card-h{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.card-t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14.5px}
+.card-s{font-size:11px;color:var(--ink3);margin-top:2px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:700px}
+th{background:var(--paper);text-align:left;padding:9px 10px;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink3);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+th.sf{background:var(--sky-l);color:#0B4A7D}
+th.pv{background:var(--amber-l);color:#B45309}
+th.ant{background:var(--err-l);color:#991B1B}
+th.ahr{background:var(--ok-l);color:#0B5F49}
+td{padding:8px 10px;border-bottom:1px solid var(--line2)}
+tr:last-child td{border-bottom:none}
+tr.gain td{background:var(--ok-l)}
+tr.sec td{background:var(--sky-l);font-weight:700;font-size:11px;color:#0B4A7D}
+td.n{font-family:'JetBrains Mono',monospace;font-weight:600}
+td.sf{background:#F4F9FE;font-family:'JetBrains Mono',monospace;font-size:11px}
+td.pv{background:#FFFCF5;font-family:'JetBrains Mono',monospace;font-size:11px}
+td.ant{background:#FEF2F2;font-family:'JetBrains Mono',monospace}
+td.ahr{background:var(--ok-l);font-family:'JetBrains Mono',monospace}
+.tr{font-weight:700;font-family:'JetBrains Mono',monospace}
+.pl{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.pl.g{background:var(--ok-l);color:var(--ok)}.pl.a{background:var(--amber-l);color:var(--warn)}.pl.r{background:var(--err-l);color:var(--err)}
+h2{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:6px}
+.sub{color:var(--ink2);font-size:13px;margin-bottom:16px;max-width:900px}
+.rm{font-size:9px;color:var(--ink3);display:block;font-weight:600}
+.emo{font-size:15px;margin-right:5px}
+.log-empty{padding:32px;text-align:center;color:var(--ink3);font-size:13px}
+@media(max-width:720px){.bar{flex-direction:column;align-items:stretch}.f select,.f input{width:100%;min-width:0}.btn span{display:none}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="logo"><span class="sw">✈</span> Precios Carga Masiva</div>
+  <div style="display:flex;gap:8px">
+    <button class="btn g" onclick="resetSc()">↺ <span>Restaurar</span></button>
+    <button class="btn" onclick="exportAll()">⬇ <span>Exportar todo</span></button>
+  </div>
+</div>
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab on" onclick="tab(this,'hist')">📉 Histórico Ene–Jul</button>
+    <button class="tab" onclick="tab(this,'ev')">🔍 Evidencia</button>
+    <button class="tab" onclick="tab(this,'net')">📐 Netas base</button>
+    <button class="tab" onclick="tab(this,'vp')">✈️ Viajes Puntuales</button>
+    <button class="tab" onclick="tab(this,'mv')">🌍 Múltiples Viajes</button>
+    <button class="tab" onclick="tab(this,'sr')">👵 Adultos Mayores</button>
+    <button class="tab" onclick="tab(this,'nac')">🚌 Viaje Nacional</button>
+    <button class="tab" onclick="tab(this,'sub')">📊 Sub-tramos 7 días</button>
+    <button class="tab" onclick="tab(this,'dec')">🎯 Cuándo saltar</button>
+    <button class="tab" onclick="tab(this,'exp')">⬇ Exportar</button>
+  </div>
+
+  <!-- HISTORICO -->
+  <div class="pane on" id="p-hist">
+    <h2>📉 Histórico de facturación · enero a julio 2026</h2>
+    <div class="sub">Análisis de las 7 facturas reales del carrier. Cuánto pagamos, cuánto habríamos pagado con la regla de tramos aplicada, y cuánto se perdió por no haberla tenido a tiempo.</div>
+    <div class="al al-r">
+      <div class="al-t">Se perdieron <b id="h-perd">—</b> en el semestre</div>
+      Sobre <b id="h-casos">—</b> casos de larga estadía de 61 días en adelante. La fórmula del carrier se validó contra las facturas con un <b>95% de precisión</b>. La pérdida representa un <b id="h-pct">—</b> de lo facturado en ese segmento.
+    </div>
+    <div class="kpis" id="h-kpis"></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Mes a mes</div><div class="card-s">Volumen total y pérdida en larga estadía</div></div></div>
+      <div class="tw"><table><thead><tr>
+        <th>Mes</th><th>Pasajeros</th><th>Neta total</th><th>Casos LE 61+</th>
+        <th class="ant">Facturado LE</th><th class="ahr">Óptimo</th><th>Perdido</th><th>%</th><th>Evolución</th>
+      </tr></thead><tbody id="h-tb1"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Pérdida por cobertura</div><div class="card-s">Dónde se concentra el sobrecosto</div></div></div>
+      <div class="tw"><table><thead><tr><th>Cobertura</th><th>Casos</th><th>Facturado</th><th>Perdido</th><th>% sobre facturado</th><th>Peso</th></tr></thead><tbody id="h-tb2"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Los 12 casos más costosos</div><div class="card-s">Ventas individuales con mayor sobrecosto</div></div></div>
+      <div class="tw"><table><thead><tr><th>Mes</th><th>Días</th><th>Cobertura</th><th class="ant">Facturado</th><th class="ahr">Óptimo</th><th>Perdido</th></tr></thead><tbody id="h-tb3"></tbody></table></div>
+    </div>
+    <div class="al al-a">
+      <div class="al-t">Por qué urge aplicarlo ahora</div>
+      El volumen creció <b>6,6 veces</b> entre enero y julio: de 46 pasajeros a 305. La pérdida sigue la misma curva — pasó de $37,96 en enero a $589,31 en julio. Cada mes que pasa sin la regla de tramos cuesta más que el anterior.
+    </div>
+  </div>
+
+  <!-- EVIDENCIA -->
+  <div class="pane" id="p-ev">
+    <h2>🔍 Evidencia · facturas reales de mayo 2026</h2>
+    <div class="sub">Verificación contra el reporte de ventas de Fly Assist Corp. No es una hipótesis: son las facturas que ya pagamos.</div>
+    <div class="al al-r">
+      <div class="al-t">Confirmado — el carrier cobra tramo base más un cargo por cada 7 días de exceso</div>
+      Se contrastaron <b id="ev-ok">—</b> casos de larga estadía de 61 días en adelante contra la fórmula esperada. <b>Coinciden todos, sin excepción.</b> Cuando un viaje no cae justo en un tramo cerrado, el carrier suma el cargo semanal y ese sobrecosto lo estamos asumiendo nosotros.
+    </div>
+    <div class="kpis" id="ev-kpis"></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Prueba de la fórmula</div><div class="card-s">Lo facturado contra lo que predice la fórmula tramo + cargo semanal</div></div></div>
+      <div class="tw"><table><thead><tr><th>Días</th><th>Edad</th><th>Cobertura</th><th>Recargo</th><th>Facturado</th><th>Fórmula esperada</th><th>Verificación</th></tr></thead><tbody id="ev-tb1"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Cuánto se habría ahorrado con el escalado</div><div class="card-s">Lo pagado contra reportar el tramo cerrado siguiente</div></div><div id="ev-tot"></div></div>
+      <div class="tw"><table><thead><tr><th>Días reales</th><th>Cobertura</th><th>Pagado</th><th>Tramo propuesto</th><th>Costo con ajuste</th><th>Ahorro</th></tr></thead><tbody id="ev-tb2"></tbody></table></div>
+    </div>
+    <div class="al al-a" id="ev-fuera" style="display:none"><div class="al-t">Hallazgo secundario · pasajeros fuera del rango del plan</div><div id="ev-fuera-d"></div></div>
+  </div>
+
+  <!-- NETAS BASE -->
+  <div class="pane" id="p-net">
+    <h2>📐 Netas base del carrier</h2>
+    <div class="sub">Las tres tablas fuente. Todo el archivo se construye únicamente desde acá — los precios de carrier salen de estos valores, no de cargas anteriores.</div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Viajes por día · Neta</div><div class="card-s">USD por día de viaje. Solo Lite llega hasta 90 días.</div></div></div>
+      <div class="tw"><table id="tb-vd"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Anual Multiviajes · Neta</div><div class="card-s">Valor único por plan y tope de días por viaje</div></div></div>
+      <div class="tw"><table id="tb-am"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Larga Estadía · Neta</div><div class="card-s">Tramos cerrados. La última fila es el cargo por cada 7 días de exceso.</div></div></div>
+      <div class="tw"><table id="tb-le"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Escala de ROAS por tramo</div><div class="card-s">Editable · Precio SF = carrier × ROAS</div></div></div>
+      <div style="padding:16px 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
+        <div><div style="font-size:11px;font-weight:700;color:var(--sky);margin-bottom:9px;text-transform:uppercase">Escala A · Lite y Smart</div><div class="chks" id="scA"></div></div>
+        <div><div style="font-size:11px;font-weight:700;color:var(--warn);margin-bottom:9px;text-transform:uppercase">Escala B · Plus, Max, Elite e Infinity</div><div class="chks" id="scB"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIAJES PUNTUALES -->
+  <div class="pane" id="p-vp">
+    <h2><span class="emo">✈️</span>Viajes Puntuales · antes y ahora</h2>
+    <div class="sub">En este producto conviven dos tablas: <b>Lite</b> va por día de 1 a 90. <b>Smart en adelante</b> va por día de 1 a 59, y desde 60 pasa a larga estadía abriéndose en bloques de 7 días.</div>
+    <div class="al al-b">
+      <div class="al-t">Cómo se lee</div>
+      <ul>
+        <li><b>Carrier antes</b> (rojo) — lo que el carrier factura hoy: neta del tramo más el cargo por cada bloque de 7 días de exceso.</li>
+        <li><b>Carrier ahora</b> (verde) — lo que pagaríamos reportando el tramo cerrado siguiente.</li>
+        <li>Cada uno tiene su ROAS. La diferencia entre ambos es lo que estamos perdiendo.</li>
+      </ul>
+    </div>
+    <div class="bar">
+      <div class="f"><label>Plan</label><select id="fvp" onchange="renderVP()"></select></div>
+      <div class="f"><label>Descuento sobre PVP</label><div class="chks" id="ckvp"></div></div>
+    </div>
+    <div class="kpis" id="k-vp"></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t" id="t-vp">—</div><div class="card-s" id="s-vp">—</div></div></div>
+      <div class="tw"><table><thead id="th-vp"></thead><tbody id="tb-vp"></tbody></table></div>
+    </div>
+    <div class="card" id="c-vpsub">
+      <div class="card-h"><div><div class="card-t">📊 Sub-tramos de 7 días · el doble ROAS</div>
+        <div class="card-s">Cada tramo abierto en bloques. El Precio SF y el PVP suben con cada bloque, así se mantiene el ROAS.</div></div></div>
+      <div class="tw"><table><thead><tr>
+        <th>Sub-tramo</th>
+        <th class="ant">Carrier real<br><span style="font-weight:400;text-transform:none">neta + bloque</span></th>
+        <th class="ant">Desglose</th>
+        <th>Precio SF</th><th>PVP web</th>
+        <th class="ahr">Tramo cerrado</th><th class="ahr">Ahorro</th>
+        <th class="ahr">ROAS al reportar tramo</th><th class="ahr">ROAS aparente</th><th>Brecha</th>
+      </tr></thead><tbody id="tb-vpsub"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- MULTIPLES VIAJES -->
+  <div class="pane" id="p-mv">
+    <h2><span class="emo">🌍</span>Múltiples Viajes · Anual</h2>
+    <div class="sub">Vigencia de 365 días con tope de días por viaje. La neta es un valor único, sin tramos ni cargos adicionales.</div>
+    <div class="bar"><div class="f"><label>Descuento sobre PVP</label><div class="chks" id="ckmv"></div></div></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Planes anuales multiviajes</div><div class="card-s">20 combinaciones · 5 planes × 4 topes de días</div></div></div>
+      <div class="tw"><table><thead id="th-mv"></thead><tbody id="tb-mv"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- ADULTOS MAYORES -->
+  <div class="pane" id="p-sr">
+    <h2><span class="emo">👵</span>Adultos Mayores · 86 a 99 años</h2>
+    <div class="sub">Plan único de cobertura USD 35.000 con tarifa propia por día. No aplica larga estadía ni bloques de 7 días.</div>
+    <div class="al al-b">
+      <div class="al-t">Condiciones del plan</div>
+      <ul>
+        <li>Rango de edad: <b>86 a 99 años</b> · planid <b>95152</b></li>
+        <li>Tarifa neta: <b>USD 3,32 por día</b>, sin escalones ni tramos</li>
+        <li>Duración: de <b>1 a 180 días</b></li>
+      </ul>
+    </div>
+    <div class="bar"><div class="f"><label>Descuento sobre PVP</label><div class="chks" id="cksr"></div></div></div>
+    <div class="kpis" id="k-sr"></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Adultos Mayores · USD 35.000</div><div class="card-s">planid 95152 · tarifa $3,32 por día</div></div></div>
+      <div class="tw"><table><thead id="th-sr"></thead><tbody id="tb-sr"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- VIAJE NACIONAL -->
+  <div class="pane" id="p-nac">
+    <h2><span class="emo">🚌</span>Viaje Nacional · Suramérica</h2>
+    <div class="sub">Plan único de cobertura USD 10.000. Admite el rango Longevo con recargo del 50%.</div>
+    <div class="al al-b">
+      <div class="al-t">Condiciones del plan</div>
+      <ul>
+        <li>Límite de edad: <b>75 años</b>. De <b>76 a 85 años</b> aplica recargo del <b>50%</b> · planid <b>95346</b></li>
+        <li>Tarifa neta: <b>USD 1,52</b> para 1 y 2 días · <b>USD 0,51 por día</b> desde el día 3</li>
+        <li>Duración: mínimo <b>1 día</b>, máximo <b>90 días</b></li>
+        <li>No aplica larga estadía ni bloques de 7 días</li>
+      </ul>
+    </div>
+    <div class="bar">
+      <div class="f"><label>Rango de edad</label><select id="fnac" onchange="renderNac()">
+        <option value="7">0-65 años</option><option value="8">66-75 años</option><option value="9">76-85 años (Longevo, +50%)</option>
+      </select></div>
+      <div class="f"><label>Descuento sobre PVP</label><div class="chks" id="cknac"></div></div>
+    </div>
+    <div class="kpis" id="k-nac"></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Fly Nacional · USD 10.000</div><div class="card-s" id="s-nac">planid 95346</div></div></div>
+      <div class="tw"><table><thead id="th-nac"></thead><tbody id="tb-nac"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- SUB-TRAMOS -->
+  <div class="pane" id="p-sub">
+    <h2>📊 Sub-tramos de 7 días · el doble ROAS</h2>
+    <div class="sub">Cada tramo de larga estadía se abre en bloques de 7 días para ver qué costo real vamos acumulando.</div>
+    <div class="al al-b">
+      <div class="al-t">Por qué hay dos ROAS</div>
+      <ul>
+        <li><b>ROAS aparente</b> — el que creemos tener, sobre la neta del tramo cerrado.</li>
+        <li><b>ROAS real</b> — el que efectivamente tenemos, sobre lo que el carrier factura: neta más el cargo por bloques de 7 días.</li>
+      </ul>
+      La brecha entre ambos es lo que perdemos sin verlo. Con el escalado al tramo cerrado, los dos se igualan.
+    </div>
+    <div class="bar">
+      <div class="f"><label>Plan</label><select id="fsub" onchange="renderSub()"></select></div>
+      <div class="f"><label>Cargo por 7 días</label><input type="number" id="fsubadd" step="0.01" oninput="renderSub()"></div>
+    </div>
+    <div class="kpis" id="k-sub"></div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t" id="t-sub">—</div><div class="card-s">Cada fila es un bloque de 7 días dentro del tramo</div></div></div>
+      <div class="tw"><table><thead><tr>
+        <th>Sub-tramo</th><th>Precio SF</th><th>PVP web</th>
+        <th class="ant">Carrier real<br><span style="font-weight:400;text-transform:none">neta + bloques</span></th>
+        <th class="ant">Desglose</th>
+        <th class="ahr">Tramo cerrado</th><th class="ahr">Ahorro</th>
+        <th class="ant">ROAS real</th><th class="ahr">ROAS aparente</th><th>Brecha</th>
+      </tr></thead><tbody id="tb-sub"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- DECISION -->
+  <div class="pane" id="p-dec">
+    <h2>🎯 Cuándo saltar de tramo</h2>
+    <div class="sub">Mapa de decisión por plan y por tramo. Indica exactamente desde qué día conviene reportar el tramo siguiente y en qué días conviene quedarse con los bloques de 7 días.</div>
+    <div class="al al-b">
+      <div class="al-t">La fórmula</div>
+      <b>bloques máximos = (neta del tramo siguiente − neta del tramo actual) ÷ cargo de 7 días</b><br>
+      Si el viaje necesita más bloques que ese número, sale más barato saltar al tramo cerrado. Los bloques se cuentan redondeando hacia arriba: 1 a 7 días de exceso son 1 bloque, 8 a 14 son 2, y así.
+    </div>
+    <div class="kpis" id="k-dec"></div>
+    <div id="dec-tables"></div>
+    <div class="al al-a">
+      <div class="al-t">El patrón en una línea</div>
+      <ul>
+        <li><b>Smart, Plus y Max</b> — saltar siempre desde el día 61 en los dos primeros tramos. Desde el tramo 120 aparece una franja corta donde conviene esperar.</li>
+        <li><b>Elite</b> — esperar unos dos bloques en cada tramo antes de saltar.</li>
+        <li><b>Infinity</b> — prácticamente nunca conviene: solo el último día de cada tramo. Su salto de neta es de $56 contra un cargo semanal de $14.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXPORTAR -->
+  <div class="pane" id="p-exp">
+    <h2>⬇ Exportar al CMS</h2>
+    <div class="sub">Excel día por día con el formato del CMS. El precioCarrier sale de las netas base, con el escalado al tramo cerrado aplicado desde el día 60.</div>
+    <div class="al al-a">
+      <div class="al-t">Qué se exporta</div>
+      <b>Días 1 a 59:</b> tarifa por día × duración (mínimo 3 días). <b>Desde el día 60:</b> neta del tramo más el bloque de 7 días que corresponda, o la neta del tramo cerrado siguiente si resulta menor. <b>Lite:</b> por día hasta 90, sin larga estadía. El Precio SF sale de carrier × ROAS, así el precio sube con cada bloque y el ROAS se mantiene.
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Viajes Puntuales</div><div class="card-s">Un archivo por plan</div></div>
+      <button class="btn" onclick="exportVPAll()">⬇ Exportar los 6</button></div>
+      <div class="tw"><table><thead><tr><th>Plan</th><th>Cobertura</th><th>planid</th><th>Rango</th><th>Larga estadía</th><th></th></tr></thead><tbody id="tb-expvp"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Múltiples Viajes</div><div class="card-s">Un archivo por plan y tope de días</div></div>
+      <button class="btn" onclick="exportMVAll()">⬇ Exportar los 20</button></div>
+      <div class="tw"><table><thead><tr><th>Plan</th><th>Cobertura</th><th>Tope</th><th>planid</th><th>Carrier</th><th>Precio SF</th><th></th></tr></thead><tbody id="tb-expmv"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">👵 Adultos Mayores · 🚌 Viaje Nacional</div><div class="card-s">Planes con tarifa propia</div></div></div>
+      <div class="tw"><table><thead><tr><th>Plan</th><th>Cobertura</th><th>planid</th><th>Edades</th><th>Tramos</th><th></th></tr></thead><tbody>
+        <tr><td style="font-weight:700">Adultos Mayores</td><td>USD 35.000</td>
+          <td class="n" style="color:var(--ink3)">95152</td><td style="font-size:11px">86-99 años</td>
+          <td class="n">180 días</td>
+          <td><button class="btn sm" onclick="dl('Adultos_Mayores',95152,rowsSR(),'Adultos Mayores')">⬇ Excel</button></td></tr>
+        <tr><td style="font-weight:700">Fly Nacional</td><td>USD 10.000</td>
+          <td class="n" style="color:var(--ink3)">95346</td>
+          <td style="font-size:11px">0-65 · 66-75 · 76-85 (Longevo, +50%)</td>
+          <td class="n">90 días</td>
+          <td><button class="btn sm" onclick="dl('Fly_Nacional',95346,rowsNAC(),'Viaje Nacional')">⬇ Excel</button></td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Bitácora de cambios</div><div class="card-s">Qué se exportó y cuándo</div></div>
+      <button class="btn g" onclick="exportLog()">⬇ Descargar bitácora</button></div>
+      <div class="tw"><table><thead><tr><th>Fecha y hora</th><th>Plan</th><th>Producto</th><th>planid</th><th>Escala ROAS</th><th>Filas</th></tr></thead><tbody id="tb-log"></tbody></table></div>
+      <div class="log-empty" id="log-empty">Todavía no se exportó ningún plan en esta sesión.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const D={"pl":["Lite","Smart","Plus","Max","Elite","Infinity"],"cov":{"Lite":"USD 10.000","Smart":"USD 30.000","Plus":"USD 50.000","Max":"USD 100.000","Elite":"USD 150.000","Infinity":"USD 250.000"},"pid":{"Lite":94626,"Smart":94636,"Plus":94656,"Max":94639,"Elite":94640,"Infinity":94641},"vd":{"Lite":{"20":0.59,"40":0.54,"60":0.5,"90":0.4},"Smart":{"20":0.92,"40":0.88,"60":0.84},"Plus":{"20":1.26,"40":1.15,"60":1.1},"Max":{"20":1.76,"40":1.73,"60":1.7},"Elite":{"20":1.98,"40":1.96,"60":1.83},"Infinity":{"20":2.25,"40":2.22,"60":2.18}},"am":{"Smart":{"30":30.49,"45":58.04,"60":69.14,"90":89.64},"Plus":{"30":45.94,"45":81.52,"60":94.71,"90":121.07},"Max":{"30":58.61,"45":109.49,"60":126.61,"90":186.25},"Elite":{"30":91.08,"45":131.58,"60":152.15,"90":223.83},"Infinity":{"30":101.71,"45":153.66,"60":177.69,"90":261.4}},"le":{"Smart":{"60":32.8,"90":34.22,"120":36.08,"150":47.25,"180":61.72,"210":74.53,"240":87.36,"270":100.18,"300":113.0,"330":125.82,"365":138.95},"Plus":{"60":37.2,"90":39.24,"120":40.92,"150":53.6,"180":70.01,"210":84.54,"240":99.09,"270":113.64,"300":128.18,"330":142.72,"365":157.61},"Max":{"60":56.39,"90":59.4,"120":62.03,"150":82.26,"180":106.11,"210":132.15,"240":164.28,"270":188.39,"300":212.5,"330":236.62,"365":261.3},"Elite":{"60":84.24,"90":112.26,"120":143.1,"150":181.23,"180":221.18,"210":262.22,"240":306.31,"270":346.39,"300":386.46,"330":426.54,"365":466.9},"Infinity":{"60":112.08,"90":168.13,"120":224.17,"150":280.21,"180":336.25,"210":392.29,"240":448.34,"270":504.38,"300":560.42,"330":616.46,"365":672.51}},"a7":{"Smart":6.8,"Plus":8.0,"Max":9.99,"Elite":12.0,"Infinity":14.01},"ampid":{"Smart":{"30":94664,"45":94665,"60":94666,"90":94667},"Plus":{"30":94672,"45":94673,"60":94674,"90":94675},"Max":{"30":94676,"45":94677,"60":94678,"90":94679},"Elite":{"30":94681,"45":94682,"60":94684,"90":94685},"Infinity":{"30":94687,"45":94689,"60":94690,"90":94691}},"sr":{"cov":"USD 35.000","pid":95152,"tarifa":3.32,"maxD":180},"nac":{"cov":"USD 10.000","pid":95346,"d12":1.52,"tdia":0.51,"maxD":90,"ages":[7,8,9]}};
+const EV={"casos":[{"d":61,"e":39,"cov":"USD 30.000","rec":false,"f":39.6,"base":60,"sem":1,"add":6.8,"esp":39.6,"ok":true,"nxt":90,"aj":34.22,"ah":5.38},{"d":65,"e":31,"cov":"USD 30.000","rec":false,"f":39.6,"base":60,"sem":1,"add":6.8,"esp":39.6,"ok":true,"nxt":90,"aj":34.22,"ah":5.38},{"d":66,"e":20,"cov":"USD 50.000","rec":false,"f":45.2,"base":60,"sem":1,"add":8.0,"esp":45.2,"ok":true,"nxt":90,"aj":39.24,"ah":5.96},{"d":66,"e":23,"cov":"USD 50.000","rec":false,"f":45.2,"base":60,"sem":1,"add":8.0,"esp":45.2,"ok":true,"nxt":90,"aj":39.24,"ah":5.96},{"d":66,"e":49,"cov":"USD 50.000","rec":false,"f":45.2,"base":60,"sem":1,"add":8.0,"esp":45.2,"ok":true,"nxt":90,"aj":39.24,"ah":5.96},{"d":73,"e":25,"cov":"USD 30.000","rec":false,"f":46.4,"base":60,"sem":2,"add":6.8,"esp":46.4,"ok":true,"nxt":90,"aj":34.22,"ah":12.18},{"d":82,"e":43,"cov":"USD 30.000","rec":false,"f":60.0,"base":60,"sem":4,"add":6.8,"esp":60.0,"ok":true,"nxt":90,"aj":34.22,"ah":25.78},{"d":83,"e":76,"cov":"USD 50.000","rec":true,"f":103.8,"base":60,"sem":4,"add":8.0,"esp":103.8,"ok":true,"nxt":90,"aj":58.86,"ah":44.94},{"d":85,"e":22,"cov":"USD 50.000","rec":false,"f":69.2,"base":60,"sem":4,"add":8.0,"esp":69.2,"ok":true,"nxt":90,"aj":39.24,"ah":29.96},{"d":86,"e":52,"cov":"USD 30.000","rec":false,"f":60.0,"base":60,"sem":4,"add":6.8,"esp":60.0,"ok":true,"nxt":90,"aj":34.22,"ah":25.78},{"d":88,"e":17,"cov":"USD 30.000","rec":false,"f":60.0,"base":60,"sem":4,"add":6.8,"esp":60.0,"ok":true,"nxt":90,"aj":34.22,"ah":25.78},{"d":93,"e":28,"cov":"USD 50.000","rec":false,"f":47.24,"base":90,"sem":1,"add":8.0,"esp":47.24,"ok":true,"nxt":120,"aj":40.92,"ah":6.32},{"d":93,"e":78,"cov":"USD 50.000","rec":true,"f":70.86,"base":90,"sem":1,"add":8.0,"esp":70.86,"ok":true,"nxt":120,"aj":61.38,"ah":9.48},{"d":93,"e":62,"cov":"USD 50.000","rec":false,"f":47.24,"base":90,"sem":1,"add":8.0,"esp":47.24,"ok":true,"nxt":120,"aj":40.92,"ah":6.32},{"d":102,"e":41,"cov":"USD 50.000","rec":false,"f":55.24,"base":90,"sem":2,"add":8.0,"esp":55.24,"ok":true,"nxt":120,"aj":40.92,"ah":14.32},{"d":102,"e":33,"cov":"USD 50.000","rec":false,"f":55.24,"base":90,"sem":2,"add":8.0,"esp":55.24,"ok":true,"nxt":120,"aj":40.92,"ah":14.32},{"d":102,"e":3,"cov":"USD 50.000","rec":false,"f":55.24,"base":90,"sem":2,"add":8.0,"esp":55.24,"ok":true,"nxt":120,"aj":40.92,"ah":14.32},{"d":102,"e":5,"cov":"USD 50.000","rec":false,"f":55.24,"base":90,"sem":2,"add":8.0,"esp":55.24,"ok":true,"nxt":120,"aj":40.92,"ah":14.32},{"d":203,"e":24,"cov":"USD 50.000","rec":false,"f":102.01,"base":180,"sem":4,"add":8.0,"esp":102.01,"ok":true,"nxt":210,"aj":84.54,"ah":17.47}],"tp":1102.51,"ta":812.58,"ahorro":289.93,"pct":26.3,"netaTot":3175.32,"pctTot":9.13,"nAf":19,"nTot":135,"anual":3479.16,"ok":19,"dist":[{"r":"1-10","n":35,"neta":224.83},{"r":"11-30","n":72,"neta":1540.84},{"r":"31-60","n":7,"neta":249.18},{"r":"61-89","n":13,"neta":672.16},{"r":"90-120","n":7,"neta":386.3},{"r":"121-365","n":1,"neta":102.01}],"fuera":[{"d":83,"e":76,"p":"USD 50.000 Fly LE 66 a 75 a\u00f1os"},{"d":93,"e":78,"p":"USD 50.000 Fly LE 66 a 75 a\u00f1os"}]};
+const H={"mensual":[{"mes":"Enero","pas":46,"neta":602.74,"casos":2,"fac":106.4,"opt":68.44,"perd":37.96},{"mes":"Febrero","pas":50,"neta":775.06,"casos":3,"fac":289.48,"opt":251.93,"perd":37.55},{"mes":"Marzo","pas":134,"neta":2518.49,"casos":14,"fac":718.95,"opt":573.2,"perd":145.75},{"mes":"Abril","pas":146,"neta":3529.29,"casos":19,"fac":1160.94,"opt":719.13,"perd":441.81},{"mes":"Mayo","pas":135,"neta":3175.32,"casos":19,"fac":1102.51,"opt":812.58,"perd":289.93},{"mes":"Junio","pas":164,"neta":4299.56,"casos":25,"fac":1446.42,"opt":1093.89,"perd":352.53},{"mes":"Julio","pas":305,"neta":7839.6,"casos":37,"fac":2527.94,"opt":1938.63,"perd":589.31}],"cov":[{"cov":"50","n":70,"fac":4476.39,"perd":961.66,"pct":21.5},{"cov":"30","n":43,"fac":2198.5,"perd":629.03,"pct":28.6},{"cov":"35","n":1,"fac":302.12,"perd":264.43,"pct":87.5},{"cov":"100","n":5,"fac":375.63,"perd":39.72,"pct":10.6}],"top":[{"mes":"Abril","dias":91,"cov":"35","fac":302.12,"opt":37.69,"perd":264.43},{"mes":"Junio","dias":84,"cov":"50","fac":103.8,"opt":58.86,"perd":44.94},{"mes":"Mayo","dias":83,"cov":"50","fac":103.8,"opt":58.86,"perd":44.94},{"mes":"Julio","dias":89,"cov":"50","fac":77.2,"opt":39.24,"perd":37.96},{"mes":"Julio","dias":80,"cov":"50","fac":91.8,"opt":58.86,"perd":32.94},{"mes":"Julio","dias":89,"cov":"30","fac":66.8,"opt":34.22,"perd":32.58},{"mes":"Julio","dias":116,"cov":"50","fac":71.24,"opt":40.92,"perd":30.32},{"mes":"Abril","dias":87,"cov":"50","fac":69.2,"opt":39.24,"perd":29.96},{"mes":"Julio","dias":85,"cov":"50","fac":69.2,"opt":39.24,"perd":29.96},{"mes":"Julio","dias":85,"cov":"50","fac":69.2,"opt":39.24,"perd":29.96},{"mes":"Julio","dias":87,"cov":"50","fac":69.2,"opt":39.24,"perd":29.96},{"mes":"Julio","dias":87,"cov":"50","fac":69.2,"opt":39.24,"perd":29.96}],"tot":{"pas":980,"neta":22740.07,"casos":119,"fac":7352.64,"opt":5457.8,"perd":1894.84,"pct":25.8,"pctTot":8.33,"anual":3248.3,"precision":95.0}};
+const DSF=[5,10,15,20,25], DPV=[55,60,65,70,75];
+let ROASC={A:[[15,3.0],[30,2.8],[45,2.7],[9999,2.4]],B:[[15,2.8],[30,2.7],[45,2.6],[9999,2.4]]};
+const PLANSC={Lite:'A',Smart:'A',Plus:'B',Max:'B',Elite:'B',Infinity:'B'};
+const SCLBL=['≤ 15 días','≤ 30 días','≤ 45 días','> 45 días'];
+const PVPX=2.177;
+let PVSEL={65:true}, LOG=[];
+const f=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function tab(el,id){document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');el.classList.add('on');}
+function roasFor(p,d){for(const[l,r]of ROASC[PLANSC[p]||'B']){if(d<=l)return r;}return 2.4;}
+function selPV(){return DPV.filter(d=>PVSEL[d]);}
+function chkHTML(){return DPV.map(d=>`<label class="chk ${PVSEL[d]?'on':''}"><input type="checkbox" ${PVSEL[d]?'checked':''} onchange="togPV(${d})">${d}%</label>`).join('');}
+function togPV(d){PVSEL[d]=!PVSEL[d];renderAll();}
+const hasLE=p=>D.le[p]!=null;
+function tramosLE(p){return hasLE(p)?Object.keys(D.le[p]).map(Number).sort((a,b)=>a-b):[];}
+function tarifaDia(p,d){const t=D.vd[p];for(const k of Object.keys(t).map(Number).sort((a,b)=>a-b)){if(d<=k)return t[k];}return null;}
+// Tramo de larga estadía que contiene el día
+function tramoBase(p,d){const ts=tramosLE(p);let b=ts[0];for(const x of ts){if(x<=d)b=x;}return b;}
+// Número de bloque de 7 días dentro del tramo: 60-67 → 1, 68-75 → 2, 76-83 → 3, 84-89 → 4
+function bloqueDe(d,tramo){return Math.floor((d-tramo)/8)+1;}
+// Carrier por día (1 a 59, o 1 a 90 en Lite)
+function carrierDia(p,d){const dd=Math.max(d,3),t=tarifaDia(p,dd);return t?+(t*dd).toFixed(2):null;}
+// Carrier REAL: por día hasta 59, y desde 60 neta del tramo + bloques de 7 días
+function carrierAntes(p,d){
+  if(!hasLE(p)||d<60) return carrierDia(p,d);
+  const b=tramoBase(p,d), n=bloqueDe(d,b);
+  return +(D.le[p][b]+n*D.a7[p]).toFixed(2);
+}
+// Carrier con escalado: se reporta el tramo cerrado siguiente
+function carrierAhora(p,d){
+  if(!hasLE(p)||d<60) return carrierDia(p,d);
+  const ts=tramosLE(p);const rep=ts.find(t=>t>=d)||ts[ts.length-1];
+  return D.le[p][rep];
+}
+// Carrier que va al CMS: el costo REAL con bloques de 7 días.
+// Así el Precio SF sube con cada bloque y el ROAS se mantiene.
+// El ahorro se genera aparte, al reportar el tramo cerrado al carrier.
+function carrierCMS(p,d){ return carrierAntes(p,d); }
+function tramoRep(p,d){const ts=tramosLE(p);return ts.find(t=>t>=d)||ts[ts.length-1];}
+
+function renderNetas(){
+  const pls=D.pl;
+  let h='<thead><tr><th>Días</th>'+pls.map(p=>`<th>${p}<br><span style="font-weight:400;text-transform:none">${D.cov[p]}</span></th>`).join('')+'</tr></thead><tbody>';
+  [['3-20','20'],['21-40','40'],['41-60','60'],['61-90','90']].forEach(([lbl,k])=>{
+    h+=`<tr><td class="tr">${lbl}</td>`+pls.map(p=>{const v=D.vd[p][k];
+      return `<td class="n">${v!=null?f(v):'<span style="color:var(--ink3)">—</span>'}</td>`;}).join('')+'</tr>';});
+  document.getElementById('tb-vd').innerHTML=h+'</tbody>';
+  const le=pls.filter(hasLE);
+  let h2='<thead><tr><th>Días</th>'+le.map(p=>`<th>${p}<br><span style="font-weight:400;text-transform:none">${D.cov[p]}</span></th>`).join('')+'</tr></thead><tbody>';
+  [30,45,60,90].forEach(mx=>{h2+=`<tr><td class="tr">Anual ${mx}</td>`+le.map(p=>`<td class="n">${f(D.am[p][mx])}</td>`).join('')+'</tr>';});
+  document.getElementById('tb-am').innerHTML=h2+'</tbody>';
+  let h3='<thead><tr><th>Días</th>'+le.map(p=>`<th>${p}<br><span style="font-weight:400;text-transform:none">${D.cov[p]}</span></th>`).join('')+'</tr></thead><tbody>';
+  tramosLE(le[0]).forEach(t=>{h3+=`<tr><td class="tr">${t}</td>`+le.map(p=>`<td class="n">${f(D.le[p][t])}</td>`).join('')+'</tr>';});
+  h3+='<tr style="background:var(--amber-l)"><td class="tr" style="color:#B45309">7 días adicionales</td>'+
+      le.map(p=>`<td class="n" style="color:#B45309">${f(D.a7[p])}</td>`).join('')+'</tr>';
+  document.getElementById('tb-le').innerHTML=h3+'</tbody>';
+  ['A','B'].forEach(k=>{document.getElementById('sc'+k).innerHTML=ROASC[k].map((r,i)=>
+    `<label class="chk on" style="cursor:default">${SCLBL[i]}<input class="sci" type="number" step="0.1" min="1" max="6" value="${r[1].toFixed(1)}" onchange="setSc('${k}',${i},this.value)">x</label>`).join('');});
+}
+function setSc(k,i,v){const n=parseFloat(v);if(isNaN(n))return;ROASC[k][i][1]=n;renderAll();}
+function resetSc(){ROASC={A:[[15,3.0],[30,2.8],[45,2.7],[9999,2.4]],B:[[15,2.8],[30,2.7],[45,2.6],[9999,2.4]]};renderAll();}
+function cells(c,sf,pvp){
+  let s='';DSF.forEach(d=>{const v=sf*(1-d/100);s+=`<td class="sf">${f(v)}<span class="rm">${(v/c).toFixed(2)}x</span></td>`;});
+  selPV().forEach(d=>{const v=pvp*(1-d/100);s+=`<td class="pv">${f(v)}<span class="rm">${(v/c).toFixed(2)}x</span></td>`;});
+  return s;
+}
+function renderVP(){
+  document.getElementById('ckvp').innerHTML=chkHTML();
+  const p=document.getElementById('fvp').value||'Smart';
+  const le=hasLE(p);
+  setTimeout(renderVPSub,0);
+  document.getElementById('t-vp').textContent=`${p} · ${D.cov[p]}`;
+  document.getElementById('s-vp').textContent=le?`planid ${D.pid[p]} · por día 1-59 · larga estadía 60-365 · cargo por 7 días ${f(D.a7[p])}`
+    :`planid ${D.pid[p]} · solo por día, 1 a 90 · sin larga estadía`;
+  let h='<tr><th>Días</th><th class="ant">Carrier antes</th><th class="ahr">Carrier ahora</th><th class="ahr">Ahorro</th><th>ROAS</th><th>Precio SF</th><th>PVP web</th><th class="ant">ROAS real</th>';
+  DSF.forEach(d=>h+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>h+=`<th class="pv">PVP −${d}%</th>`);
+  document.getElementById('th-vp').innerHTML=h+'</tr>';
+  const diasCortos=[3,5,10,15,20,25,30,40,50,59];
+  const diasLE=le?[60,67,75,83,89,90,105,119,120,150,180,240,300,365]:[61,70,80,90];
+  let rows='',ahTot=0,n=0;
+  rows+=`<tr class="sec"><td colspan="${8+DSF.length+selPV().length}">VIAJES POR DÍA · tarifa × duración</td></tr>`;
+  diasCortos.forEach(d=>{
+    const c=carrierAntes(p,d);if(c==null)return;
+    const r=roasFor(p,d),sf=+(c*r).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+    rows+=`<tr><td class="tr">${d} días</td>
+      <td class="ant" style="color:var(--ink3)">${f(c)}</td>
+      <td class="ahr" style="color:var(--ink3)">${f(c)}</td>
+      <td class="ahr" style="color:var(--ink3)">—</td>
+      <td><span class="pl ${r>=2.8?'g':'a'}">${r.toFixed(2)}x</span></td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+      <td class="n" style="color:var(--ink3)">${f(pvp)}</td>
+      <td class="ahr"><span class="pl g">${r.toFixed(2)}x</span></td>${cells(c,sf,pvp)}</tr>`;
+  });
+  rows+=`<tr class="sec"><td colspan="${8+DSF.length+selPV().length}">${le?'LARGA ESTADÍA · tramos cerrados con bloques de 7 días':'VIAJES POR DÍA · rango 61-90'}</td></tr>`;
+  diasLE.forEach(d=>{
+    const ca=carrierAntes(p,d),ch=carrierAhora(p,d);if(ca==null)return;
+    const ah=+(ca-ch).toFixed(2);if(ah>0){ahTot+=ah;n++;}
+    const r=roasFor(p,d),sf=+(ca*r).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+    const rReal=sf/ch;
+    rows+=`<tr class="${ah>0?'gain':''}"><td class="tr">${d} días${le&&d>=60?`<span class="rm">→ tramo ${tramoRep(p,d)}</span>`:''}</td>
+      <td class="ant" style="color:var(--err);font-weight:700">${f(ca)}</td>
+      <td class="ahr" style="color:var(--ok);font-weight:700">${f(ch)}</td>
+      <td class="ahr" style="color:${ah>0?'var(--ok)':'var(--ink3)'};font-weight:700">${ah>0?'+'+f(ah):'—'}</td>
+      <td><span class="pl ${r>=2.4?'g':'a'}">${r.toFixed(2)}x</span></td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+      <td class="n" style="color:var(--ink3)">${f(pvp)}</td>
+      <td class="ahr"><span class="pl g">${rReal.toFixed(2)}x</span></td>${cells(ca,sf,pvp)}</tr>`;
+  });
+  document.getElementById('tb-vp').innerHTML=rows;
+  document.getElementById('k-vp').innerHTML=`
+    <div class="kpi"><div class="kpi-k">Ahorro en los días probados</div><div class="kpi-v" style="color:var(--ok)">${f(ahTot)}</div><div class="kpi-s">${n} escenarios mejoran</div></div>
+    <div class="kpi"><div class="kpi-k">Tarifa por día 3-20</div><div class="kpi-v">${f(D.vd[p]['20'])}</div><div class="kpi-s">${D.cov[p]}</div></div>
+    <div class="kpi"><div class="kpi-k">Cargo por 7 días</div><div class="kpi-v">${le?f(D.a7[p]):'—'}</div><div class="kpi-s">${le?'Larga estadía':'No aplica'}</div></div>
+    <div class="kpi"><div class="kpi-k">Tramos disponibles</div><div class="kpi-v">${le?tramosLE(p).length:0}</div><div class="kpi-s">${le?'60 a 365 días':'Solo por día'}</div></div>`;
+}
+function renderVPSub(){
+  const p=document.getElementById('fvp').value||'Smart';
+  const card=document.getElementById('c-vpsub');
+  if(!hasLE(p)){card.style.display='none';return;}
+  card.style.display='block';
+  const add=D.a7[p], ts=tramosLE(p);
+  let rows='';
+  ts.forEach((td,i)=>{
+    const sig=ts[i+1];if(!sig)return;
+    const neta=D.le[p][td], netaSig=D.le[p][sig];
+    rows+=`<tr class="sec"><td colspan="10">TRAMO ${td} — neta ${f(neta)} · bloques de 7 días hasta ${sig-1} · destino tramo ${sig} (${f(netaSig)})</td></tr>`;
+    let n=1,ini=td;
+    while(ini<sig){
+      const hasta=Math.min(ini+7,sig-1);
+      const real=+(neta+n*add).toFixed(2);
+      const ah=+(real-netaSig).toFixed(2);
+      const r=roasFor(p,ini);
+      const sf=+(real*r).toFixed(2), pvp=+(sf*PVPX).toFixed(2);
+      const rReal=sf/real, rApar=sf/netaSig, br=+(rApar-rReal).toFixed(2);
+      rows+=`<tr class="${ah>0?'gain':''}"><td class="tr">${ini} a ${hasta}</td>
+        <td class="ant" style="color:var(--err);font-weight:700">${f(real)}</td>
+        <td class="ant" style="font-size:10.5px;color:#991B1B">${f(neta)} + ${n} × ${f(add)}</td>
+        <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+        <td class="n" style="color:var(--ink3)">${f(pvp)}</td>
+        <td class="ahr" style="color:var(--ok);font-weight:700">${f(netaSig)}<span class="rm">tramo ${sig}d</span></td>
+        <td class="ahr" style="color:${ah>0?'var(--ok)':'var(--ink3)'};font-weight:700">${ah>0?'+'+f(ah):'—'}</td>
+        <td class="ant"><span class="pl ${rReal>=2.4?'g':'r'}">${rReal.toFixed(2)}x</span></td>
+        <td class="ahr"><span class="pl g">${rApar.toFixed(2)}x</span></td>
+        <td class="n" style="color:${br>=0.3?'var(--err)':'var(--ink3)'};font-weight:700">${br>0?'−'+br.toFixed(2)+'x':'—'}</td></tr>`;
+      ini=hasta+1;n++;
+    }
+  });
+  document.getElementById('tb-vpsub').innerHTML=rows;
+}
+function renderSR(){
+  document.getElementById('cksr').innerHTML=chkHTML();
+  const S=D.sr;
+  let hh='<tr><th>Días</th><th>Carrier</th><th>ROAS</th><th>Precio SF</th><th>PVP web</th>';
+  DSF.forEach(d=>hh+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>hh+=`<th class="pv">PVP −${d}%</th>`);
+  document.getElementById('th-sr').innerHTML=hh+'</tr>';
+  const muestra=[1,3,5,7,10,15,20,30,45,60,75,90,120,150,180];
+  let rs=0,n=0;
+  document.getElementById('tb-sr').innerHTML=muestra.map(d=>{
+    const c=+(S.tarifa*d).toFixed(2),r=roasFor('Smart',d),sf=+(c*r).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+    rs+=r;n++;
+    return `<tr><td class="tr">${d} días</td><td class="n" style="color:var(--ink3)">${f(c)}</td>
+      <td><span class="pl ${r>=2.8?'g':'a'}">${r.toFixed(2)}x</span></td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+      <td class="n" style="color:var(--ink3)">${f(pvp)}</td>${cells(c,sf,pvp)}</tr>`;}).join('');
+  document.getElementById('k-sr').innerHTML=`
+    <div class="kpi"><div class="kpi-k">Tarifa por día</div><div class="kpi-v">${f(S.tarifa)}</div><div class="kpi-s">Sin tramos ni bloques</div></div>
+    <div class="kpi"><div class="kpi-k">ROAS promedio</div><div class="kpi-v" style="color:var(--ok)">${(rs/n).toFixed(2)}x</div><div class="kpi-s">Según escala por días</div></div>
+    <div class="kpi"><div class="kpi-k">Duración máxima</div><div class="kpi-v">${S.maxD}d</div><div class="kpi-s">86 a 99 años</div></div>
+    <div class="kpi"><div class="kpi-k">Carrier a 180 días</div><div class="kpi-v">${f(S.tarifa*S.maxD)}</div><div class="kpi-s">Precio SF ${f(S.tarifa*S.maxD*2.4)}</div></div>`;
+}
+function renderNac(){
+  document.getElementById('cknac').innerHTML=chkHTML();
+  const N=D.nac,a=+(document.getElementById('fnac').value||7),m=a===9?1.5:1;
+  const AL={7:'0-65 años',8:'66-75 años',9:'76-85 años (Longevo, +50%)'};
+  document.getElementById('s-nac').textContent=`planid ${N.pid} · ${AL[a]} · 1 a ${N.maxD} días`;
+  let hh='<tr><th>Días</th><th>Carrier</th><th>ROAS</th><th>Precio SF</th><th>PVP web</th>';
+  DSF.forEach(d=>hh+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>hh+=`<th class="pv">PVP −${d}%</th>`);
+  document.getElementById('th-nac').innerHTML=hh+'</tr>';
+  const muestra=[1,2,3,5,7,10,15,20,30,40,50,60,75,90];
+  let rs=0,n=0;
+  document.getElementById('tb-nac').innerHTML=muestra.map(d=>{
+    const base=d<=2?N.d12:N.tdia*d, c=+(base*m).toFixed(2);
+    const r=roasFor('Lite',d),sf=+(c*r).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+    rs+=r;n++;
+    return `<tr><td class="tr">${d} ${d===1?'día':'días'}</td><td class="n" style="color:var(--ink3)">${f(c)}${m>1?'<span class="rm">×1.5</span>':''}</td>
+      <td><span class="pl ${r>=2.8?'g':'a'}">${r.toFixed(2)}x</span></td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+      <td class="n" style="color:var(--ink3)">${f(pvp)}</td>${cells(c,sf,pvp)}</tr>`;}).join('');
+  document.getElementById('k-nac').innerHTML=`
+    <div class="kpi"><div class="kpi-k">Tarifa 1 y 2 días</div><div class="kpi-v">${f(N.d12*m)}</div><div class="kpi-s">Valor fijo</div></div>
+    <div class="kpi"><div class="kpi-k">Tarifa por día</div><div class="kpi-v">${f(N.tdia*m)}</div><div class="kpi-s">Desde el día 3</div></div>
+    <div class="kpi"><div class="kpi-k">ROAS promedio</div><div class="kpi-v" style="color:var(--ok)">${(rs/n).toFixed(2)}x</div><div class="kpi-s">${AL[a]}</div></div>
+    <div class="kpi"><div class="kpi-k">Carrier a 90 días</div><div class="kpi-v">${f(N.tdia*N.maxD*m)}</div><div class="kpi-s">Máximo permitido</div></div>`;
+}
+function renderMV(){
+  document.getElementById('ckmv').innerHTML=chkHTML();
+  let h='<tr><th>Plan</th><th>Cobertura</th><th>Tope</th><th>planid</th><th>Carrier</th><th>ROAS</th><th>Precio SF</th><th>PVP web</th>';
+  DSF.forEach(d=>h+=`<th class="sf">SF −${d}%</th>`);
+  selPV().forEach(d=>h+=`<th class="pv">PVP −${d}%</th>`);
+  document.getElementById('th-mv').innerHTML=h+'</tr>';
+  let rows='';
+  Object.keys(D.am).forEach(p=>{
+    [30,45,60,90].forEach(mx=>{
+      const c=D.am[p][mx],r=roasFor(p,mx),sf=+(c*r).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+      rows+=`<tr><td style="font-weight:700">${p}</td><td>${D.cov[p]}</td>
+        <td class="n">${mx}d</td><td class="n" style="color:var(--ink3)">${D.ampid[p][mx]}</td>
+        <td class="n" style="color:var(--ink3)">${f(c)}</td>
+        <td><span class="pl ${r>=2.4?'g':'a'}">${r.toFixed(2)}x</span></td>
+        <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+        <td class="n" style="color:var(--ink3)">${f(pvp)}</td>${cells(c,sf,pvp)}</tr>`;});});
+  document.getElementById('tb-mv').innerHTML=rows;
+}
+function renderSub(){
+  const p=document.getElementById('fsub').value||'Smart';
+  const ai=document.getElementById('fsubadd');
+  if(document.activeElement!==ai)ai.value=D.a7[p];
+  const add=parseFloat(ai.value)||D.a7[p];
+  document.getElementById('t-sub').textContent=`${p} · ${D.cov[p]} · cargo por 7 días ${f(add)}`;
+  const ts=tramosLE(p);let rows='',ahTot=0,nS=0,brMax=0;
+  ts.forEach((td,i)=>{
+    const sig=ts[i+1];if(!sig)return;
+    const neta=D.le[p][td],netaSig=D.le[p][sig];
+    const sf=+(netaSig*roasFor(p,td)).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+    rows+=`<tr class="sec"><td colspan="10">TRAMO ${td} — neta ${f(neta)} · bloques de 7 días hasta ${sig-1} · destino tramo ${sig} (${f(netaSig)})</td></tr>`;
+    let n=1,ini=td;
+    while(ini<sig){
+      const hasta=Math.min(ini+7,sig-1),cargo=+(n*add).toFixed(2),real=+(neta+cargo).toFixed(2);
+      const ah=+(real-netaSig).toFixed(2);if(ah>0){ahTot+=ah;nS++;}
+      const rReal=sf/real,rApar=sf/netaSig,br=+(rApar-rReal).toFixed(2);
+      if(br>brMax)brMax=br;
+      rows+=`<tr class="${ah>0?'gain':''}"><td class="tr">${ini} a ${hasta}</td>
+        <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+        <td class="n" style="color:var(--ink3)">${f(pvp)}</td>
+        <td class="ant" style="color:var(--err);font-weight:700">${f(real)}</td>
+        <td class="ant" style="font-size:10.5px;color:#991B1B">${f(neta)} + ${n} × ${f(add)}</td>
+        <td class="ahr" style="color:var(--ok);font-weight:700">${f(netaSig)}<span class="rm">tramo ${sig}d</span></td>
+        <td class="ahr" style="color:${ah>0?'var(--ok)':'var(--ink3)'};font-weight:700">${ah>0?'+'+f(ah):'—'}</td>
+        <td class="ant"><span class="pl ${rReal>=2.4?'g':'r'}">${rReal.toFixed(2)}x</span></td>
+        <td class="ahr"><span class="pl g">${rApar.toFixed(2)}x</span></td>
+        <td class="n" style="color:${br>=0.3?'var(--err)':'var(--ink3)'};font-weight:700">${br>0?'−'+br.toFixed(2)+'x':'—'}</td></tr>`;
+      ini=hasta+1;n++;
+    }
+  });
+  document.getElementById('tb-sub').innerHTML=rows;
+  document.getElementById('k-sub').innerHTML=`
+    <div class="kpi"><div class="kpi-k">Ahorro sumando bloques</div><div class="kpi-v" style="color:var(--ok)">${f(ahTot)}</div><div class="kpi-s">${nS} bloques mejoran</div></div>
+    <div class="kpi"><div class="kpi-k">Brecha máxima de ROAS</div><div class="kpi-v" style="color:var(--err)">−${brMax.toFixed(2)}x</div><div class="kpi-s">Aparente contra real</div></div>
+    <div class="kpi"><div class="kpi-k">Cargo por 7 días</div><div class="kpi-v">${f(add)}</div><div class="kpi-s">${D.cov[p]}</div></div>
+    <div class="kpi"><div class="kpi-k">Tramos</div><div class="kpi-v">${ts.length}</div><div class="kpi-s">De 60 a 365 días</div></div>`;
+}
+function buildHist(){
+  const T=H.tot,maxP=Math.max(...H.mensual.map(m=>m.perd));
+  document.getElementById('h-perd').textContent=f(T.perd);
+  document.getElementById('h-casos').textContent=T.casos;
+  document.getElementById('h-pct').textContent=T.pct+'%';
+  document.getElementById('h-kpis').innerHTML=`
+    <div class="kpi"><div class="kpi-k">Perdido en el semestre</div><div class="kpi-v" style="color:var(--err)">${f(T.perd)}</div><div class="kpi-s">${T.pct}% de la larga estadía</div></div>
+    <div class="kpi"><div class="kpi-k">Proyección anual</div><div class="kpi-v" style="color:var(--err)">${f(T.anual)}</div><div class="kpi-s">Al ritmo actual</div></div>
+    <div class="kpi"><div class="kpi-k">Sobre la neta total</div><div class="kpi-v" style="color:var(--warn)">${T.pctTot}%</div><div class="kpi-s">De ${f(T.neta)} en 7 meses</div></div>
+    <div class="kpi"><div class="kpi-k">Pasajeros analizados</div><div class="kpi-v">${T.pas}</div><div class="kpi-s">${T.casos} en larga estadía 61+</div></div>
+    <div class="kpi"><div class="kpi-k">Precisión de la fórmula</div><div class="kpi-v" style="color:var(--ok)">${T.precision}%</div><div class="kpi-s">Validada contra facturas</div></div>`;
+  document.getElementById('h-tb1').innerHTML=H.mensual.map(m=>{
+    const w=maxP?Math.round(m.perd/maxP*100):0;
+    return `<tr class="${m.perd>0?'gain':''}"><td style="font-weight:700">${m.mes}</td>
+      <td class="n">${m.pas}</td><td class="n" style="color:var(--ink2)">${f(m.neta)}</td>
+      <td class="n">${m.casos||'—'}</td>
+      <td class="ant" style="color:var(--err)">${m.fac?f(m.fac):'—'}</td>
+      <td class="ahr" style="color:var(--ok)">${m.opt?f(m.opt):'—'}</td>
+      <td class="n" style="color:var(--err);font-weight:700">${m.perd?f(m.perd):'—'}</td>
+      <td class="n">${m.fac?(m.perd/m.fac*100).toFixed(1)+'%':'—'}</td>
+      <td><div style="background:var(--line2);border-radius:99px;height:8px;width:100px"><div style="background:var(--err);height:8px;border-radius:99px;width:${w}%"></div></div></td></tr>`;}).join('')+
+    `<tr style="background:var(--navy)"><td style="color:#fff;font-weight:700">TOTAL</td>
+      <td class="n" style="color:#fff">${T.pas}</td><td class="n" style="color:#B8D4EE">${f(T.neta)}</td>
+      <td class="n" style="color:#fff">${T.casos}</td>
+      <td class="n" style="color:#FCA5A5;font-weight:700">${f(T.fac)}</td>
+      <td class="n" style="color:#4ADE80;font-weight:700">${f(T.opt)}</td>
+      <td class="n" style="color:var(--amber);font-weight:700">${f(T.perd)}</td>
+      <td class="n" style="color:#fff">${T.pct}%</td><td></td></tr>`;
+  const maxC=Math.max(...H.cov.map(c=>c.perd));
+  document.getElementById('h-tb2').innerHTML=H.cov.map(c=>`<tr>
+    <td style="font-weight:700">USD ${c.cov}.000</td><td class="n">${c.n}</td>
+    <td class="n" style="color:var(--ink2)">${f(c.fac)}</td>
+    <td class="n" style="color:var(--err);font-weight:700">${f(c.perd)}</td>
+    <td><span class="pl ${c.pct>25?'r':'a'}">${c.pct}%</span></td>
+    <td><div style="background:var(--line2);border-radius:99px;height:8px;width:110px"><div style="background:var(--err);height:8px;border-radius:99px;width:${Math.round(c.perd/maxC*100)}%"></div></div></td></tr>`).join('');
+  document.getElementById('h-tb3').innerHTML=H.top.map(t=>`<tr>
+    <td>${t.mes}</td><td class="tr">${t.dias} días</td><td>USD ${t.cov}.000</td>
+    <td class="ant" style="color:var(--err);font-weight:700">${f(t.fac)}</td>
+    <td class="ahr" style="color:var(--ok);font-weight:700">${f(t.opt)}</td>
+    <td class="n" style="color:var(--err);font-weight:700">${f(t.perd)}</td></tr>`).join('');
+}
+function buildEv(){
+  document.getElementById('ev-ok').textContent=EV.ok;
+  document.getElementById('ev-kpis').innerHTML=`
+    <div class="kpi"><div class="kpi-k">Sobrecosto del mes</div><div class="kpi-v" style="color:var(--err)">${f(EV.ahorro)}</div><div class="kpi-s">${EV.pct}% de más en larga estadía</div></div>
+    <div class="kpi"><div class="kpi-k">Proyección anual</div><div class="kpi-v" style="color:var(--err)">${f(EV.anual)}</div><div class="kpi-s">Al ritmo de mayo</div></div>
+    <div class="kpi"><div class="kpi-k">Sobre la neta total</div><div class="kpi-v" style="color:var(--warn)">${EV.pctTot}%</div><div class="kpi-s">De ${f(EV.netaTot)} del mes</div></div>
+    <div class="kpi"><div class="kpi-k">Pasajeros afectados</div><div class="kpi-v">${EV.nAf} de ${EV.nTot}</div><div class="kpi-s">${(EV.nAf/EV.nTot*100).toFixed(1)}% del volumen</div></div>
+    <div class="kpi"><div class="kpi-k">Casos verificados</div><div class="kpi-v" style="color:var(--ok)">${EV.ok}/${EV.casos.length}</div><div class="kpi-s">La fórmula coincide en todos</div></div>`;
+  document.getElementById('ev-tb1').innerHTML=EV.casos.map(c=>`<tr>
+    <td class="tr">${c.d}</td><td class="n">${c.e}</td><td>${c.cov}</td>
+    <td>${c.rec?'<span class="pl a">×1.5</span>':'<span style="color:var(--ink3)">—</span>'}</td>
+    <td class="n" style="color:var(--err);font-weight:700">${f(c.f)}</td>
+    <td class="n" style="font-size:11px;color:var(--ink2)">tramo ${c.base}d${c.sem?` + ${c.sem} × ${f(c.add)}`:''}${c.rec?' × 1.5':''} = ${f(c.esp)}</td>
+    <td>${c.ok?'<span class="pl g">✓ Coincide</span>':'<span class="pl r">✗</span>'}</td></tr>`).join('');
+  document.getElementById('ev-tb2').innerHTML=EV.casos.map(c=>`<tr class="${c.ah>0?'gain':''}">
+    <td class="tr">${c.d} días</td><td>${c.cov}${c.rec?' <span class="pl a">×1.5</span>':''}</td>
+    <td class="n" style="color:var(--err)">${f(c.f)}</td><td><span class="pl g">Tramo ${c.nxt}d</span></td>
+    <td class="n" style="color:var(--ok);font-weight:700">${f(c.aj)}</td>
+    <td class="n" style="color:var(--ok);font-weight:700">${c.ah>0?'+'+f(c.ah):'—'}</td></tr>`).join('')+
+    `<tr style="background:var(--navy)"><td colspan="2" style="color:#fff;font-weight:700">TOTAL DEL MES</td>
+     <td class="n" style="color:#FCA5A5;font-weight:700">${f(EV.tp)}</td><td></td>
+     <td class="n" style="color:#4ADE80;font-weight:700">${f(EV.ta)}</td>
+     <td class="n" style="color:var(--amber);font-weight:700">${f(EV.ahorro)}</td></tr>`;
+  document.getElementById('ev-tot').innerHTML=`<span class="pl r" style="font-size:12px">Sobrecosto ${f(EV.ahorro)} · ${EV.pct}%</span>`;
+  if(EV.fuera&&EV.fuera.length){
+    document.getElementById('ev-fuera').style.display='block';
+    document.getElementById('ev-fuera-d').innerHTML=`Se encontraron <b>${EV.fuera.length} pasajeros</b> con el plan de 66 a 75 años pero con edad superior: `+
+      EV.fuera.map(x=>`<b>${x.e} años</b> (${x.d} días)`).join(' y ')+`. Revisar si el plan está mal asignado.`;
+  }
+}
+// ── EXPORT ──
+const HEAD=['dias','ageId','carrierId','planid','precioCarrier','precioSf','precioVentaPublico'];
+function rowsVP(p){
+  const rows=[HEAD.slice()],maxD=hasLE(p)?365:90;
+  for(let d=1;d<=maxD;d++){
+    const c=carrierCMS(p,d);if(c==null)continue;
+    const sf=+(c*roasFor(p,d)).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+    rows.push([d,7,1,D.pid[p],c,sf,pvp]);}
+  return rows;
+}
+// Adultos Mayores · tarifa fija por día
+function rowsSR(){
+  const rows=[HEAD.slice()],S=D.sr;
+  for(let d=1;d<=S.maxD;d++){
+    const c=+(S.tarifa*d).toFixed(2), sf=+(c*roasFor('Smart',d)).toFixed(2), pvp=+(sf*PVPX).toFixed(2);
+    rows.push([d,1,1,S.pid,c,sf,pvp]);}
+  return rows;
+}
+// Fly Nacional · 1-2 días tarifa fija, desde 3 por día · ageId 9 con recargo 50%
+function rowsNAC(){
+  const rows=[HEAD.slice()],N=D.nac;
+  N.ages.forEach(a=>{
+    const m=a===9?1.5:1;
+    for(let d=1;d<=N.maxD;d++){
+      const base=d<=2?N.d12:N.tdia*d;
+      const c=+(base*m).toFixed(2), sf=+(c*roasFor('Lite',d)).toFixed(2), pvp=+(sf*PVPX).toFixed(2);
+      rows.push([d,a,1,N.pid,c,sf,pvp]);}});
+  return rows;
+}
+function rowsMV(p,mx){
+  const c=D.am[p][mx],sf=+(c*roasFor(p,mx)).toFixed(2),pvp=+(sf*PVPX).toFixed(2);
+  return [HEAD.slice(),[mx,7,1,D.ampid[p][mx],c,sf,pvp]];
+}
+function dl(label,pid,rows,tipo){
+  const ws=XLSX.utils.aoa_to_sheet(rows),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Precios');
+  XLSX.writeFile(wb,`CMS_${label.replace(/[^a-zA-Z0-9]/g,'_')}_${pid}.xlsx`);
+  LOG.unshift({t:new Date().toLocaleString('es-CO'),p:label,tipo,id:pid,
+    roas:ROASC[PLANSC[label.split('_')[0]]||'B'].map(r=>r[1].toFixed(1)).join('/'),rows:rows.length-1});
+  renderLog();
+}
+function dlVP(p){dl(p,D.pid[p],rowsVP(p),'Viajes Puntuales');}
+function dlMV(p,mx){dl(`${p}_Anual_${mx}d`,D.ampid[p][mx],rowsMV(p,mx),'Múltiples Viajes');}
+function exportVPAll(){D.pl.forEach((p,i)=>setTimeout(()=>dlVP(p),i*380));}
+function exportMVAll(){let i=0;Object.keys(D.am).forEach(p=>[30,45,60,90].forEach(mx=>setTimeout(()=>dlMV(p,mx),(i++)*380)));}
+function exportAll(){
+  exportVPAll();
+  setTimeout(exportMVAll,D.pl.length*380+400);
+  const t=D.pl.length*380+400+20*380+400;
+  setTimeout(()=>dl('Adultos_Mayores',95152,rowsSR(),'Adultos Mayores'),t);
+  setTimeout(()=>dl('Fly_Nacional',95346,rowsNAC(),'Viaje Nacional'),t+380);
+}
+function renderLog(){
+  const tb=document.getElementById('tb-log'),e=document.getElementById('log-empty');
+  if(!LOG.length){tb.innerHTML='';e.style.display='block';return;}
+  e.style.display='none';
+  tb.innerHTML=LOG.map(l=>`<tr><td class="n" style="font-size:11px">${l.t}</td>
+    <td style="font-weight:700">${l.p}</td><td style="font-size:11px;color:var(--ink2)">${l.tipo}</td>
+    <td class="n" style="color:var(--ink3)">${l.id}</td><td class="n" style="font-size:11px">${l.roas}</td>
+    <td class="n">${l.rows}</td></tr>`).join('');
+}
+function exportLog(){
+  if(!LOG.length){alert('Todavía no hay exportaciones en esta sesión.');return;}
+  const rows=[['Fecha y hora','Plan','Producto','planid','Escala ROAS','Filas']].concat(LOG.map(l=>[l.t,l.p,l.tipo,l.id,l.roas,l.rows]));
+  const ws=XLSX.utils.aoa_to_sheet(rows),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Bitacora');
+  XLSX.writeFile(wb,`Bitacora_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+function buildExp(){
+  document.getElementById('tb-expvp').innerHTML=D.pl.map(p=>`<tr>
+    <td style="font-weight:700">${p}</td><td>${D.cov[p]}</td>
+    <td class="n" style="color:var(--ink3)">${D.pid[p]}</td>
+    <td class="n">1 a ${hasLE(p)?365:90}</td>
+    <td>${hasLE(p)?`<span class="pl g">${tramosLE(p).length} tramos</span>`:'<span class="pl a">Solo por día</span>'}</td>
+    <td><button class="btn sm" onclick="dlVP('${p}')">⬇ Excel</button></td></tr>`).join('');
+  let r='';Object.keys(D.am).forEach(p=>[30,45,60,90].forEach(mx=>{
+    const c=D.am[p][mx],sf=+(c*roasFor(p,mx)).toFixed(2);
+    r+=`<tr><td style="font-weight:700">${p}</td><td>${D.cov[p]}</td><td class="n">${mx}d</td>
+      <td class="n" style="color:var(--ink3)">${D.ampid[p][mx]}</td>
+      <td class="n" style="color:var(--ink3)">${f(c)}</td>
+      <td class="n" style="color:var(--navy);font-weight:700">${f(sf)}</td>
+      <td><button class="btn sm" onclick="dlMV('${p}',${mx})">⬇ Excel</button></td></tr>`;}));
+  document.getElementById('tb-expmv').innerHTML=r;
+}
+function renderDec(){
+  const cont=document.getElementById('dec-tables');let html='';
+  let totSalta=0,totNo=0,planSiempre=0;
+  D.pl.filter(hasLE).forEach(p=>{
+    const ts=tramosLE(p),add=D.a7[p];
+    let filas='',saltaDesde61=true;
+    for(let i=0;i<ts.length-1;i++){
+      const a=ts[i],b=ts[i+1],na=D.le[p][a],nb=D.le[p][b];
+      let primero=null;
+      for(let d=a+1;d<b;d++){
+        const bl=Math.ceil((d-a)/7);
+        if(na+bl*add>nb){primero=d;break;}
+      }
+      const noSaltar = primero&&primero>a+1 ? `${a+1} a ${primero-1}` : (primero?null:`${a+1} a ${b-1}`);
+      const saltar = primero ? `${primero} a ${b-1}` : null;
+      if(primero!==a+1) saltaDesde61=false;
+      if(saltar) totSalta++; if(noSaltar) totNo++;
+      filas+=`<tr>
+        <td class="tr">${a} → ${b}</td>
+        <td class="n" style="color:var(--ink3)">${f(na)} → ${f(nb)}</td>
+        <td class="n" style="color:var(--ink2)">${f(nb-na)}</td>
+        <td class="n">${((nb-na)/add).toFixed(2)}</td>
+        <td class="ant" style="color:${noSaltar?'var(--err)':'var(--ink3)'};font-weight:${noSaltar?'700':'400'}">${noSaltar||'—'}</td>
+        <td class="ahr" style="color:${saltar?'var(--ok)':'var(--ink3)'};font-weight:${saltar?'700':'400'}">${saltar||'nunca conviene'}</td>
+      </tr>`;
+    }
+    if(saltaDesde61)planSiempre++;
+    html+=`<div class="card">
+      <div class="card-h"><div><div class="card-t">${p} · ${D.cov[p]}</div>
+        <div class="card-s">Cargo por 7 días: ${f(add)}</div></div>
+        <span class="pl ${saltaDesde61?'g':'a'}" style="font-size:12px">${saltaDesde61?'Saltar desde el día 61':'Requiere esperar bloques'}</span></div>
+      <div class="tw"><table><thead><tr>
+        <th>Tramo</th><th>Netas</th><th>Salto</th><th>Bloques máx</th>
+        <th class="ant">❌ NO saltar</th><th class="ahr">✅ SALTAR</th>
+      </tr></thead><tbody>${filas}</tbody></table></div></div>`;
+  });
+  cont.innerHTML=html;
+  document.getElementById('k-dec').innerHTML=`
+    <div class="kpi"><div class="kpi-k">Planes con salto inmediato</div><div class="kpi-v" style="color:var(--ok)">${planSiempre} de 5</div><div class="kpi-s">Saltan desde el día 61</div></div>
+    <div class="kpi"><div class="kpi-k">Rangos donde conviene saltar</div><div class="kpi-v" style="color:var(--ok)">${totSalta}</div><div class="kpi-s">Sobre 50 transiciones</div></div>
+    <div class="kpi"><div class="kpi-k">Rangos de espera</div><div class="kpi-v" style="color:var(--err)">${totNo}</div><div class="kpi-s">Conviene quedarse con bloques</div></div>
+    <div class="kpi"><div class="kpi-k">Zona más rentable</div><div class="kpi-v" style="color:var(--ok)">61–119d</div><div class="kpi-s">Smart, Plus y Max</div></div>`;
+}
+function renderAll(){renderNetas();renderVP();renderVPSub();renderMV();renderSR();renderNac();renderSub();renderDec();buildExp();}
+(function(){
+  const a=document.getElementById('fvp'),b=document.getElementById('fsub');
+  D.pl.forEach(p=>{a.innerHTML+=`<option value="${p}">${p} · ${D.cov[p]}</option>`;
+    if(hasLE(p))b.innerHTML+=`<option value="${p}">${p} · ${D.cov[p]}</option>`;});
+  a.value='Smart';b.value='Smart';
+})();
+buildHist();buildEv();renderAll();renderLog();
+</script>
+</body>
+</html>
