@@ -33,7 +33,7 @@ ul{margin:0;padding-left:18px}li{margin-bottom:6px}
 .cal td:first-child{width:22%}.now td{background:#FFF8E8}
 .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.8px;padding:1px 7px;border-radius:999px;background:#EEF2F5;color:#6B7A88;margin-left:6px;vertical-align:1px}.tag.ok{background:#FFF1D6;color:#8A5A00}.tbd td{color:#8a98a6}
 .foot{margin:50px 0 30px;color:#8a98a6;font-size:12.5px;border-top:1px solid #E4E9EE;padding-top:12px}
-@media(max-width:760px){.story,.two,.pal{grid-template-columns:1fr}#fm{width:100%}h1{font-size:26px}}
+@media(max-width:760px){.story,.two,.pal{grid-template-columns:1fr}#fm{width:100%;height:calc((100vw - 84px) * 2.165 + 70px)}#fd{height:calc((100vw - 84px) * .625 + 10px)}h1{font-size:26px}.dates{border-radius:14px}.viewer{padding:12px}.tabs{flex-wrap:wrap}.tabs .hint{margin-left:0;width:100%}}
 </style></head><body>
 <header><div class="wrap"><div><h1>Hero de temporada: Halloween 2026</h1>
 <div class="sub">Propuesta para segurosfly.com y /lp/asistencia · móvil y escritorio</div>
@@ -122,6 +122,7 @@ html,body{margin:0;background:#222;font-family:Exo2,sans-serif}
 .wa{position:absolute;right:12px;bottom:12px;z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:9px}
 .wa .b{background:#fff;color:#222;font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:10px}
 .wa .c{width:44px;height:44px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+@media (max-width:420px){.stage{padding:8px}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important}}
 .slide{display:none;align-items:center;gap:14px;animation:in .38s ease}.slide.on{display:flex}
 @keyframes in{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
@@ -171,6 +172,8 @@ document.querySelectorAll(&#x27;.phone&#x27;).forEach(ph=&gt;{const sl=ph.queryS
 const go=n=&gt;{sl[i].classList.remove(&#x27;on&#x27;);dt[i].classList.remove(&#x27;on&#x27;);i=(n+sl.length)%sl.length;sl[i].classList.add(&#x27;on&#x27;);dt[i].classList.add(&#x27;on&#x27;)};
 const arr=ph.querySelectorAll(&#x27;.arr&#x27;);arr[0].onclick=()=&gt;go(i-1);arr[1].onclick=()=&gt;go(i+1);setInterval(()=&gt;go(i+1),3500)});
 
+
+const fitM=()=&gt;{const s=Math.min(1,(innerWidth-16)/375);document.querySelectorAll(&#x27;.phone&#x27;).forEach(p=&gt;{p.style.transform=&#x27;scale(&#x27;+s+&#x27;)&#x27;;p.style.transformOrigin=&#x27;top left&#x27;;p.parentElement.style.width=(375*s)+&#x27;px&#x27;;p.parentElement.style.height=(812*s+26)+&#x27;px&#x27;})};fitM();addEventListener(&#x27;resize&#x27;,fitM);
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 "></iframe><iframe id="fd" title="Hero escritorio" style="display:none" srcdoc="&lt;!DOCTYPE html&gt;&lt;html lang=&quot;es&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;
 &lt;style&gt;
