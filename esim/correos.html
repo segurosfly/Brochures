@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correos de la eSIM · qué sale solo y cuándo</title>
+<!-- Resumen para el equipo (11/10/2026). Fuente técnica: api/docs/ESIM-CATALOGO.md §6. -->
+<style>
+:root{--noche:#123550;--oro:#F8B133;--celeste:#6A9CD9;--tinta:#16263a;--gris:#5b6b7d;--linea:#e3e9f0;--fondo:#f4f7fb}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--fondo);color:var(--tinta);line-height:1.5}
+main{max-width:860px;margin:0 auto;padding:36px 20px 60px}
+h1{font-size:30px;color:var(--noche);line-height:1.15}
+.intro{color:var(--gris);margin-top:8px;font-size:16px}
+h2{font-size:20px;color:var(--noche);margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+h2 .chip{font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;background:#fff4dc;color:var(--noche)}
+.linea{position:relative;padding-left:28px}
+.linea:before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--linea)}
+.paso{position:relative;background:#fff;border:1px solid var(--linea);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.paso:before{content:"";position:absolute;left:-25px;top:18px;width:14px;height:14px;border-radius:50%;background:var(--oro);border:3px solid #fff;box-shadow:0 0 0 1px var(--linea)}
+.paso.cond:before{background:var(--celeste)}
+.cuando{font-size:13px;font-weight:800;color:var(--celeste);text-transform:uppercase;letter-spacing:.4px}
+.asunto{font-weight:700;color:var(--noche);margin-top:3px}
+.que{font-size:14.5px;color:var(--gris);margin-top:4px}
+.nota{background:#fff;border-left:4px solid var(--oro);border-radius:8px;padding:12px 14px;font-size:14.5px;margin-top:14px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:14.5px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--linea);text-align:left;vertical-align:top}
+th{background:var(--noche);color:#fff;font-weight:700}
+.leyenda{display:flex;gap:18px;font-size:13px;color:var(--gris);margin-top:6px}
+.leyenda i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Correos de la eSIM: qué sale solo y cuándo</h1>
+  <p class="intro">Todos estos correos los envía el sistema sin que nadie los dispare. Las horas son de Bogotá.</p>
+  <div class="leyenda"><span><i style="background:var(--oro)"></i>Siempre</span><span><i style="background:var(--celeste)"></i>Solo si se cumple la condición</span></div>
+
+  <h2>1. eSIM incluida en la asistencia <span class="chip">el viajero no hace nada para recibirla</span></h2>
+  <div class="linea">
+    <div class="paso">
+      <div class="cuando">3 días antes de salir</div>
+      <div class="asunto">«Tu eSIM para el viaje ya está lista 📱»</div>
+      <div class="que">Una eSIM por pasajero, todas en un solo correo: QR, código manual, guía para iPhone y Android y el enlace de recarga de cada una. Si compró con menos de 3 días, sale en la siguiente hora.</div>
+    </div>
+    <div class="paso cond">
+      <div class="cuando">La víspera del viaje, desde las 9:00</div>
+      <div class="asunto">«¿Ya instalaste tu eSIM? Hazlo antes de salir 📱»</div>
+      <div class="que">Solo si la eSIM aún no se ha conectado y el primer correo salió hace 24 h o más. Le pide instalarla con wifi y dejar la línea apagada hasta aterrizar.</div>
+    </div>
+    <div class="paso cond">
+      <div class="cuando">El día después de salir, desde las 9:00</div>
+      <div class="asunto">«¿Ya llegaste? Así activas tu eSIM 📶»</div>
+      <div class="que">Solo si sigue sin conectarse. Le explica cómo activarla en destino (línea de datos y roaming).</div>
+    </div>
+    <div class="paso cond">
+      <div class="cuando">Durante el viaje · cada hora de 7:00 a 19:00</div>
+      <div class="asunto">«Tu eSIM se está acabando: recárgala sin instalar nada nuevo»</div>
+      <div class="que">Si usó el 80 % de los datos, le quedan 36 h o menos, se quedó sin datos o se le venció. Un aviso por motivo. Lleva cuánto le queda y su enlace de recarga. A la vez, Kommo marca el lead para que el asesor mande el WhatsApp.</div>
+    </div>
+    <div class="paso cond">
+      <div class="cuando">Si recarga</div>
+      <div class="asunto">«Tu recarga está lista 📶 · [plan] · Pedido [número]»</div>
+      <div class="que">Recibo con el importe. No tiene que instalar nada: la recarga entra en la misma eSIM.</div>
+    </div>
+  </div>
+
+  <h2>2. eSIM comprada en la tienda <span class="chip">segurosfly.com/es/esim</span></h2>
+  <div class="linea">
+    <div class="paso">
+      <div class="cuando">Al confirmarse el pago</div>
+      <div class="asunto">«Tu eSIM [plan] está lista 📱 · Pedido [número]»</div>
+      <div class="que">QR, código manual, guía, factura y enlace de recarga. Si Airalo falla, sale con una eSIM de nuestro stock.</div>
+    </div>
+    <div class="paso cond">
+      <div class="cuando">Si recarga</div>
+      <div class="asunto">«Tu recarga está lista 📶»</div>
+      <div class="que">Igual que en el seguro.</div>
+    </div>
+  </div>
+  <div class="nota">La tienda no pide fechas de viaje, así que a estos clientes <b>no</b> les llegan los recordatorios de instalación ni la invitación a recargar.</div>
+
+  <h2>3. Dónde lo ve el equipo</h2>
+  <table>
+    <tr><th>Qué</th><th>Dónde</th></tr>
+    <tr><td>Copia de todos los correos de eSIM</td><td>comercial@ → etiqueta <b>eSIMs</b> (las invitaciones a recargar, en <b>eSIMs/Recargas</b>). No llenan la bandeja de entrada.</td></tr>
+    <tr><td>Si el cliente responde</td><td>La conversación vuelve a Recibidos de comercial@ para contestarle.</td></tr>
+    <tr><td>Quién debe recargar hoy</td><td>Kommo: «eSIM · Invitar a recargar» = hoy, con el motivo y el enlace en el lead.</td></tr>
+    <tr><td>Viaja en menos de 24 h y le falta eSIM</td><td>Alerta en el Google Chat de Posventa y Emergencias.</td></tr>
+    <tr><td>Venta de la tienda</td><td>Google Chat de Comercial SF y CMS → eSIM → Ventas tienda.</td></tr>
+    <tr><td>Reenviar un correo</td><td>CMS → la orden o la venta → reenviar.</td></tr>
+  </table>
+
+  <div class="nota">Los recordatorios y la invitación a recargar se pueden apagar desde el sistema sin tocar código (los maneja Wilker). Por defecto están encendidos.</div>
+</main>
+</body>
+</html>
