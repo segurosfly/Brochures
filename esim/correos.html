@@ -28,54 +28,83 @@ th,td{padding:10px 12px;border-bottom:1px solid var(--linea);text-align:left;ver
 th{background:var(--noche);color:#fff;font-weight:700}
 .leyenda{display:flex;gap:18px;font-size:13px;color:var(--gris);margin-top:6px}
 .leyenda i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.paso{display:flex;gap:16px;align-items:flex-start}
+.paso .txt{flex:1;min-width:0}
+.mini{flex:none;width:170px;text-decoration:none;color:var(--celeste);font-size:12.5px;font-weight:700;text-align:center}
+.mini .marco{display:block;width:170px;height:200px;overflow:hidden;border:1px solid var(--linea);border-radius:10px;background:#fff;position:relative;transition:border-color .2s,box-shadow .2s}
+.mini iframe{width:600px;height:705px;border:0;transform:scale(.2834);transform-origin:0 0;pointer-events:none}
+.mini:hover .marco{border-color:var(--celeste);box-shadow:0 8px 20px -12px rgba(18,53,80,.5)}
+.mini span{display:block;margin-top:6px}
+@media (max-width:620px){.paso{flex-direction:column}.mini{width:100%}.mini .marco{width:100%;height:240px}.mini iframe{transform:scale(.55)}}
 </style>
 </head>
 <body>
 <main>
   <h1>Correos de la eSIM: qué sale solo y cuándo</h1>
-  <p class="intro">Todos estos correos los envía el sistema sin que nadie los dispare. Las horas son de Bogotá.</p>
+  <p class="intro">Todos estos correos los envía el sistema sin que nadie los dispare. Las horas son de Bogotá. Toca la miniatura para ver el correo completo (ejemplo con datos ficticios).</p>
   <div class="leyenda"><span><i style="background:var(--oro)"></i>Siempre</span><span><i style="background:var(--celeste)"></i>Solo si se cumple la condición</span></div>
 
   <h2>1. eSIM incluida en la asistencia <span class="chip">el viajero no hace nada para recibirla</span></h2>
   <div class="linea">
     <div class="paso">
+      <div class="txt">
       <div class="cuando">3 días antes de salir</div>
       <div class="asunto">«Tu eSIM para el viaje ya está lista 📱»</div>
       <div class="que">Una eSIM por pasajero, todas en un solo correo: QR, código manual, guía para iPhone y Android y el enlace de recarga de cada una. Si compró con menos de 3 días, sale en la siguiente hora.</div>
+      </div>
+      <a class="mini" href="correo-entrega.html" target="_blank" rel="noopener"><span class="marco"><iframe src="correo-entrega.html" loading="lazy" tabindex="-1" title="Vista previa"></iframe></span><span>Ver correo completo →</span></a>
     </div>
     <div class="paso cond">
+      <div class="txt">
       <div class="cuando">La víspera del viaje, desde las 9:00</div>
       <div class="asunto">«¿Ya instalaste tu eSIM? Hazlo antes de salir 📱»</div>
       <div class="que">Solo si la eSIM aún no se ha conectado y el primer correo salió hace 24 h o más. Le pide instalarla con wifi y dejar la línea apagada hasta aterrizar.</div>
+      </div>
+      <a class="mini" href="correo-recordatorio-antes.html" target="_blank" rel="noopener"><span class="marco"><iframe src="correo-recordatorio-antes.html" loading="lazy" tabindex="-1" title="Vista previa"></iframe></span><span>Ver correo completo →</span></a>
     </div>
     <div class="paso cond">
+      <div class="txt">
       <div class="cuando">El día después de salir, desde las 9:00</div>
       <div class="asunto">«¿Ya llegaste? Así activas tu eSIM 📶»</div>
       <div class="que">Solo si sigue sin conectarse. Le explica cómo activarla en destino (línea de datos y roaming).</div>
+      </div>
+      <a class="mini" href="correo-recordatorio-llegada.html" target="_blank" rel="noopener"><span class="marco"><iframe src="correo-recordatorio-llegada.html" loading="lazy" tabindex="-1" title="Vista previa"></iframe></span><span>Ver correo completo →</span></a>
     </div>
     <div class="paso cond">
+      <div class="txt">
       <div class="cuando">Durante el viaje · cada hora de 7:00 a 19:00</div>
       <div class="asunto">«Tu eSIM se está acabando: recárgala sin instalar nada nuevo»</div>
       <div class="que">Si usó el 80 % de los datos, le quedan 36 h o menos, se quedó sin datos o se le venció. Un aviso por motivo. Lleva cuánto le queda y su enlace de recarga. A la vez, Kommo marca el lead para que el asesor mande el WhatsApp.</div>
+      </div>
+      <a class="mini" href="correo-invitacion-recarga.html" target="_blank" rel="noopener"><span class="marco"><iframe src="correo-invitacion-recarga.html" loading="lazy" tabindex="-1" title="Vista previa"></iframe></span><span>Ver correo completo →</span></a>
     </div>
     <div class="paso cond">
+      <div class="txt">
       <div class="cuando">Si recarga</div>
       <div class="asunto">«Tu recarga está lista 📶 · [plan] · Pedido [número]»</div>
       <div class="que">Recibo con el importe. No tiene que instalar nada: la recarga entra en la misma eSIM.</div>
+      </div>
+      <a class="mini" href="correo-recibo-recarga.html" target="_blank" rel="noopener"><span class="marco"><iframe src="correo-recibo-recarga.html" loading="lazy" tabindex="-1" title="Vista previa"></iframe></span><span>Ver correo completo →</span></a>
     </div>
   </div>
 
   <h2>2. eSIM comprada en la tienda <span class="chip">segurosfly.com/es/esim</span></h2>
   <div class="linea">
     <div class="paso">
+      <div class="txt">
       <div class="cuando">Al confirmarse el pago</div>
       <div class="asunto">«Tu eSIM [plan] está lista 📱 · Pedido [número]»</div>
       <div class="que">QR, código manual, guía, factura y enlace de recarga. Si Airalo falla, sale con una eSIM de nuestro stock.</div>
+      </div>
+      <a class="mini" href="correo-entrega-tienda.html" target="_blank" rel="noopener"><span class="marco"><iframe src="correo-entrega-tienda.html" loading="lazy" tabindex="-1" title="Vista previa"></iframe></span><span>Ver correo completo →</span></a>
     </div>
     <div class="paso cond">
+      <div class="txt">
       <div class="cuando">Si recarga</div>
       <div class="asunto">«Tu recarga está lista 📶»</div>
       <div class="que">Igual que en el seguro.</div>
+      </div>
+      <a class="mini" href="correo-recibo-recarga.html" target="_blank" rel="noopener"><span class="marco"><iframe src="correo-recibo-recarga.html" loading="lazy" tabindex="-1" title="Vista previa"></iframe></span><span>Ver correo completo →</span></a>
     </div>
   </div>
   <div class="nota">La tienda no pide fechas de viaje, así que a estos clientes <b>no</b> les llegan los recordatorios de instalación ni la invitación a recargar.</div>
