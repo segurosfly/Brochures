@@ -57,6 +57,24 @@
   .cambios li.cabecera::before{content:"";background:none}
   .veredicto{font:700 11px "Exo 2";letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;white-space:nowrap}
   .v-si{background:#EAF6F0;color:var(--verde)} .v-prob{background:#FFF8EA;color:#9a6a00} .v-no{background:#EEF2F6;color:var(--gris)}
+  .clave{background:var(--mid);color:#fff;border-left:6px solid var(--oro);border-radius:8px;padding:16px 20px;margin:16px 0;font:800 21px/1.3 "Exo 2"}
+  .clave span{color:var(--oro)}
+  @media (max-width:760px){
+    .clave{font-size:18px;padding:14px 16px}
+    .chart{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .chart svg{min-width:640px}
+    table.compacta{display:table;white-space:normal;font-size:13.5px}
+    table.compacta td,table.compacta th{min-width:0;padding:8px 6px}
+    .cambios li.cabecera{display:none}
+    table.tarjetas{display:block;white-space:normal;overflow:visible}
+    table.tarjetas thead{display:none}
+    table.tarjetas tbody,table.tarjetas tr{display:block}
+    table.tarjetas tr{border:1px solid var(--linea);border-radius:10px;margin:10px 0;padding:6px 4px;background:#fff}
+    table.tarjetas tr:nth-child(even) td{background:transparent}
+    table.tarjetas td{display:block;border:0;padding:4px 10px;min-width:0}
+    table.tarjetas td:first-child{font-weight:700;color:var(--mid)}
+    table.tarjetas td[data-l]::before{content:attr(data-l) ": ";font-weight:700;color:var(--gris)}
+  }
   @media (max-width:760px){.cambios li{grid-template-columns:34px 1fr}.cambios li .si{grid-column:2}}
   footer{padding:18px 48px;color:var(--gris);font-size:12px;border-top:1px solid var(--linea);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
   @media (max-width:760px){header,main,footer{padding-left:20px;padding-right:20px}.kpi{grid-template-columns:1fr 1fr}h1{font-size:26px}table{display:block;overflow-x:auto;white-space:nowrap}td,th{white-space:normal;min-width:140px}}
@@ -86,7 +104,7 @@
   <li><b>Los cambios del 14 y del 16 de octubre todavía no explican nada de lo que vemos:</b> el costo de la última semana ya había subido del 11 al 13 (3,16 USD) y no empeoró después del 14 (3,08). Lo que sí hacen es devolver al aprendizaje a los conjuntos de Colombia, México y Venezuela; su efecto se verá desde el 17.</li>
   <li><b>No es la web:</b> según Clarity, quien llega desde Instagram y Facebook cotiza igual antes y después del 4 de octubre (~28 %).</li>
   <li><b>WhatsApp Colombia es la campaña más eficiente de la cuenta</b> (1,41 USD por conversación en la semana del 10 al 16, mejor que la semana anterior) y Web Colombia la que más cotizaciones y compras trae. Ahí está la base para escalar.</li>
-  <li><b>Hay datos sucios:</b> ráfagas de eventos «Lead» en la home que no salen de nuestro código, y las compras llegan a Meta casi sin la marca del clic (menos del 10 %). Meta aprende y atribuye con señales incompletas.</li>
+  <li><b>Hay datos sucios:</b> Meta recibe como «Lead» cada clic en un botón de WhatsApp o de contacto (así está configurado en Google Tag Manager), y desde el 12 de octubre llegan en ráfagas desde celulares Android, los mismos días en que entra tráfico de Taboola News; además, las compras llegan a Meta casi sin la marca del clic (menos del 10 %). Meta aprende y atribuye con señales incompletas.</li>
   <li><b>Con 12.000 USD al mes entre Meta y Google, un ROAS de 3,0 pide ~420 ventas a ≤ 28 USD cada una;</b> el ROIS que nos interesa (descontando además carrier y pasarela) pide bastante más y depende del porcentaje que pesan el carrier y la pasarela sobre la venta (dato por confirmar con Jhojan). Hoy el negocio vende ~180 al mes y Meta se atribuye compras a 35–40 USD.</li>
 </ol>
 <div class="nota"><b>Cómo comprobar cualquier cifra de este documento en el Administrador de anuncios.</b> Cuenta «SegurosFly». Fechas cerradas: agosto 1–31, septiembre 1–30 y octubre 1–16 (el 17 aún no terminaba); la cuenta está en hora de Chicago, que en estas fechas es la misma de Bogotá. Atribución: la que trae cada conjunto (7 días después del clic y 1 día después de ver el anuncio); es la que usa la columna «Resultados». <b>Costo por cotización web</b> = importe gastado ÷ resultados, sumando solo las campañas cuyo resultado es «quote» (las «Web Quote» y «Web Ventas - Venezuela»). <b>Visitas que cotizan</b> = esos resultados ÷ la columna «Visitas a la página de destino». <b>Compras</b> = columna «Compras» (sitio web y dentro de Meta). Leídas el 17-oct-2026: Meta puede sumar alguna cotización o compra de los últimos días mientras termina de atribuirlas, así que la última semana puede mejorar un poco, no empeorar.</div>
@@ -96,7 +114,7 @@
 <section id="meses">
 <h2>De lo macro a lo micro: agosto, septiembre y octubre</h2>
 <p class="lead"><b>Septiembre fue el mejor mes. Octubre gasta más por día y rinde menos en todos los países.</b></p>
-<table>
+<table class="compacta">
   <thead><tr><th></th><th>Agosto</th><th>Septiembre</th><th>Octubre (1–16)</th></tr></thead>
   <tbody>
     <tr><td>Gasto (USD)</td><td>3.660 (118/día)</td><td>5.008 (167/día)</td><td>3.336 (209/día)</td></tr>
@@ -141,9 +159,10 @@
 
 <section id="causas">
 <h2>¿Por qué subió el costo? Lo comprobado, lo probable y lo descartado</h2>
-<p class="lead"><b>El costo por cotización se duplicó sobre todo porque, de cada 100 personas que llegan a la web desde los anuncios, cada vez menos cotizan. La web no cambió: cambió a quién le estamos mostrando los anuncios.</b></p>
+<p class="lead"><b>El costo por cotización se duplicó sobre todo porque, de cada 100 personas que llegan a la web desde los anuncios, cada vez menos cotizan.</b></p>
+<p class="clave">La web no cambió: <span>cambió a quién le estamos mostrando los anuncios.</span></p>
 <p><b>De qué se compone la subida</b> (Instagram y Facebook, campañas que optimizan por cotización, semana del 13 al 19 de septiembre contra la del 11 al 16 de octubre):</p>
-<table>
+<table class="compacta">
   <thead><tr><th>Qué cambió</th><th>13–19 sep</th><th>11–16 oct</th><th>Peso en la subida</th></tr></thead>
   <tbody>
     <tr><td>De cada 100 visitas, cuántas cotizan</td><td>25,0</td><td>16,9</td><td><b>~55 %</b></td></tr>
@@ -153,7 +172,7 @@
     <tr><td><b>Costo por cotización (USD)</b></td><td><b>1,55</b></td><td><b>3,11</b></td><td><b>× 2,0</b></td></tr>
   </tbody>
 </table>
-<table>
+<table class="tarjetas">
   <thead><tr><th>Posible causa</th><th>Veredicto</th><th>En qué nos basamos</th></tr></thead>
   <tbody>
     <tr><td>Seguimos subiendo presupuesto, en campañas de pocas ciudades, cuando el costo ya venía subiendo</td><td><span class="veredicto v-prob">Probable · la principal</span></td><td>Entre el 10 de septiembre y el 5 de octubre hubo 34 cambios de presupuesto. Cada subida fue pequeña (10–15 %), que está bien; lo que no funcionó fue seguir subiendo sin mirar el costo. Web Colombia pasó de 12 a 34,50 USD/día y su costo por cotización subió todas las semanas: 0,59 → 0,74 → 1,03 → 1,26. Venezuela pasó de 10 a 20 USD/día el 18 de septiembre y a la semana siguiente su costo saltó de 0,88 a 2,08. Con un público de pocas ciudades, cada dólar extra llega a gente con menos interés. México, que subió menos en proporción, mantuvo su porcentaje de visitas que cotizan (14–19 % todas las semanas).</td></tr>
@@ -172,15 +191,15 @@
 <section id="octubre">
 <h2>Cronología de la cuenta: septiembre y octubre</h2>
 <p class="lead"><b>Desde el 10 de septiembre la cuenta casi no ha tenido una semana sin cambios grandes, y Meta necesita justamente lo contrario para aprender.</b> La fase de aprendizaje es el periodo en que Meta todavía prueba a quién mostrar el anuncio; mientras dura, los resultados son inestables y más caros, y se sale de ella con unos 50 resultados en la semana siguiente al último cambio importante. Al 17 de octubre solo Perú la tiene superada; Ecuador lleva 18, Colombia 12, México 7 y Venezuela 2.</p>
-<table>
+<table class="tarjetas">
   <thead><tr><th>Fecha</th><th>Qué se hizo</th><th>Efecto</th></tr></thead>
   <tbody>
-    <tr><td>16 oct, 6:08–6:37 p. m.</td><td>Se editó el video de 15 anuncios web (5 por país en CO, MX y VE; 4 de ellos se pausaron en esa misma sesión) dejando el mismo texto; se pausaron 9 anuncios, entre ellos los 5 que más traían (WhatsApp MX Anuncio 1, Web MX Anuncio 1, Perú Anuncio 4, Ecuador Anuncio 4, CO Web Anuncio 5); se crearon 7 anuncios nuevos iguales en todos los países (5 web y 2 de WhatsApp; «Si vuelves a casa sin haberlo necesitado…»)</td><td>Editar un anuncio o agregar uno nuevo devuelve el conjunto a la fase de aprendizaje. Del 10 al 16 de octubre, los pausados traían: Perú 4, 33 de las 47 cotizaciones; Ecuador 4, 19 de 33 y las 4 compras; Web MX 1, 32 de 54 cotizaciones y 7 de 12 compras; WhatsApp MX 1, 47 de 65 conversaciones. Aún no se ve en los datos (se hizo al final del día)</td></tr>
-    <tr><td>14 oct, 9:07 a. m. y 5:44–5:54 p. m.</td><td>En la mañana, +20 % a Web CO (34,50 → 41,40 USD/día), Web MX (30 → 36) y Ecuador (15 → 18), y Perú pausada. En la tarde, Perú reactivada y 15 → 30 → 20; Ecuador 18 → 42,92 → 25; Venezuela 24 → 30; WhatsApp CO 31 → 40</td><td>Nueve cambios de presupuesto y una pausa en un día, con idas y vueltas en minutos. Los que superan el 20 % pueden reiniciar el aprendizaje</td></tr>
-    <tr><td>10 oct, 7:17 a. m.</td><td>Panamá pausada</td><td>Costaba 1,90 USD por cotización con 3 compras en 9 días</td></tr>
-    <tr><td>6 oct, 11:15 a. m.–12:13 p. m.</td><td>Se crearon las campañas «Octubre» de CO (web y WhatsApp), MX (WhatsApp y web «Octubre - Copia») y VE, y se apagaron el mismo día las de septiembre y Web México «Octubre»</td><td>Las nuevas arrancaron su aprendizaje desde cero. En la misma semana, Web Colombia nueva costó 2,16 USD por cotización y la anterior, en sus últimos días, 1,24. Web México «Agosto» costaba 3,10 en septiembre; su reemplazo, 4,17 en octubre</td></tr>
-    <tr><td>2–3 oct</td><td>Se crearon Ecuador, Perú, Panamá y Web México «Octubre»; Web México «Agosto» bajó de 71 a 30 USD/día y se apagó</td><td>Mercados nuevos sin historial (17 campañas con gasto en octubre, por los reemplazos)</td></tr>
-    <tr><td>10 sep – 5 oct</td><td>34 cambios de presupuesto, casi todos subidas de 10–15 % cada 2–4 días: Web CO 12 → 34,50 USD/día; Web VE 6,50 → 24 (incluye 10 → 20 el 18 sep); Web MX 40 → 71; WhatsApp CO 36 → 44 → 25 → 27 → 31; WhatsApp MX 46 → 51 → 30 → 34</td><td>El costo por cotización subió cada semana mientras subía el presupuesto (ver «¿Por qué subió el costo?»)</td></tr>
+    <tr><td>16 oct, 6:08–6:37 p. m.</td><td data-l="Qué se hizo">Se editó el video de 15 anuncios web (5 por país en CO, MX y VE; 4 de ellos se pausaron en esa misma sesión) dejando el mismo texto; se pausaron 9 anuncios, entre ellos los 5 que más traían (WhatsApp MX Anuncio 1, Web MX Anuncio 1, Perú Anuncio 4, Ecuador Anuncio 4, CO Web Anuncio 5); se crearon 7 anuncios nuevos iguales en todos los países (5 web y 2 de WhatsApp; «Si vuelves a casa sin haberlo necesitado…»)</td><td data-l="Efecto">Editar un anuncio o agregar uno nuevo devuelve el conjunto a la fase de aprendizaje. Del 10 al 16 de octubre, los pausados traían: Perú 4, 33 de las 47 cotizaciones; Ecuador 4, 19 de 33 y las 4 compras; Web MX 1, 32 de 54 cotizaciones y 7 de 12 compras; WhatsApp MX 1, 47 de 65 conversaciones. Aún no se ve en los datos (se hizo al final del día)</td></tr>
+    <tr><td>14 oct, 9:07 a. m. y 5:44–5:54 p. m.</td><td data-l="Qué se hizo">En la mañana, +20 % a Web CO (34,50 → 41,40 USD/día), Web MX (30 → 36) y Ecuador (15 → 18), y Perú pausada. En la tarde, Perú reactivada y 15 → 30 → 20; Ecuador 18 → 42,92 → 25; Venezuela 24 → 30; WhatsApp CO 31 → 40</td><td data-l="Efecto">Nueve cambios de presupuesto y una pausa en un día, con idas y vueltas en minutos. Los que superan el 20 % pueden reiniciar el aprendizaje</td></tr>
+    <tr><td>10 oct, 7:17 a. m.</td><td data-l="Qué se hizo">Panamá pausada</td><td data-l="Efecto">Costaba 1,90 USD por cotización con 3 compras en 9 días</td></tr>
+    <tr><td>6 oct, 11:15 a. m.–12:13 p. m.</td><td data-l="Qué se hizo">Se crearon las campañas «Octubre» de CO (web y WhatsApp), MX (WhatsApp y web «Octubre - Copia») y VE, y se apagaron el mismo día las de septiembre y Web México «Octubre»</td><td data-l="Efecto">Las nuevas arrancaron su aprendizaje desde cero. En la misma semana, Web Colombia nueva costó 2,16 USD por cotización y la anterior, en sus últimos días, 1,24. Web México «Agosto» costaba 3,10 en septiembre; su reemplazo, 4,17 en octubre</td></tr>
+    <tr><td>2–3 oct</td><td data-l="Qué se hizo">Se crearon Ecuador, Perú, Panamá y Web México «Octubre»; Web México «Agosto» bajó de 71 a 30 USD/día y se apagó</td><td data-l="Efecto">Mercados nuevos sin historial (17 campañas con gasto en octubre, por los reemplazos)</td></tr>
+    <tr><td>10 sep – 5 oct</td><td data-l="Qué se hizo">34 cambios de presupuesto, casi todos subidas de 10–15 % cada 2–4 días: Web CO 12 → 34,50 USD/día; Web VE 6,50 → 24 (incluye 10 → 20 el 18 sep); Web MX 40 → 71; WhatsApp CO 36 → 44 → 25 → 27 → 31; WhatsApp MX 46 → 51 → 30 → 34</td><td data-l="Efecto">El costo por cotización subió cada semana mientras subía el presupuesto (ver «¿Por qué subió el costo?»)</td></tr>
   </tbody>
 </table>
 <p class="fuente">Historial de cambios de la cuenta (Administrador de anuncios → Historial de la cuenta). Horas en el huso de la cuenta, igual al de Bogotá en estas fechas.</p>
@@ -208,30 +227,30 @@
 </div>
 
 <p><b>El detalle de cada punto:</b></p>
-<table>
+<table class="tarjetas">
   <thead><tr><th>Cómo lo hacemos hoy</th><th>Qué nos cuesta</th><th>Cómo podemos hacerlo</th></tr></thead>
   <tbody>
-    <tr><td>Rehacemos las campañas cada mes (Agosto → Septiembre → Octubre)</td><td>Cada campaña nueva aprende desde cero. Web Colombia nueva: 2,16 USD por cotización; la que reemplazó, 1,24 en la misma semana</td><td>Una campaña permanente por país y canal. Lo nuevo entra como anuncios dentro del mismo conjunto</td></tr>
-    <tr><td>Hacemos varios cambios el mismo día (presupuesto + videos + pausas)</td><td>Cada cambio importante reinicia el aprendizaje; con varios a la vez no sabemos cuál ayudó y cuál dañó</td><td>Un cambio a la vez por campaña, y ninguno durante los 7 días siguientes</td></tr>
-    <tr><td>Seguimos subiendo presupuesto aunque el costo ya suba, y a veces en saltos (Venezuela 10 → 20; Ecuador 18 → 42,92 → 25 en minutos)</td><td>Meta gasta, pero en gente con menos interés: en campañas de pocas ciudades el costo sube semana a semana</td><td>Máximo +20 % cada 3–4 días, solo si gastó ≥ 90 % de lo asignado y su costo no subió más de 20 %. Antes de escalar fuerte, pasar de ciudades a país completo</td></tr>
-    <tr><td>Cambiamos el video de un anuncio que ya corre</td><td>Meta lo trata como un cambio importante: el conjunto vuelve a aprender y el anuncio pierde lo ganado</td><td>Creamos el anuncio nuevo al lado. Agregar también reinicia el aprendizaje, así que los nuevos entran todos juntos, cada 3 semanas</td></tr>
-    <tr><td>Pausamos a los que más rinden</td><td>Apagamos justo lo que traía los resultados</td><td>Pausamos solo lo que gastó 2–3 veces el costo objetivo sin traer nada</td></tr>
-    <tr><td>Nombres con mes y «Copia»</td><td>Cuesta saber cuál es la vigente y se duplican campañas</td><td>Nombre por país y canal (<code>CO · Web</code>, <code>MX · WhatsApp</code>); el mes va en el anuncio</td></tr>
-    <tr><td>No dejamos registro de los cambios</td><td>Después no podemos saber qué funcionó ni por qué</td><td>Una línea por cambio: fecha, campaña, qué, por qué, quién</td></tr>
-    <tr><td>Juzgamos por las compras que Meta se atribuye</td><td>Menos del 10 % de las compras le llegan a Meta con la marca del clic (ver Medición)</td><td>Decidimos con las ventas del CMS por país y semana, y usamos Meta para cotizaciones y conversaciones</td></tr>
+    <tr><td>Rehacemos las campañas cada mes (Agosto → Septiembre → Octubre)</td><td data-l="Qué nos cuesta">Cada campaña nueva aprende desde cero. Web Colombia nueva: 2,16 USD por cotización; la que reemplazó, 1,24 en la misma semana</td><td data-l="Cómo podemos hacerlo">Una campaña permanente por país y canal. Lo nuevo entra como anuncios dentro del mismo conjunto</td></tr>
+    <tr><td>Hacemos varios cambios el mismo día (presupuesto + videos + pausas)</td><td data-l="Qué nos cuesta">Cada cambio importante reinicia el aprendizaje; con varios a la vez no sabemos cuál ayudó y cuál dañó</td><td data-l="Cómo podemos hacerlo">Un cambio a la vez por campaña, y ninguno durante los 7 días siguientes</td></tr>
+    <tr><td>Seguimos subiendo presupuesto aunque el costo ya suba, y a veces en saltos (Venezuela 10 → 20; Ecuador 18 → 42,92 → 25 en minutos)</td><td data-l="Qué nos cuesta">Meta gasta, pero en gente con menos interés: en campañas de pocas ciudades el costo sube semana a semana</td><td data-l="Cómo podemos hacerlo">Máximo +20 % cada 3–4 días, solo si gastó ≥ 90 % de lo asignado y su costo no subió más de 20 %. Antes de escalar fuerte, pasar de ciudades a país completo</td></tr>
+    <tr><td>Cambiamos el video de un anuncio que ya corre</td><td data-l="Qué nos cuesta">Meta lo trata como un cambio importante: el conjunto vuelve a aprender y el anuncio pierde lo ganado</td><td data-l="Cómo podemos hacerlo">Creamos el anuncio nuevo al lado. Agregar también reinicia el aprendizaje, así que los nuevos entran todos juntos, cada 3 semanas</td></tr>
+    <tr><td>Pausamos a los que más rinden</td><td data-l="Qué nos cuesta">Apagamos justo lo que traía los resultados</td><td data-l="Cómo podemos hacerlo">Pausamos solo lo que gastó 2–3 veces el costo objetivo sin traer nada</td></tr>
+    <tr><td>Nombres con mes y «Copia»</td><td data-l="Qué nos cuesta">Cuesta saber cuál es la vigente y se duplican campañas</td><td data-l="Cómo podemos hacerlo">Nombre por país y canal (<code>CO · Web</code>, <code>MX · WhatsApp</code>); el mes va en el anuncio</td></tr>
+    <tr><td>No dejamos registro de los cambios</td><td data-l="Qué nos cuesta">Después no podemos saber qué funcionó ni por qué</td><td data-l="Cómo podemos hacerlo">Una línea por cambio: fecha, campaña, qué, por qué, quién</td></tr>
+    <tr><td>Juzgamos por las compras que Meta se atribuye</td><td data-l="Qué nos cuesta">Menos del 10 % de las compras le llegan a Meta con la marca del clic (ver Medición)</td><td data-l="Cómo podemos hacerlo">Decidimos con las ventas del CMS por país y semana, y usamos Meta para cotizaciones y conversaciones</td></tr>
   </tbody>
 </table>
 
 <h3 id="duplicar">¿Duplicar campañas o cuentas?</h3>
 <p class="lead"><b>Duplicar no multiplica resultados: reparte los mismos datos entre más piezas y cada una aprende peor.</b> Meta aprende por conjunto de anuncios y necesita del orden de 50 resultados por semana en cada uno para salir de la fase de aprendizaje; hoy ninguna campaña llega a eso en compras.</p>
-<table>
+<table class="tarjetas">
   <thead><tr><th>Idea</th><th>¿Nos conviene?</th><th>Por qué</th><th>Cuándo sí</th></tr></thead>
   <tbody>
-    <tr><td>Duplicar una campaña y dejar las dos encendidas</td><td><b>No</b></td><td>Compiten por la misma gente: Meta deja entrar a una y la otra gasta poco y mal; los resultados se parten y ninguna aprende</td><td>Solo para reemplazar: se duplica, se ajusta la copia y se apaga la original el mismo día</td></tr>
-    <tr><td>Duplicar para probar un video o texto nuevo</td><td><b>No</b></td><td>No hace falta: el anuncio nuevo entra en el mismo conjunto y Meta reparte</td><td>Para una prueba limpia, la herramienta de prueba A/B de Meta, que separa a la gente</td></tr>
-    <tr><td>Duplicar para subir mucho el presupuesto sin «romper» la original</td><td><b>No, por ahora</b></td><td>Resultados irregulares y se pierde el historial; subir 20 % cada 3–4 días funciona mejor</td><td>Con presupuestos muy superiores a los nuestros y conjuntos que ya salieron de aprendizaje</td></tr>
-    <tr><td>Una cuenta por país</td><td><b>No</b></td><td>El píxel es el mismo y Meta aprende por conjunto, no por cuenta; Meta puede reconocer que las cuentas son del mismo anunciante, así que la competencia entre anuncios propios no desaparece; las cuentas nuevas arrancan con límites de gasto y revisiones más estrictas; seis facturaciones y comparaciones a mano</td><td>Solo si cada país lo paga una empresa distinta o lo maneja un equipo que no debe ver el resto</td></tr>
-    <tr><td>Una cuenta de respaldo vacía</td><td><b>Sí</b></td><td>Si Meta bloquea la cuenta principal (ya pasó con una cuenta antigua), se reactiva la pauta en horas y no en días</td><td>Ya existe «SegurosFly 2»: conviene dejarla con medio de pago y píxel compartido, sin campañas</td></tr>
+    <tr><td>Duplicar una campaña y dejar las dos encendidas</td><td data-l="¿Nos conviene?"><b>No</b></td><td data-l="Por qué">Compiten por la misma gente: Meta deja entrar a una y la otra gasta poco y mal; los resultados se parten y ninguna aprende</td><td data-l="Cuándo sí">Solo para reemplazar: se duplica, se ajusta la copia y se apaga la original el mismo día</td></tr>
+    <tr><td>Duplicar para probar un video o texto nuevo</td><td data-l="¿Nos conviene?"><b>No</b></td><td data-l="Por qué">No hace falta: el anuncio nuevo entra en el mismo conjunto y Meta reparte</td><td data-l="Cuándo sí">Para una prueba limpia, la herramienta de prueba A/B de Meta, que separa a la gente</td></tr>
+    <tr><td>Duplicar para subir mucho el presupuesto sin «romper» la original</td><td data-l="¿Nos conviene?"><b>No, por ahora</b></td><td data-l="Por qué">Resultados irregulares y se pierde el historial; subir 20 % cada 3–4 días funciona mejor</td><td data-l="Cuándo sí">Con presupuestos muy superiores a los nuestros y conjuntos que ya salieron de aprendizaje</td></tr>
+    <tr><td>Una cuenta por país</td><td data-l="¿Nos conviene?"><b>No</b></td><td data-l="Por qué">El píxel es el mismo y Meta aprende por conjunto, no por cuenta; Meta puede reconocer que las cuentas son del mismo anunciante, así que la competencia entre anuncios propios no desaparece; las cuentas nuevas arrancan con límites de gasto y revisiones más estrictas; seis facturaciones y comparaciones a mano</td><td data-l="Cuándo sí">Solo si cada país lo paga una empresa distinta o lo maneja un equipo que no debe ver el resto</td></tr>
+    <tr><td>Una cuenta de respaldo vacía</td><td data-l="¿Nos conviene?"><b>Sí</b></td><td data-l="Por qué">Si Meta bloquea la cuenta principal (ya pasó con una cuenta antigua), se reactiva la pauta en horas y no en días</td><td data-l="Cuándo sí">Ya existe «SegurosFly 2»: conviene dejarla con medio de pago y píxel compartido, sin campañas</td></tr>
   </tbody>
 </table>
 <p>En la práctica: una cuenta, una campaña por país y canal, los anuncios nuevos al lado de los que corren, y el presupuesto de la campaña repartido por Meta entre conjuntos. Hoy Colombia y México tienen tres campañas cada uno (web, WhatsApp y reconocimiento) sobre el mismo público; es lo máximo que conviene.</p>
@@ -241,7 +260,7 @@
 <section id="videos">
 <h2>Cuándo cambiar un video</h2>
 <p class="lead"><b>Un video se renueva cuando se desgasta, no cuando lleva tiempo. El desgaste se ve en tres señales que hay que mirar juntas, por anuncio, en ventanas de 7 días.</b> Del 10 al 16 de octubre ningún anuncio activo pasaba de una frecuencia semanal de 2,2, lejos del umbral de 3: los videos que se cambiaron el 16 todavía tenían recorrido.</p>
-<table>
+<table class="compacta">
   <thead><tr><th>Señal</th><th>Qué mirar</th><th>Umbral para actuar</th></tr></thead>
   <tbody>
     <tr><td>Frecuencia</td><td>Veces que una misma persona vio el anuncio en 7 días</td><td>Supera 3,0 y sigue subiendo</td></tr>
@@ -262,10 +281,10 @@
 
 <section id="medicion">
 <h2>Medición: lo que Meta ve y lo que no</h2>
-<p class="lead"><b>Meta decide con datos incompletos: las compras le llegan casi sin la marca del clic, y la home dispara eventos «Lead» que no existen.</b> Esto no explica la caída de octubre, pero sí por qué el costo por compra de Meta no sirve para decidir presupuesto.</p>
+<p class="lead"><b>Meta decide con datos incompletos: las compras le llegan casi sin la marca del clic, y recibe como «Lead» simples clics en botones, inflados en ráfagas.</b> Esto no explica la caída de octubre, pero sí por qué el costo por compra de Meta no sirve para decidir presupuesto.</p>
 <ol>
   <li><b>Las compras casi no se atribuyen.</b> Solo el 9,1 % de los avisos de compra que recibe el píxel llevan el identificador del clic en el anuncio (<code>fbc</code>), contra 74,1 % en las cotizaciones (lectura del 17 de octubre; es un promedio móvil que Meta recalcula a diario y en días anteriores rondó el 5 %). Se pierde entre la cotización y el pago, probablemente al pasar por la pasarela. Es un tema del api y la web. Hasta arreglarlo, las ventas se miden en el CMS.</li>
-  <li><b>Eventos «Lead» inflados en la home.</b> Ráfagas imposibles en <code>segurosfly.com/</code>: 422 Leads contra 103 visitas el 14 de octubre a las 8 a. m.; 209 contra 71 el 16 a las 3 p. m. (hora de Bogotá). Llegan por navegador y por servidor a la vez, con la misma forma, así que no vienen de nuestro código: probablemente un botón configurado desde el Administrador de eventos de Meta o desde Google Tag Manager que se dispara con cada clic. Ninguna campaña optimiza por Lead, pero ensucia las audiencias automáticas.</li>
+  <li><b>Eventos «Lead» que no son leads.</b> En Google Tag Manager (contenedor <code>GTM-5ZGZLL8T</code>) hay una etiqueta que envía a Meta un «Lead» cada vez que la web registra un clic en un botón de WhatsApp o de contacto (el evento <code>cta_click</code>); la misma regla envía «Contact» a TikTok y <code>cta_click</code> a Google Analytics. O sea: un «Lead» en Meta es un toque en un botón, no un contacto real. Desde el 12 de octubre llegan en ráfagas imposibles: 422 «Leads» el 14 de octubre entre las 8 y las 9 a. m. (hora de Bogotá), todos desde celulares Android, frente a 103 páginas vistas en esa hora; 209 el 16 entre las 3 y las 4 p. m. (203 desde Android) Cada clic llega dos veces, por navegador y por servidor. Ninguna campaña optimiza por «Lead», pero ensucia las señales y audiencias automáticas de Meta. Lo que lo conecta con Taboola News, en «Comportamiento en la web».</li>
   <li><b>La calidad de coincidencia del píxel es 6,1 sobre 10</b> en todos los eventos: solo IP, navegador y cookie. Sin correo ni teléfono cifrados, Meta reconoce peor a quién cotizó y compró.</li>
   <li><b>El comportamiento dentro de la web se revisó con Clarity:</b> ver la sección siguiente.</li>
 </ol>
@@ -274,17 +293,19 @@
 <section id="web">
 <h2>Comportamiento en la web (Clarity)</h2>
 <p class="lead"><b>El tráfico de Meta se comporta igual que antes del cambio de octubre: el diseño de la landing no está espantando a la gente. La fricción está en tráfico de baja calidad que llega desde Google Ads.</b> Comparamos dos ventanas de 14 días: 20 sep – 3 oct y 4 – 17 oct.</p>
-<table>
+<table class="tarjetas">
   <thead><tr><th>Origen</th><th>% que pide cotización (antes → después)</th><th>Clics en zonas que no responden</th><th>Lectura</th></tr></thead>
   <tbody>
-    <tr><td>Instagram</td><td>28,6 % → 28,1 %</td><td>5 %</td><td>Estable. Van directo al cotizador («Siguiente →» y calendario son lo más tocado)</td></tr>
-    <tr><td>Facebook</td><td>28,2 % → 27,7 %</td><td>5 % → 8 %</td><td>Estable</td></tr>
-    <tr><td>Taboola News (Google Ads)</td><td>15,7 % → 13,3 %</td><td>32–35 %</td><td>23 toques por página vista sobre textos que no son botones, 0 compras, 3,8 s de carga</td></tr>
-    <tr><td>Display de Google</td><td>— → 11,9 %</td><td>29 %</td><td>Apareció en octubre (293 sesiones)</td></tr>
+    <tr><td>Instagram</td><td data-l="% que pide cotización (antes → después)">28,6 % → 28,1 %</td><td data-l="Clics en zonas que no responden">5 %</td><td data-l="Lectura">Estable. Van directo al cotizador («Siguiente →» y calendario son lo más tocado)</td></tr>
+    <tr><td>Facebook</td><td data-l="% que pide cotización (antes → después)">28,2 % → 27,7 %</td><td data-l="Clics en zonas que no responden">5 % → 8 %</td><td data-l="Lectura">Estable</td></tr>
+    <tr><td>Taboola News (Google Ads)</td><td data-l="% que pide cotización (antes → después)">15,7 % → 13,3 %</td><td data-l="Clics en zonas que no responden">32–35 %</td><td data-l="Lectura">23 toques por página vista sobre textos que no son botones, 0 compras, 3,8 s de carga</td></tr>
+    <tr><td>Display de Google</td><td data-l="% que pide cotización (antes → después)">— → 11,9 %</td><td data-l="Clics en zonas que no responden">29 %</td><td data-l="Lectura">Apareció en octubre (293 sesiones)</td></tr>
   </tbody>
 </table>
+<div class="nota"><b>¿Qué es Taboola News?</b> Taboola es una empresa de recomendación de contenidos: los bloques de «artículos que te pueden interesar» de muchos portales de noticias. Taboola News es su lector de noticias que viene integrado en algunos celulares Android (en la pantalla de bloqueo o al deslizar a un lado). Nuestros anuncios de Google Ads aparecen ahí porque las campañas de Google que usan la red de display publican también en sitios y apps de terceros. Es tráfico barato pero de poca intención: la persona estaba leyendo noticias, no buscando un seguro, y muchos toques son accidentales.</div>
 <ul>
   <li><b>Taboola News</b> son 1.000–1.300 sesiones cada dos semanas (12–16 % de todo el tráfico del sitio) desde dos campañas de Google Ads (23819281672 y 24085455279). Ya estaba en septiembre. Lo más tocado es el título del hero y el texto «Cumple requisito ingreso a Argentina»: señal de clics accidentales, no de interés.</li>
+  <li><b>Coincide con las ráfagas de «Lead» en Meta.</b> El 10 y el 11 de octubre no entró tráfico de Taboola News y no hubo ráfagas; del 12 al 16 entraron entre 75 y 129 visitas diarias de Taboola News y hubo ráfagas todos los días. En los dos casos son celulares: las ráfagas vienen casi solo de Android y las visitas de Taboola News, 100 % de Chrome móvil y la página es <code>/lp/asistencia</code>. Es una coincidencia fuerte, no una prueba: lo más probable es que quien llega desde Taboola News toque varias veces el botón de WhatsApp sin que se abra (pasa en los navegadores internos de algunas apps) y cada toque cuente como un «Lead».</li>
   <li><b>Señales de rebote del sitio completo, casi sin cambio:</b> páginas por sesión 1,58 → 1,53; retrocesos rápidos 1,6 % → 1,8 %; desplazamiento promedio 41,7 % → 41,4 %.</li>
   <li><b>La página carga algo más lento desde el 4 de octubre:</b> 2,6 → 2,8 s en mostrar lo principal y 360 → 420 ms en responder al toque. No movió la cotización de Meta, pero conviene aligerar la versión actual del hero.</li>
   <li><b>Para confirmar:</b> de quienes llegan al pago, Clarity muestra ~50 % que terminan en septiembre y 39–47 % desde el 27 de septiembre. Es una medición aproximada; hay que contrastarla con las ventas por pasarela en la intranet.</li>
@@ -295,7 +316,7 @@
 <h2>Plan de inversión: 12.000 USD en 30 días entre Meta y Google</h2>
 <p class="lead"><b>Hablamos de ROAS, pero lo que nos importa es el ROIS: cuánto devuelve cada dólar después de pagar también la póliza y la pasarela.</b> El tablero de ventas de la intranet ya tiene las piezas: <code>ROAS = Ventas USD ÷ Total MKT</code> y <code>Margen de contribución = (Ventas − Costo Carrier − Total MKT) ÷ Ventas</code>. El ROIS que proponemos usar es <code>Ventas USD ÷ (Total MKT + Costo Carrier + Fees pasarela)</code>. El tablero advierte, y vale para los dos: es una división de totales del mismo periodo, no atribución campaña por campaña, e incluye ventas que habrían llegado sin publicidad.</p>
 <p><b>Lo que pide un 3,0 con 12.000 USD de pauta y ticket medio de 85,55 USD:</b></p>
-<table>
+<table class="compacta">
   <thead><tr><th>Meta</th><th>Venta necesaria (USD)</th><th>Ventas al mes</th><th>Costo de pauta por venta</th></tr></thead>
   <tbody>
     <tr><td>ROAS 3,0 (solo pauta)</td><td>36.000</td><td>421</td><td>≤ 28,5 USD</td></tr>
@@ -317,7 +338,7 @@
 
 <h3>Rampa del total Meta + Google</h3>
 <p>30 días desde el jueves 23 de octubre (7 días después de los cambios del 16, para no empezar con los conjuntos aprendiendo), o noviembre completo. Reparto de referencia: ~75 % Meta y ~25 % Google; cada plataforma sube con las mismas reglas.</p>
-<table>
+<table class="compacta">
   <thead><tr><th>Días</th><th>USD/día</th><th>Subtotal</th><th>Cambio</th></tr></thead>
   <tbody>
     <tr><td>1–4</td><td>250</td><td>1.000</td><td>parte de lo actual (209/día)</td></tr>
@@ -339,7 +360,7 @@
 </ol>
 <p><b>Reparto inicial (se ajusta cada semana con las ventas del CMS por país):</b> Colombia 35 % (web + WhatsApp) · México 30 % · Venezuela 12 % · Ecuador 8 % · Perú 8 % · Reconocimiento 5 %. Perú cotiza barato pero casi no compra: si en dos semanas no vende, su parte pasa a Colombia.</p>
 <p><b>Metas intermedias para saber si vamos bien (ventas del CMS, no de Meta):</b></p>
-<table>
+<table class="compacta">
   <thead><tr><th>Semana</th><th>Gasto (USD)</th><th>Ventas necesarias</th><th>Costo por venta objetivo</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>1.000–1.200</td><td>40–45</td><td>≤ 28</td></tr>
@@ -359,7 +380,7 @@
   <li>Brandon: una sola campaña por país y canal, con nombre sin mes; revisemos juntos si los 5 anuncios que más traían y se pausaron el 16 de octubre deben volver (Perú 4, Ecuador 4, Web MX 1, WhatsApp MX 1, CO Web 5); si vuelven, todos en un mismo cambio.</li>
   <li>Brandon y Wilker: acordar el registro de cambios (fecha, campaña, qué, por qué, quién) y las reglas de subida de esta nota.</li>
   <li>Wilker y Jhojan: confirmar el porcentaje de carrier y pasarela sobre la venta, y con eso fijar la meta de ROIS y el costo por venta objetivo.</li>
-  <li>Wilker: revisar en el Administrador de eventos de Meta (y en Google Tag Manager) qué dispara el evento Lead en la home y apagarlo.</li>
+  <li>Wilker y quien administra Google Tag Manager: dejar de enviar a Meta el clic en botones como «Lead» (renombrarlo a un evento propio, por ejemplo <code>clic_whatsapp</code>, o enviarlo solo a Google Analytics) y confirmar que ninguna conversión de Google Ads se alimenta de <code>cta_click</code>.</li>
   <li>Quien maneja Google Ads: excluir Taboola News y las ubicaciones de display de baja calidad en las campañas 23819281672 y 24085455279, y mover ese presupuesto a búsqueda.</li>
   <li>Wilker: contrastar en la intranet los pagos iniciados contra los terminados por pasarela desde el 27 de septiembre.</li>
   <li>Marketing: tener listos 2 videos nuevos por país antes del día 15 de la rampa, y los de Joanna para YouTube.</li>
