@@ -155,7 +155,7 @@ def pase_hsm(p):
 def generar_piezas():
     hechas = []
     for p in D['piezas']:
-        if p['id'] == 'pase-hsm':
+        if p['id'] == 'pase-hsm' and p.get('estado') != 'descartada':
             svg = pase_hsm(p)
             (AQUI / 'piezas').mkdir(exist_ok=True)
             (AQUI / 'piezas' / 'pase_hsm_1600x837.svg').write_text(svg, encoding='utf-8')

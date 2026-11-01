@@ -253,13 +253,13 @@
     {
       "id": "pase-hsm",
       "nombre": "Pase de abordar · Black Friday",
-      "estado": "maqueta",
+      "estado": "descartada",
       "formato": "Plantilla de mensaje (HSM) / encabezado de correo",
       "tamano": [
         1600,
         837
       ],
-      "archivo": "piezas/pase_hsm_1600x837.png",
+      "archivo": null,
       "usos": [
         "whatsapp_hsm",
         "whatsapp_chat",
@@ -303,7 +303,8 @@
         ],
         "pie": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026"
       },
-      "mensaje_sugerido": "¡Hola! 👋 Llegó Black Friday en SegurosFly: hasta 75% OFF en tu asistencia de viaje, todo noviembre. Mientras antes compres, más ahorras. Asistencia médica 24/7, y además eSIM gratis y Salas VIP en planes seleccionados. ¿Me compartes origen, destino y fechas y te envío tu cotización? ✈️"
+      "mensaje_sugerido": "¡Hola! 👋 Llegó Black Friday en SegurosFly: hasta 75% OFF en tu asistencia de viaje, todo noviembre. Mientras antes compres, más ahorras. Asistencia médica 24/7, y además eSIM gratis y Salas VIP en planes seleccionados. ¿Me compartes origen, destino y fechas y te envío tu cotización? ✈️",
+      "motivo_descarte": "Repetía el descuento de la campaña (hasta 75%). El pase de abordar es para un descuento ADICIONAL al macro (cupón), como el de Halloween (40% adicional hoy hasta las 8 PM). Se rehace en la central de materiales HSM: docs/CENTRAL-MATERIALES-HSM.md."
     },
     {
       "id": "jessica-chat",

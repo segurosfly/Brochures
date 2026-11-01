@@ -30,6 +30,8 @@ def generar(D, aqui):
     # Kit comercial
     kit = ''
     for p in D['piezas']:
+        if p.get('estado') == 'descartada':
+            continue
         if p.get('archivo') and (aqui / p['archivo']).exists():
             w, h = p['tamano']
             img = (f'<img src="{e(p["archivo"])}" alt="{e(p.get("alt",""))}" loading="lazy">'

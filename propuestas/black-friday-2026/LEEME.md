@@ -38,22 +38,17 @@ ni en la imagen. Así página, piezas, PDF y correos dicen siempre lo mismo.
   (Mac: doble clic → Instalar; Linux: `~/.fonts` + `fc-cache -f`).
 - Para el PDF: Google Chrome o Chromium (en el Mac de Wilker ya está Chrome).
 
-## Pieza: pase de abordar (Black Friday)
+## Pieza: pase de abordar — DESCARTADA (01/11/2026)
 
-Versión Black Friday del pase de Halloween («Perder este vuelo SÍ da susto»), que los asesores envían a
-prospectos. Mismo esquema (pase + talón dorado + beneficios + aliados) con el concepto de noviembre:
-fondo negro, lámpara LED, «BLACK FRIDAY» itálica blanco + oro, maletas + celular con eSIM.
-- Oferta: **hasta 75% · todo noviembre** (INICIO hoy → FIN 30 nov). No es oferta relámpago: si se
-  quiere una por horas o por fecha clave (Buen Fin, Black Friday, Cyber Monday), se agrega otra
-  pieza en el JSON con su condición confirmada por Wilker.
-- Beneficios: Asistencia médica 24/7 (primero, siempre) · eSIM gratis* · Salas VIP* (*planes seleccionados).
-- Aliados del pie: Meta Verified, AirHelp, Priority Pass, Rentcars (en blanco). Koris/Lloyd's no entra:
-  su logo solo existe en JPG con fondo.
+La versión «hasta 75% · todo noviembre» repetía el descuento de la campaña y no aportaba nada. El pase de
+abordar de Halloween funciona porque anuncia un descuento **ADICIONAL** al macro (cupón: 40% hoy hasta las
+8 PM para quien sale de mañana a 5 días). Se rehace como cupón adicional real dentro de la **central de
+materiales HSM para Kommo**, que se desarrolla aparte: `docs/CENTRAL-MATERIALES-HSM.md` (raíz de
+segurosfly-dev). El dibujo (`generar.py → pase_hsm()`) se conserva para reutilizarlo con esos datos.
 
 ## Pendientes
 
 - Visto bueno de Wilker a la maqueta.
 - Originales de Jéssica (chat 1080×1080, estado 1080×1920, plantilla 1600×837): en el PDF están en
   baja resolución. Se agregan a `piezas/` y se marca `estado: "lista"` en el JSON.
-- Versiones del pase para chat (1080×1080) y estado (1080×1920).
 - `piezas/hero_captura.png` (captura del hero para el PDF) y generar el PDF.
