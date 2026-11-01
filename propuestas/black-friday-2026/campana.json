@@ -1,0 +1,370 @@
+{
+  "_leeme": "Fuente ÚNICA de datos de la campaña Black Friday 2026. De aquí salen la página de recursos (index.html), las piezas (piezas/*.png), el PDF descargable y, más adelante, los correos de email marketing. Para cambiar un texto, se cambia AQUÍ y se vuelve a correr generar.py. Especificación visual: paginaweb-nextjs/docs/temporadas/BLACK-FRIDAY-2026.md.",
+  "version": "2026-11-01 · maqueta 1",
+  "campana": {
+    "id": "black-friday-2026",
+    "nombre": "Black Friday 2026",
+    "eyebrow": "Campaña del mes · Noviembre 2026",
+    "vigencia": {
+      "desde": "2026-11-01",
+      "hasta": "2026-11-30T23:59:59-05:00",
+      "texto": "Del 1 al 30 de noviembre de 2026",
+      "texto_corto": "Todo noviembre"
+    },
+    "mercados": [
+      "CO",
+      "MX",
+      "VE",
+      "PE",
+      "EC",
+      "PA"
+    ],
+    "notas_mercado": [
+      "México: el contenido orgánico arranca el 3 (hasta el 2 sigue Día de Muertos). La web es una sola y entra el 1.",
+      "Venezuela: tono cuidadoso y cero política.",
+      "Copy público solo con fechas que existen en los seis países."
+    ],
+    "fechas_clave": [
+      {
+        "fecha": "2026-11-13/2026-11-17",
+        "nombre": "El Buen Fin",
+        "mercados": [
+          "MX"
+        ]
+      },
+      {
+        "fecha": "2026-11-27",
+        "nombre": "Black Friday",
+        "mercados": [
+          "todos"
+        ]
+      },
+      {
+        "fecha": "2026-11-30",
+        "nombre": "Cyber Monday · último día",
+        "mercados": [
+          "todos"
+        ]
+      }
+    ],
+    "origen": [
+      {
+        "quien": "Jéssica Machado",
+        "aporte": "Propuesta «Campaña del mes · Black Friday 2026»: negro de gala y oro, «HASTA» sobre el 75%, franja y vigencia."
+      },
+      {
+        "quien": "Wilker Casadiego",
+        "aporte": "Concepto web aprobado el 01/11 tras 9 versiones: lámpara LED, maletas + celular, avioncito, regla «lo principal primero»."
+      }
+    ]
+  },
+  "oferta": {
+    "titular": "Hasta 75% OFF",
+    "complemento": "en tu asistencia de viaje",
+    "condicion": "Descuento según la anticipación de tu compra",
+    "regla": "«HASTA» es obligatorio: el 75% es el tramo más alto de la escalera de antelación (181 días o más). Nunca el 75 sin «hasta» ni separado de «asistencia de viaje».",
+    "requisito_previo": "Subir el último tramo de la escalera a 75% en CMS → Antelación antes de publicar."
+  },
+  "mensaje": {
+    "titulo": {
+      "linea1_blanco": "BLACK",
+      "linea1_oro": "FRIDAY"
+    },
+    "h1": "Más que un seguro de viaje",
+    "bajada": "Para viajar tranquilo.",
+    "eslogan_jessica": "El regalo es viajar tranquilo.",
+    "cta": {
+      "web_movil": "Cotizar Ahora",
+      "web_escritorio": "Cotizar por WhatsApp",
+      "piezas": "Cotiza tu asistencia"
+    },
+    "orden_lectura": [
+      "titulo",
+      "h1",
+      "bajada",
+      "oferta",
+      "cta",
+      "tarjetas"
+    ],
+    "prohibido": [
+      "Sílabas AN·TI·CÍ·PA·TE en noviembre",
+      "Copy de temporada en <title> o meta description",
+      "Decir o insinuar que vendemos vuelos o maletas"
+    ]
+  },
+  "pilares": [
+    {
+      "id": "medica",
+      "orden": 1,
+      "principal": true,
+      "etiqueta": "Te respaldamos 24/7",
+      "texto": "¿Emergencia médica?",
+      "frase": "Asistencia médica y emergencias 24/7",
+      "icono": "cruz",
+      "guardarrail": "Siempre primero: es lo que vendemos."
+    },
+    {
+      "id": "equipaje",
+      "orden": 2,
+      "etiqueta": "Equipaje protegido",
+      "texto": "¿Maleta perdida?",
+      "frase": "Equipaje protegido",
+      "icono": "maleta",
+      "guardarrail": "«según tu plan» (pendiente confirmar que aplica en todos)"
+    },
+    {
+      "id": "esim",
+      "orden": 3,
+      "etiqueta": "eSIM gratis",
+      "texto": "Datos al aterrizar",
+      "frase": "eSIM gratis",
+      "icono": "chip",
+      "guardarrail": "«en planes seleccionados»"
+    },
+    {
+      "id": "dispositivos",
+      "orden": 4,
+      "etiqueta": "Tus dispositivos",
+      "texto": "Protege laptop y celular",
+      "frase": "Protección para laptop y celular",
+      "icono": "laptop",
+      "guardarrail": "Tech Protection es complemento pagado (USD 22/viajero, planes 2 y 15–20): nunca «incluido» ni «gratis»"
+    },
+    {
+      "id": "argentina",
+      "orden": 5,
+      "etiqueta": "Cumple requisito",
+      "texto": "Ingreso a Argentina",
+      "icono": "pasaporte"
+    },
+    {
+      "id": "schengen",
+      "orden": 6,
+      "etiqueta": "Cumple requisitos",
+      "texto": "Europa · Zona Schengen",
+      "icono": "schengen",
+      "guardarrail": "Nunca «requisito de ingreso» Schengen"
+    },
+    {
+      "id": "vuelo",
+      "orden": 7,
+      "etiqueta": "Te respaldamos",
+      "texto": "¿Vuelo cancelado?",
+      "icono": "reloj"
+    }
+  ],
+  "franja": [
+    "Black Friday todo noviembre",
+    "Hasta 75% OFF en tu asistencia de viaje",
+    "eSIM gratis + Salas VIP en planes seleccionados",
+    "Cotiza hoy por WhatsApp"
+  ],
+  "legal": {
+    "corto": "Descuento según la anticipación de tu compra. eSIM y Salas VIP en planes seleccionados.",
+    "largo": "Válido del 1 al 30 de noviembre de 2026. Descuento de hasta 75% según la anticipación de la compra. eSIM y Salas VIP en planes seleccionados. Coberturas según el plan contratado."
+  },
+  "paleta": [
+    {
+      "papel": "60% fondo",
+      "nombre": "Negro",
+      "hex": "#000000"
+    },
+    {
+      "papel": "30% lectura",
+      "nombre": "Blanco",
+      "hex": "#FFFFFF"
+    },
+    {
+      "papel": "10% acento",
+      "nombre": "Oro",
+      "hex": "#F8B133",
+      "uso": "Solo lo que debe mirarse o tocarse: FRIDAY, 75%, botón, lámpara"
+    },
+    {
+      "papel": "Ambiente",
+      "nombre": "Medianoche",
+      "hex": "#123550",
+      "uso": "Resplandor, nunca con texto encima"
+    },
+    {
+      "papel": "Ambiente",
+      "nombre": "Celeste",
+      "hex": "#6A9CD9",
+      "uso": "Parpadeo de la lámpara y resplandor"
+    }
+  ],
+  "tipografia": "Exo 2 (900 itálica para BLACK FRIDAY; 700–900 para el 75%)",
+  "contacto": {
+    "web": "segurosfly.com",
+    "whatsapp_url": "https://wa.me/19365486775",
+    "utm_base": "utm_source={canal}&utm_medium={medio}&utm_campaign=black-friday-2026&utm_content={pieza}"
+  },
+  "aliados": [
+    {
+      "nombre": "Meta Verified",
+      "archivo": "../../../paginaweb-nextjs/public/images/MetaVerified-white.png"
+    },
+    {
+      "nombre": "AirHelp",
+      "archivo": "../../../paginaweb-nextjs/public/images/AirHelp.png"
+    },
+    {
+      "nombre": "Priority Pass",
+      "archivo": "../../../paginaweb-nextjs/public/images/priority-pass-logo.png"
+    },
+    {
+      "nombre": "Rentcars",
+      "archivo": "../../../paginaweb-nextjs/public/images/rentcars.png"
+    }
+  ],
+  "semanas": [
+    {
+      "id": "S1",
+      "fechas": "1–8 nov",
+      "foco": "Arranca Black Friday: para qué sirve la asistencia",
+      "ads": "Prueba: el 75% al inicio o al cierre del video"
+    },
+    {
+      "id": "S2",
+      "fechas": "9–15 nov",
+      "foco": "El pasaje lo compraste en oferta",
+      "ads": "Buen Fin en México (13–17)"
+    },
+    {
+      "id": "S3",
+      "fechas": "16–22 nov",
+      "foco": "Primer invierno en Europa",
+      "ads": "Más presupuesto a la versión que ganó"
+    },
+    {
+      "id": "S4",
+      "fechas": "23–29 nov",
+      "foco": "Lo que trae tu caja · Black Friday el 27",
+      "ads": "Anuncios a quien cotizó y no compró"
+    },
+    {
+      "id": "S5",
+      "fechas": "30 nov",
+      "foco": "Cyber Monday, último día",
+      "ads": "Último aviso a quien cotizó"
+    }
+  ],
+  "piezas": [
+    {
+      "id": "pase-hsm",
+      "nombre": "Pase de abordar · Black Friday",
+      "estado": "maqueta",
+      "formato": "Plantilla de mensaje (HSM) / encabezado de correo",
+      "tamano": [
+        1600,
+        837
+      ],
+      "archivo": "piezas/pase_hsm_1600x837.png",
+      "usos": [
+        "whatsapp_hsm",
+        "whatsapp_chat",
+        "email_cabecera"
+      ],
+      "alt": "Pase de abordar de SegurosFly: Black Friday, hasta 75% de descuento en tu asistencia de viaje, válido todo noviembre.",
+      "textos": {
+        "eyebrow": "¿YA TIENES TU VUELO?",
+        "pase_cabecera": "PASE DE ABORDAR",
+        "pase_campana": "SEGUROSFLY · BLACK FRIDAY",
+        "desde_label": "INICIO",
+        "desde": "HOY",
+        "hasta_label": "FIN",
+        "hasta": "30 NOV",
+        "salida_label": "SALIDA",
+        "salida": "Cuando tú elijas",
+        "cierre_label": "CIERRE DE PUERTA",
+        "cierre": "30 nov · 11:59 p. m.",
+        "pct_label": "HASTA",
+        "pct": "75%",
+        "pct_sub": "EN TU ASISTENCIA DE VIAJE",
+        "talon": [
+          [
+            "EMBARQUE",
+            "Todo noviembre"
+          ],
+          [
+            "PUERTA",
+            "Tu asesor"
+          ],
+          [
+            "ASIENTO",
+            "Con respaldo"
+          ]
+        ],
+        "sello": "BLACK FRIDAY",
+        "beneficios": [
+          "Asistencia médica 24/7",
+          "eSIM gratis*",
+          "Salas VIP*"
+        ],
+        "pie": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026"
+      },
+      "mensaje_sugerido": "¡Hola! 👋 Llegó Black Friday en SegurosFly: hasta 75% OFF en tu asistencia de viaje, todo noviembre. Mientras antes compres, más ahorras. Asistencia médica 24/7, y además eSIM gratis y Salas VIP en planes seleccionados. ¿Me compartes origen, destino y fechas y te envío tu cotización? ✈️"
+    },
+    {
+      "id": "jessica-chat",
+      "nombre": "Pieza de Jéssica · chat",
+      "estado": "pendiente_original",
+      "formato": "Chat",
+      "tamano": [
+        1080,
+        1080
+      ],
+      "archivo": null,
+      "usos": [
+        "whatsapp_chat",
+        "instagram"
+      ],
+      "nota": "Pedir original PNG/JPG a Jéssica (en el PDF está en baja resolución)."
+    },
+    {
+      "id": "jessica-estado",
+      "nombre": "Pieza de Jéssica · estado",
+      "estado": "pendiente_original",
+      "formato": "Estado",
+      "tamano": [
+        1080,
+        1920
+      ],
+      "archivo": null,
+      "usos": [
+        "whatsapp_estado",
+        "historias"
+      ],
+      "nota": "Pedir original a Jéssica."
+    },
+    {
+      "id": "jessica-hsm",
+      "nombre": "Pieza de Jéssica · plantilla",
+      "estado": "pendiente_original",
+      "formato": "Plantilla de mensaje",
+      "tamano": [
+        1600,
+        837
+      ],
+      "archivo": null,
+      "usos": [
+        "whatsapp_hsm"
+      ],
+      "nota": "Pedir original a Jéssica."
+    }
+  ],
+  "email": {
+    "_nota": "Bloques reutilizables para la futura estrategia de email marketing. La secuencia (segmentos, envíos, asuntos) se define después; aquí solo queda lo que no cambia.",
+    "bloques": [
+      "titulo",
+      "h1",
+      "bajada",
+      "oferta",
+      "pilares[1..4]",
+      "cta",
+      "legal.largo"
+    ],
+    "imagen_cabecera": "pase-hsm",
+    "remitente_sugerido": "SegurosFly"
+  }
+}
