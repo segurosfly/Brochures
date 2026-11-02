@@ -46,6 +46,22 @@ abordar de Halloween funciona porque anuncia un descuento **ADICIONAL** al macro
 materiales HSM para Kommo**, que se desarrolla aparte: `docs/CENTRAL-MATERIALES-HSM.md` (raíz de
 segurosfly-dev). El dibujo (`generar.py → pase_hsm()`) se conserva para reutilizarlo con esos datos.
 
+## Generador de cupón adicional (sección 4 de la página, 01/11/2026)
+
+Lo pidió Wilker: que el equipo comercial ponga el % y salga la imagen lista para adjuntar.
+- Archivo: `generador-cupon.js` (se incrusta en `index.html` al regenerar). Dibuja en un `<canvas>` del navegador;
+  no envía nada a ningún servidor.
+- Campos: % adicional · texto de arriba (segmento: «¿Sales de mañana a 5 días?», «¿Ya tienes tu vuelo?», grupo,
+  Europa, «Solo para ti» u otro) · válido hasta (fecha y hora; por defecto hoy 8:00 p. m.) · cliente, asesor y
+  código del cupón (opcionales) · formato.
+- Salidas: **JPG** 1600×837 (adjunto/plantilla) o 1080×1080 (chat), con nombre
+  `cupon-bf-{pct}pct-{fecha}-{cliente}-{tamaño}.jpg`; «Copiar imagen» (PNG al portapapeles).
+- La pieza: pase de abordar Black Friday (negro y oro, lámpara, maletas) con «EXTRA {pct}% DE DESCUENTO ADICIONAL»,
+  «Asistencia médica 24/7» como primer beneficio y el legal «Adicional al descuento de la web, sobre ese precio».
+- **Regla:** el % debe existir como cupón en el CMS con la misma vigencia antes de enviar la imagen (la página lo
+  recuerda). El sistema guarda cupones por fecha, sin hora: el «hasta las 8 p. m.» lo cumple el asesor.
+- Logo y aliados en blanco salen de `generar.py` (`img64(..., blanco=True)`) al regenerar.
+
 ## Pendientes
 
 - Visto bueno de Wilker a la maqueta.

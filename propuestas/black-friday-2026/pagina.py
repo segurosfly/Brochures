@@ -22,6 +22,15 @@ def _fuentes(raiz):
     return out
 
 
+def _assets_cupon(raiz):
+    """Logo y aliados en blanco (data URI) para el generador de cupón del navegador."""
+    import generar as g
+    d = json.loads((Path(__file__).resolve().parent / 'campana.json').read_text(encoding='utf-8'))
+    logo, _ = g.img64(raiz / 'SegurosFly-AI-System/01_BRAND/logo/logo_blanco_fondo_oscuro.png', 600)
+    aliados = [g.img64(a['archivo'], 400, blanco=True)[0] for a in d['aliados']]
+    return {'logo': logo, 'aliados': aliados}
+
+
 def generar(D, aqui):
     raiz = aqui.parents[2]
     c = D['campana']; o = D['oferta']; m = D['mensaje']
@@ -105,31 +114,55 @@ Pasa el mouse por las maletas (escritorio) para ver el mensaje.</p>
 <p>Cada pieza con su mensaje listo para copiar. En WhatsApp, primero la imagen y luego el texto.</p>
 <div class="kit">{kit}</div></section>
 
-<section id="pilares"><h2><span class="num">4</span> Qué decimos y en qué orden</h2>
+<section id="cupon"><h2><span class="num">4</span> Generador de cupón adicional</h2>
+<p>Para el prospecto que necesita un empujón: un pase de abordar con un <b class="oro">descuento ADICIONAL</b> al de la web
+(como el de Halloween). Escribe el %, la vigencia y, si quieres, el nombre del cliente, el tuyo y el código; la imagen se
+genera sola y la descargas en <b>JPG</b> para adjuntarla en WhatsApp/Kommo.</p>
+<div class="nota no-print"><b>Antes de enviarlo:</b> el <span id="cu-aviso-pct">%</span> tiene que existir como cupón en el CMS
+(Cupones) con la misma vigencia. Es <b>adicional</b> y se aplica <b>sobre el precio ya rebajado</b> de la web: un 40% extra no
+se suma al 75%. Si el cupón no existe, no envíes la imagen.</div>
+<div class="cupon no-print"><form id="cu-form" onsubmit="return false">
+ <label>% adicional<input id="cu-pct" type="number" min="1" max="90" value="40"></label>
+ <label>Para quién (arriba)<select id="cu-seg">
+  <option>¿SALES DE MAÑANA A 5 DÍAS?</option><option>¿YA TIENES TU VUELO?</option><option>¿VIAJAN EN GRUPO?</option>
+  <option>¿VIAJAS A EUROPA?</option><option>SOLO PARA TI</option><option value="__otro">Otro texto…</option></select>
+  <input id="cu-seg-otro" type="text" maxlength="40" placeholder="Escribe el texto" style="display:none"></label>
+ <label>Válido hasta<input id="cu-vence" type="datetime-local"></label>
+ <label>Nombre del cliente (opcional)<input id="cu-cliente" type="text" maxlength="22" placeholder="María"></label>
+ <label>Tu nombre (opcional)<input id="cu-asesor" type="text" maxlength="16" placeholder="Guillermo"></label>
+ <label>Código del cupón (opcional)<input id="cu-codigo" type="text" maxlength="12" placeholder="BF40HOY"></label>
+ <label>Formato<select id="cu-formato"><option value="hsm">Adjunto / plantilla 1600×837</option><option value="chat">Chat cuadrado 1080×1080</option></select></label>
+ <div class="acciones"><button id="cu-jpg" class="btn oro" type="button">Descargar JPG</button><button id="cu-copiar" type="button">Copiar imagen</button></div>
+</form><div class="cu-vista"><canvas id="cu-canvas" width="1600" height="837"></canvas></div></div>
+</section>
+
+<section id="pilares"><h2><span class="num">5</span> Qué decimos y en qué orden</h2>
 <table><thead><tr><th>#</th><th>Tarjeta (etiqueta · texto)</th><th>Cuidado con</th></tr></thead><tbody>{pilares}</tbody></table>
 <p class="franja">{franja}</p>
 <p class="legal"><b>Legal corto:</b> {e(D["legal"]["corto"])}<br><b>Legal largo:</b> {e(D["legal"]["largo"])}</p>
 </section>
 
-<section id="semanas"><h2><span class="num">5</span> Semana a semana</h2>
+<section id="semanas"><h2><span class="num">6</span> Semana a semana</h2>
 <table><thead><tr><th>Semana</th><th>Foco</th><th>Ads</th></tr></thead><tbody>{semanas}</tbody></table>
 <div class="grid2"><div class="card"><span class="eb">Fechas clave</span><ul>{fechas}</ul></div>
 <div class="card"><span class="eb">Por país</span><ul>{mercados}</ul></div></div>
 </section>
 
-<section id="colores"><h2><span class="num">6</span> Colores y letra</h2>
+<section id="colores"><h2><span class="num">7</span> Colores y letra</h2>
 <div class="paleta">{paleta}</div><p>{e(D["tipografia"])}</p></section>
 
-<section id="reglas"><h2><span class="num">7</span> Lo que no hacemos</h2><ul>{prohibido}</ul>
+<section id="reglas"><h2><span class="num">8</span> Lo que no hacemos</h2><ul>{prohibido}</ul>
 <p class="meta">De dónde sale:</p><ul>{origen}</ul></section>
 
-<section id="datos"><h2><span class="num">8</span> Los datos, para lo que viene</h2>
+<section id="datos"><h2><span class="num">9</span> Los datos, para lo que viene</h2>
 <p>Todo lo de esta página sale de <code>campana.json</code>: textos, oferta, legal, piezas, semanas y colores.
 Así la misma fuente alimenta la web, las piezas, este PDF y, más adelante, los correos de email marketing
 (bloques listos: título, H1, bajada, oferta, pilares 1–4, CTA y legal largo; imagen de cabecera: el pase de abordar).</p>
 </section>
 </main>
 <footer class="wrap"><p>SegurosFly · {e(c["nombre"])} · {e(D["version"])} · uso interno</p></footer>
+<script>window.CUPON_ASSETS={json.dumps(_assets_cupon(raiz))};</script>
+<script>{(aqui / 'generador-cupon.js').read_text(encoding='utf-8')}</script>
 <script>
 document.querySelectorAll('[data-copiar-txt]').forEach(b=>b.onclick=async()=>{{await navigator.clipboard.writeText(b.dataset.copiarTxt);b.textContent='¡Copiado!';setTimeout(()=>b.textContent='Copiar texto',1500)}});
 document.querySelectorAll('[data-copiar-img]').forEach(b=>b.onclick=async()=>{{try{{const r=await fetch(b.dataset.copiarImg);const bl=await r.blob();await navigator.clipboard.write([new ClipboardItem({{[bl.type]:bl}})]);b.textContent='¡Copiada!'}}catch(x){{b.textContent='Usa Descargar'}}setTimeout(()=>b.textContent='Copiar imagen',1800)}});
@@ -170,6 +203,13 @@ iframe{width:100%;height:1080px;border:1px solid #2a2a30;border-radius:14px;back
 .card .big{color:#fff;font-weight:900;font-size:22px;line-height:1.15}.card .big.oro{color:#F8B133}
 .nota{margin-top:16px;padding:14px 18px;border-left:4px solid #F8B133;background:#121214;border-radius:8px;color:#cfd3da}
 .kit{display:grid;gap:18px}
+.cupon{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:18px;margin-top:14px;background:#0e0e10;border:1px solid #26262b;border-radius:16px;padding:16px}
+#cu-form{display:flex;flex-direction:column;gap:10px}
+#cu-form label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#cfd3da;font-weight:700}
+#cu-form input,#cu-form select{font-family:inherit;font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid #333;background:#141416;color:#fff}
+#cu-pct{font-size:22px!important;font-weight:900;color:#F8B133!important}
+.cu-vista canvas{width:100%;height:auto;border-radius:10px;display:block;background:#000}
+@media (max-width:860px){.cupon{grid-template-columns:1fr}}
 .pieza{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;background:#0e0e10;border:1px solid #26262b;border-radius:16px;padding:16px}
 .marco img{width:100%;border-radius:10px;display:block}
 .pendiente{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;border:1px dashed #555;border-radius:10px;color:#999}
