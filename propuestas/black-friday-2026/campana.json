@@ -307,9 +307,9 @@
       "motivo_descarte": "Repetía el descuento de la campaña (hasta 75%). El pase de abordar es para un descuento ADICIONAL al macro (cupón), como el de Halloween (40% adicional hoy hasta las 8 PM). Se rehace en la central de materiales HSM: docs/CENTRAL-MATERIALES-HSM.md."
     },
     {
-      "id": "jessica-chat",
-      "nombre": "Pieza de Jéssica · chat",
-      "estado": "pendiente_original",
+      "id": "kit-chat",
+      "nombre": "Kit · chat",
+      "estado": "por_generar",
       "formato": "Chat",
       "tamano": [
         1080,
@@ -320,12 +320,12 @@
         "whatsapp_chat",
         "instagram"
       ],
-      "nota": "Pedir original PNG/JPG a Jéssica (en el PDF está en baja resolución)."
+      "nota": "Se genera aquí con generar.py, como el kit de Halloween."
     },
     {
-      "id": "jessica-estado",
-      "nombre": "Pieza de Jéssica · estado",
-      "estado": "pendiente_original",
+      "id": "kit-estado",
+      "nombre": "Kit · estado",
+      "estado": "por_generar",
       "formato": "Estado",
       "tamano": [
         1080,
@@ -336,12 +336,12 @@
         "whatsapp_estado",
         "historias"
       ],
-      "nota": "Pedir original a Jéssica."
+      "nota": "Se genera aquí con generar.py, como el kit de Halloween."
     },
     {
-      "id": "jessica-hsm",
-      "nombre": "Pieza de Jéssica · plantilla",
-      "estado": "pendiente_original",
+      "id": "kit-plantilla",
+      "nombre": "Kit · plantilla",
+      "estado": "por_generar",
       "formato": "Plantilla de mensaje",
       "tamano": [
         1600,
@@ -351,7 +351,7 @@
       "usos": [
         "whatsapp_hsm"
       ],
-      "nota": "Pedir original a Jéssica."
+      "nota": "Se genera aquí con generar.py, como el kit de Halloween."
     }
   ],
   "email": {

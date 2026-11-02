@@ -216,7 +216,7 @@ iframe{width:100%;height:1080px;border:1px solid #2a2a30;border-radius:14px;back
 .acciones{display:flex;gap:8px;margin-top:10px}
 .info h3{margin:0 0 4px;font-size:20px}.meta{margin:2px 0;font-size:13px;color:#9aa3ad}
 .estado{font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:1px;padding:2px 8px;border-radius:999px;background:#26262b;color:#ddd}
-.estado.maqueta{background:#F8B133;color:#000}.estado.pendiente_original{background:#3a2a10;color:#F8B133}
+.estado.maqueta{background:#F8B133;color:#000}.estado.por_generar{background:#3a2a10;color:#F8B133}
 .msg{margin-top:12px;background:#141416;border-radius:12px;padding:12px 14px}.msg p{margin:6px 0 10px;color:#fff;font-size:14.5px}
 table{width:100%;border-collapse:collapse;margin:8px 0;font-size:15px}
 th{text-align:left;color:#F8B133;font-weight:800;border-bottom:2px solid #F8B133;padding:8px}

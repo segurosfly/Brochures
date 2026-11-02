@@ -65,6 +65,7 @@ Lo pidió Wilker: que el equipo comercial ponga el % y salga la imagen lista par
 ## Pendientes
 
 - Visto bueno de Wilker a la maqueta.
-- Originales de Jéssica (chat 1080×1080, estado 1080×1920, plantilla 1600×837): en el PDF están en
-  baja resolución. Se agregan a `piezas/` y se marca `estado: "lista"` en el JSON.
+- Kit del equipo (chat 1080×1080, estado 1080×1920, plantilla 1600×837): **se generan aquí** con
+  `generar.py`, como el kit de Halloween (nadie externo entrega piezas). Al generarlas se guardan en `piezas/`
+  y se marca `estado: "lista"` en el JSON.
 - `piezas/hero_captura.png` (captura del hero para el PDF) y generar el PDF.
