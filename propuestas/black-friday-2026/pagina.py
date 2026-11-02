@@ -134,7 +134,7 @@ se suma al 75%. Si el cupón no existe, no envíes la imagen.</div>
   <input id="cu-seg-otro" type="text" maxlength="40" placeholder="Escribe el texto" style="display:none"></label>
  <label>Válido hasta<input id="cu-vence" type="datetime-local"></label>
  <label>Nombre del cliente (opcional)<input id="cu-cliente" type="text" maxlength="22" placeholder="María"></label>
- <label>Tu nombre (opcional)<input id="cu-asesor" type="text" maxlength="16" placeholder="Guillermo"></label>
+ <label>Tu nombre (opcional)<input id="cu-asesor" type="text" maxlength="16" placeholder="William"></label>
  <label>Código del cupón (opcional)<input id="cu-codigo" type="text" maxlength="12" placeholder="BF40HOY"></label>
  <label>Formato<select id="cu-formato"><option value="hsm">Adjunto / plantilla 1600×837</option><option value="chat">Chat cuadrado 1080×1080</option></select></label>
  <div class="acciones"><button id="cu-jpg" class="btn oro" type="button">Descargar JPG</button><button id="cu-copiar" type="button">Copiar imagen</button></div>
