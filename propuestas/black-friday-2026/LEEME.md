@@ -5,7 +5,7 @@ comercial (piezas + mensaje listo para copiar), qué decimos y en qué orden, la
 y las reglas. Al publicarla (push de Wilker) queda en
 `https://segurosfly.github.io/Brochures/propuestas/black-friday-2026/`.
 
-**Estado (01/11/2026): MAQUETA 1**, pendiente de visto bueno de Wilker. El PDF se genera después.
+**Estado (01/11/2026):** publicada, con el kit de WhatsApp (19 imágenes) y el generador de cupón. El PDF se genera después.
 
 ## Una sola fuente de datos: `campana.json`
 
@@ -15,7 +15,7 @@ Todos los textos, la oferta, el legal, los pilares, las piezas, las semanas y lo
 | Salida | Archivo | Cómo |
 |---|---|---|
 | Página de recursos | `index.html` | `python3 generar.py` |
-| Piezas (imágenes) | `piezas/*.png` (+ `.svg` editable) | `python3 generar.py` |
+| Kit de WhatsApp (imágenes) | `piezas/bf_*.jpg` | `python3 generar.py` (dibuja `kit.py`) |
 | PDF descargable | `recursos-black-friday-2026.pdf` | `python3 generar.py --pdf` (la misma página impresa, A4 horizontal) |
 | Correos (más adelante) | — | Bloque `email` del JSON: qué bloques reutilizar y qué imagen va de cabecera |
 
@@ -29,7 +29,8 @@ ni en la imagen. Así página, piezas, PDF y correos dicen siempre lo mismo.
 - `pagina.py` — arma `index.html`; sus estilos de impresión son los del PDF.
 - `hero.html` — copia del prototipo aprobado (`paginaweb-nextjs/docs/temporadas/black-friday-2026-prototipo.html`)
   con la barra de notas oculta; la página lo muestra en un marco.
-- `piezas/pase_hsm_1600x837.png` — pase de abordar (plantilla de mensaje / cabecera de correo).
+- `kit.py` — dibuja el kit de WhatsApp desde el bloque `kit` de `campana.json`.
+- `piezas/bf_<tema>_chat.jpg` (1080×1080), `bf_<tema>_estado.jpg` (1080×1920) y `bf_general_1600x837.jpg` (plantilla HSM / cabecera de correo).
 
 ## Requisitos para regenerar
 
@@ -37,6 +38,18 @@ ni en la imagen. Así página, piezas, PDF y correos dicen siempre lo mismo.
 - Exo 2 instalada: copiar `SegurosFly-AI-System/01_BRAND/fonts/Exo2-*.otf` a la carpeta de fuentes
   (Mac: doble clic → Instalar; Linux: `~/.fonts` + `fc-cache -f`).
 - Para el PDF: Google Chrome o Chromium (en el Mac de Wilker ya está Chrome).
+
+## Kit de WhatsApp para el equipo comercial (01/11/2026)
+
+Las piezas **se hacen aquí**, como el kit de Halloween: nadie externo las entrega (Wilker, 01/11). Bloque `kit` de
+`campana.json`: 9 temas (general, anticipación, vuelo en oferta, Europa, Argentina, eSIM, dispositivos/Tech Protection,
+familia en diciembre y Cyber Monday 30/11), cada uno con chat 1080×1080 + estado 1080×1920 y su mensaje sugerido; el
+general además en 1600×837. En la página: «Copiar imagen» (la pasa a PNG para el portapapeles: pegar con Ctrl/Cmd + V en
+WhatsApp Web o Kommo), «Descargar» y «Copiar texto».
+Reglas que ya cumplen los textos: «hasta» siempre junto al 75% y a «asistencia de viaje»; asistencia médica 24/7
+siempre presente; eSIM y Salas VIP «en planes seleccionados»; Tech Protection como complemento pagado (USD 22/viajero,
+nunca «incluido»); Schengen = «cumple los requisitos», nunca «requisito de ingreso»; sin sílabas AN·TI·CÍ·PA·TE.
+Para cambiar un texto o agregar un tema: editar `kit.temas` y correr `python3 generar.py`.
 
 ## Pieza: pase de abordar — DESCARTADA (01/11/2026)
 
@@ -65,7 +78,4 @@ Lo pidió Wilker: que el equipo comercial ponga el % y salga la imagen lista par
 ## Pendientes
 
 - Visto bueno de Wilker a la maqueta.
-- Kit del equipo (chat 1080×1080, estado 1080×1920, plantilla 1600×837): **se generan aquí** con
-  `generar.py`, como el kit de Halloween (nadie externo entrega piezas). Al generarlas se guardan en `piezas/`
-  y se marca `estado: "lista"` en el JSON.
 - `piezas/hero_captura.png` (captura del hero para el PDF) y generar el PDF.

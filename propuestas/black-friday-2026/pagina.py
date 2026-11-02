@@ -36,27 +36,30 @@ def generar(D, aqui):
     c = D['campana']; o = D['oferta']; m = D['mensaje']
     hay_pdf = (aqui / PDF_NOMBRE).exists()
 
-    # Kit comercial
+    # Kit comercial: un bloque por tema (chat + estado [+ plantilla]) con su mensaje listo
+    import kit as kitmod
+    FORMATOS = {'chat': ('Chat', '1080 × 1080', 'Para enviar a un prospecto.'),
+                'estado': ('Estados', '1080 × 1920', 'Para estados de WhatsApp.'),
+                'plantilla': ('Plantilla HSM', '1600 × 837', 'Cabecera de plantilla HSM o de correo.')}
     kit = ''
-    for p in D['piezas']:
-        if p.get('estado') == 'descartada':
-            continue
-        if p.get('archivo') and (aqui / p['archivo']).exists():
-            w, h = p['tamano']
-            img = (f'<img src="{e(p["archivo"])}" alt="{e(p.get("alt",""))}" loading="lazy">'
-                   f'<div class="acciones no-print"><button data-copiar-img="{e(p["archivo"])}">Copiar imagen</button>'
-                   f'<a class="btn" href="{e(p["archivo"])}" download>Descargar</a></div>')
-        else:
-            w, h = p['tamano']
-            img = f'<div class="pendiente">Pendiente: {e(p.get("nota",""))}</div>'
-        msg = ''
-        if p.get('mensaje_sugerido'):
-            msg = (f'<div class="msg"><span class="eb">Mensaje sugerido</span><p>{e(p["mensaje_sugerido"])}</p>'
-                   f'<button class="no-print" data-copiar-txt="{e(p["mensaje_sugerido"])}">Copiar texto</button></div>')
-        usos = ' · '.join(u.replace('_', ' ') for u in p.get('usos', []))
-        kit += (f'<article class="pieza"><div class="marco">{img}</div><div class="info"><h3>{e(p["nombre"])}</h3>'
-                f'<p class="meta">{e(p["formato"])} · {w}×{h} · <span class="estado {e(p["estado"])}">{e(p["estado"].replace("_"," "))}</span></p>'
-                f'<p class="meta">Sirve para: {e(usos)}</p>{msg}</div></article>')
+    for t in D['kit']['temas']:
+        cajas = ''
+        for clave, ruta in kitmod.archivos(t).items():
+            nom, tam, uso = FORMATOS[clave]
+            if (aqui / ruta).exists():
+                vista = f'<a href="{e(ruta)}" target="_blank"><img src="{e(ruta)}" alt="{e(t["titulo"])} · {nom}" loading="lazy"></a>'
+                botones = (f'<div class="acciones no-print"><button data-copiar-img="{e(ruta)}">Copiar imagen</button>'
+                           f'<a class="btn" href="{e(ruta)}" download="SegurosFly-{e(Path(ruta).name)}">Descargar</a></div>')
+            else:
+                vista, botones = '<div class="pendiente">Falta generar: python3 generar.py</div>', ''
+            cajas += (f'<div class="fmt fmt-{clave}">{vista}<div class="kb"><b>{nom}</b><span>{tam}</span>'
+                      f'<p>{uso}</p>{botones}</div></div>')
+        filas = t['mensaje'].count('\n') + 2
+        kit += (f'<article class="tema"><h3>{e(t["titulo"])} <span class="tag">{e(t["etiqueta"])}</span>'
+                f'<small>{e(t["cuando"])}</small></h3><div class="fmts">{cajas}</div>'
+                f'<div class="msg"><div class="mh"><b>Mensaje sugerido</b>'
+                f'<button class="no-print" data-copiar-txt="{e(t["mensaje"])}">Copiar texto</button></div>'
+                f'<textarea readonly rows="{filas}">{e(t["mensaje"])}</textarea></div></article>')
 
     pilares = ''.join(
         f'<tr><td class="n">{x["orden"]}</td><td><b class="oro">{e(x["etiqueta"])}</b><br>{e(x["texto"])}</td>'
@@ -111,7 +114,9 @@ Pasa el mouse por las maletas (escritorio) para ver el mensaje.</p>
 </section>
 
 <section id="kit"><h2><span class="num">3</span> Kit para el equipo comercial</h2>
-<p>Cada pieza con su mensaje listo para copiar. En WhatsApp, primero la imagen y luego el texto.</p>
+<p>Una pieza por tema, para chat y para estados, con su mensaje listo. En WhatsApp, primero la imagen y luego el texto.
+«Copiar imagen» la deja lista para pegar (Ctrl/Cmd + V) en WhatsApp Web o Kommo; en el celular, usa «Descargar».
+Las piezas salen de <code>campana.json</code> (bloque <code>kit</code>): nadie externo las entrega.</p>
 <div class="kit">{kit}</div></section>
 
 <section id="cupon"><h2><span class="num">4</span> Generador de cupón adicional</h2>
@@ -157,7 +162,7 @@ se suma al 75%. Si el cupón no existe, no envíes la imagen.</div>
 <section id="datos"><h2><span class="num">9</span> Los datos, para lo que viene</h2>
 <p>Todo lo de esta página sale de <code>campana.json</code>: textos, oferta, legal, piezas, semanas y colores.
 Así la misma fuente alimenta la web, las piezas, este PDF y, más adelante, los correos de email marketing
-(bloques listos: título, H1, bajada, oferta, pilares 1–4, CTA y legal largo; imagen de cabecera: el pase de abordar).</p>
+(bloques listos: título, H1, bajada, oferta, pilares 1–4, CTA y legal largo; imagen de cabecera: la plantilla 1600×837 del tema general).</p>
 </section>
 </main>
 <footer class="wrap"><p>SegurosFly · {e(c["nombre"])} · {e(D["version"])} · uso interno</p></footer>
@@ -165,7 +170,9 @@ Así la misma fuente alimenta la web, las piezas, este PDF y, más adelante, los
 <script>{(aqui / 'generador-cupon.js').read_text(encoding='utf-8')}</script>
 <script>
 document.querySelectorAll('[data-copiar-txt]').forEach(b=>b.onclick=async()=>{{await navigator.clipboard.writeText(b.dataset.copiarTxt);b.textContent='¡Copiado!';setTimeout(()=>b.textContent='Copiar texto',1500)}});
-document.querySelectorAll('[data-copiar-img]').forEach(b=>b.onclick=async()=>{{try{{const r=await fetch(b.dataset.copiarImg);const bl=await r.blob();await navigator.clipboard.write([new ClipboardItem({{[bl.type]:bl}})]);b.textContent='¡Copiada!'}}catch(x){{b.textContent='Usa Descargar'}}setTimeout(()=>b.textContent='Copiar imagen',1800)}});
+// El portapapeles del navegador solo acepta PNG: la JPG se pasa a PNG antes de copiarla.
+const aPng=async(src)=>{{const bm=await createImageBitmap(await (await fetch(src)).blob());const c=document.createElement('canvas');c.width=bm.width;c.height=bm.height;c.getContext('2d').drawImage(bm,0,0);return new Promise(ok=>c.toBlob(ok,'image/png'))}};
+document.querySelectorAll('[data-copiar-img]').forEach(b=>b.onclick=async()=>{{try{{await navigator.clipboard.write([new ClipboardItem({{'image/png':aPng(b.dataset.copiarImg)}})]);b.textContent='¡Copiada!'}}catch(x){{b.textContent='Usa Descargar'}}setTimeout(()=>b.textContent='Copiar imagen',1800)}});
 </script></body></html>'''
     (aqui / 'index.html').write_text(doc, encoding='utf-8')
 
@@ -203,6 +210,16 @@ iframe{width:100%;height:1080px;border:1px solid #2a2a30;border-radius:14px;back
 .card .big{color:#fff;font-weight:900;font-size:22px;line-height:1.15}.card .big.oro{color:#F8B133}
 .nota{margin-top:16px;padding:14px 18px;border-left:4px solid #F8B133;background:#121214;border-radius:8px;color:#cfd3da}
 .kit{display:grid;gap:18px}
+.tema{background:#0e0e10;border:1px solid #26262b;border-radius:16px;padding:18px}
+.tema h3{margin:0 0 12px;font-size:21px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.tema h3 small{font-size:13px;color:#9aa3ad;font-weight:600}
+.tag{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:#F8B133;color:#000;padding:3px 9px;border-radius:999px}
+.fmts{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;align-items:start}
+.fmt{background:#141416;border-radius:12px;padding:10px}.fmt img{width:100%;border-radius:8px;display:block}
+.fmt-estado img{max-height:420px;object-fit:contain;background:#000}.fmt-plantilla{grid-column:span 2}
+.kb{display:flex;flex-direction:column;gap:2px;margin-top:8px}.kb .acciones{flex-wrap:wrap}.kb .acciones button,.kb .acciones .btn{padding:8px 14px;font-size:13px;white-space:nowrap}.kb span{font-size:12px;color:#9aa3ad}.kb p{margin:2px 0;font-size:13px}
+.msg .mh{display:flex;justify-content:space-between;align-items:center}.msg textarea{width:100%;margin-top:8px;background:#0b0b0c;color:#fff;border:1px solid #2a2a30;border-radius:10px;padding:10px;font-family:inherit;font-size:14.5px;line-height:1.45;resize:vertical}
+@media (max-width:860px){.fmt-plantilla{grid-column:auto}}
+
 .cupon{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:18px;margin-top:14px;background:#0e0e10;border:1px solid #26262b;border-radius:16px;padding:16px}
 #cu-form{display:flex;flex-direction:column;gap:10px}
 #cu-form label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#cfd3da;font-weight:700}
@@ -235,6 +252,6 @@ footer p{color:#666;font-size:12px;padding:24px 0}
  .no-print{display:none!important}.solo-print{display:block;width:100%;border-radius:10px}
  section{break-inside:avoid;page-break-before:always;border:0;padding-top:0}
  section#hero{page-break-before:auto}
- .pieza{break-inside:avoid}
+ .pieza,.tema{break-inside:avoid}
 }
 '''

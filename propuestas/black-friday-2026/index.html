@@ -24,6 +24,16 @@ iframe{width:100%;height:1080px;border:1px solid #2a2a30;border-radius:14px;back
 .card .big{color:#fff;font-weight:900;font-size:22px;line-height:1.15}.card .big.oro{color:#F8B133}
 .nota{margin-top:16px;padding:14px 18px;border-left:4px solid #F8B133;background:#121214;border-radius:8px;color:#cfd3da}
 .kit{display:grid;gap:18px}
+.tema{background:#0e0e10;border:1px solid #26262b;border-radius:16px;padding:18px}
+.tema h3{margin:0 0 12px;font-size:21px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.tema h3 small{font-size:13px;color:#9aa3ad;font-weight:600}
+.tag{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:#F8B133;color:#000;padding:3px 9px;border-radius:999px}
+.fmts{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;align-items:start}
+.fmt{background:#141416;border-radius:12px;padding:10px}.fmt img{width:100%;border-radius:8px;display:block}
+.fmt-estado img{max-height:420px;object-fit:contain;background:#000}.fmt-plantilla{grid-column:span 2}
+.kb{display:flex;flex-direction:column;gap:2px;margin-top:8px}.kb .acciones{flex-wrap:wrap}.kb .acciones button,.kb .acciones .btn{padding:8px 14px;font-size:13px;white-space:nowrap}.kb span{font-size:12px;color:#9aa3ad}.kb p{margin:2px 0;font-size:13px}
+.msg .mh{display:flex;justify-content:space-between;align-items:center}.msg textarea{width:100%;margin-top:8px;background:#0b0b0c;color:#fff;border:1px solid #2a2a30;border-radius:10px;padding:10px;font-family:inherit;font-size:14.5px;line-height:1.45;resize:vertical}
+@media (max-width:860px){.fmt-plantilla{grid-column:auto}}
+
 .cupon{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:18px;margin-top:14px;background:#0e0e10;border:1px solid #26262b;border-radius:16px;padding:16px}
 #cu-form{display:flex;flex-direction:column;gap:10px}
 #cu-form label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#cfd3da;font-weight:700}
@@ -56,7 +66,7 @@ footer p{color:#666;font-size:12px;padding:24px 0}
  .no-print{display:none!important}.solo-print{display:block;width:100%;border-radius:10px}
  section{break-inside:avoid;page-break-before:always;border:0;padding-top:0}
  section#hero{page-break-before:auto}
- .pieza{break-inside:avoid}
+ .pieza,.tema{break-inside:avoid}
 }
 </style></head><body>
 <header class="top"><div class="wrap">
@@ -89,8 +99,152 @@ Pasa el mouse por las maletas (escritorio) para ver el mensaje.</p>
 </section>
 
 <section id="kit"><h2><span class="num">3</span> Kit para el equipo comercial</h2>
-<p>Cada pieza con su mensaje listo para copiar. En WhatsApp, primero la imagen y luego el texto.</p>
-<div class="kit"><article class="pieza"><div class="marco"><div class="pendiente">Pendiente: Se genera aquí con generar.py, como el kit de Halloween.</div></div><div class="info"><h3>Kit · chat</h3><p class="meta">Chat · 1080×1080 · <span class="estado por_generar">por generar</span></p><p class="meta">Sirve para: whatsapp chat · instagram</p></div></article><article class="pieza"><div class="marco"><div class="pendiente">Pendiente: Se genera aquí con generar.py, como el kit de Halloween.</div></div><div class="info"><h3>Kit · estado</h3><p class="meta">Estado · 1080×1920 · <span class="estado por_generar">por generar</span></p><p class="meta">Sirve para: whatsapp estado · historias</p></div></article><article class="pieza"><div class="marco"><div class="pendiente">Pendiente: Se genera aquí con generar.py, como el kit de Halloween.</div></div><div class="info"><h3>Kit · plantilla</h3><p class="meta">Plantilla de mensaje · 1600×837 · <span class="estado por_generar">por generar</span></p><p class="meta">Sirve para: whatsapp hsm</p></div></article></div></section>
+<p>Una pieza por tema, para chat y para estados, con su mensaje listo. En WhatsApp, primero la imagen y luego el texto.
+«Copiar imagen» la deja lista para pegar (Ctrl/Cmd + V) en WhatsApp Web o Kommo; en el celular, usa «Descargar».
+Las piezas salen de <code>campana.json</code> (bloque <code>kit</code>): nadie externo las entrega.</p>
+<div class="kit"><article class="tema"><h3>Black Friday: más que un seguro de viaje <span class="tag">General</span><small>Todo noviembre</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_general_chat.jpg" target="_blank"><img src="piezas/bf_general_chat.jpg" alt="Black Friday: más que un seguro de viaje · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_general_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_general_chat.jpg" download="SegurosFly-bf_general_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_general_estado.jpg" target="_blank"><img src="piezas/bf_general_estado.jpg" alt="Black Friday: más que un seguro de viaje · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_general_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_general_estado.jpg" download="SegurosFly-bf_general_estado.jpg">Descargar</a></div></div></div><div class="fmt fmt-plantilla"><a href="piezas/bf_general_1600x837.jpg" target="_blank"><img src="piezas/bf_general_1600x837.jpg" alt="Black Friday: más que un seguro de viaje · Plantilla HSM" loading="lazy"></a><div class="kb"><b>Plantilla HSM</b><span>1600 × 837</span><p>Cabecera de plantilla HSM o de correo.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_general_1600x837.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_general_1600x837.jpg" download="SegurosFly-bf_general_1600x837.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="🖤 *Black Friday en SegurosFly*
+
+Más que un seguro de viaje: *asistencia médica y emergencias 24/7* para que viajes tranquilo.
+
+✅ *Hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra
+✅ eSIM gratis y Salas VIP en planes seleccionados
+
+Válido todo noviembre. ¿Me compartes origen, destino y fechas y te cotizo? 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="9">🖤 *Black Friday en SegurosFly*
+
+Más que un seguro de viaje: *asistencia médica y emergencias 24/7* para que viajes tranquilo.
+
+✅ *Hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra
+✅ eSIM gratis y Salas VIP en planes seleccionados
+
+Válido todo noviembre. ¿Me compartes origen, destino y fechas y te cotizo? 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>¿Ya tienes fecha de viaje? <span class="tag">Más ahorro</span><small>Todo noviembre</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_anticipa_chat.jpg" target="_blank"><img src="piezas/bf_anticipa_chat.jpg" alt="¿Ya tienes fecha de viaje? · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_anticipa_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_anticipa_chat.jpg" download="SegurosFly-bf_anticipa_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_anticipa_estado.jpg" target="_blank"><img src="piezas/bf_anticipa_estado.jpg" alt="¿Ya tienes fecha de viaje? · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_anticipa_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_anticipa_estado.jpg" download="SegurosFly-bf_anticipa_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="🖤 *Black Friday en SegurosFly*
+
+¿Ya tienes fecha de viaje? *Mientras antes compres, más ahorras*: el descuento de tu asistencia de viaje sube según la anticipación de tu compra, *hasta 75%* este noviembre.
+
+✅ Asistencia médica y emergencias 24/7
+✅ eSIM gratis y Salas VIP en planes seleccionados
+
+¿Me pasas destino y fechas y te cotizo? 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="9">🖤 *Black Friday en SegurosFly*
+
+¿Ya tienes fecha de viaje? *Mientras antes compres, más ahorras*: el descuento de tu asistencia de viaje sube según la anticipación de tu compra, *hasta 75%* este noviembre.
+
+✅ Asistencia médica y emergencias 24/7
+✅ eSIM gratis y Salas VIP en planes seleccionados
+
+¿Me pasas destino y fechas y te cotizo? 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>¿Compraste tu vuelo en oferta? <span class="tag">Semana 2</span><small>S2 · 9–15 nov (sirve todo el mes)</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_vuelo_chat.jpg" target="_blank"><img src="piezas/bf_vuelo_chat.jpg" alt="¿Compraste tu vuelo en oferta? · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_vuelo_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_vuelo_chat.jpg" download="SegurosFly-bf_vuelo_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_vuelo_estado.jpg" target="_blank"><img src="piezas/bf_vuelo_estado.jpg" alt="¿Compraste tu vuelo en oferta? · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_vuelo_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_vuelo_estado.jpg" download="SegurosFly-bf_vuelo_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="✈️ *¿Compraste tu vuelo en oferta?*
+
+Ahora protege el viaje: con SegurosFly tienes *asistencia médica y emergencias 24/7* desde que sales hasta que vuelves.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Equipaje protegido según tu plan
+✅ eSIM gratis en planes seleccionados
+
+¿Me cuentas destino y fechas y te cotizo? 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="11">✈️ *¿Compraste tu vuelo en oferta?*
+
+Ahora protege el viaje: con SegurosFly tienes *asistencia médica y emergencias 24/7* desde que sales hasta que vuelves.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Equipaje protegido según tu plan
+✅ eSIM gratis en planes seleccionados
+
+¿Me cuentas destino y fechas y te cotizo? 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>¿Viajas a Europa? <span class="tag">Destino</span><small>S3 · 16–22 nov (sirve todo el mes)</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_europa_chat.jpg" target="_blank"><img src="piezas/bf_europa_chat.jpg" alt="¿Viajas a Europa? · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_europa_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_europa_chat.jpg" download="SegurosFly-bf_europa_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_europa_estado.jpg" target="_blank"><img src="piezas/bf_europa_estado.jpg" alt="¿Viajas a Europa? · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_europa_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_europa_estado.jpg" download="SegurosFly-bf_europa_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="🇪🇺 *¿Viajas a Europa?*
+
+Nuestra asistencia de viaje cumple los requisitos para pedir tu visa y viajar por la Zona Schengen.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Asistencia médica y emergencias 24/7
+✅ eSIM en Europa en planes seleccionados
+
+¿Me cuentas tus fechas y te cotizo? 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="11">🇪🇺 *¿Viajas a Europa?*
+
+Nuestra asistencia de viaje cumple los requisitos para pedir tu visa y viajar por la Zona Schengen.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Asistencia médica y emergencias 24/7
+✅ eSIM en Europa en planes seleccionados
+
+¿Me cuentas tus fechas y te cotizo? 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>¿Viajas a Argentina? <span class="tag">Destino</span><small>Todo noviembre</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_argentina_chat.jpg" target="_blank"><img src="piezas/bf_argentina_chat.jpg" alt="¿Viajas a Argentina? · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_argentina_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_argentina_chat.jpg" download="SegurosFly-bf_argentina_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_argentina_estado.jpg" target="_blank"><img src="piezas/bf_argentina_estado.jpg" alt="¿Viajas a Argentina? · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_argentina_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_argentina_estado.jpg" download="SegurosFly-bf_argentina_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="🇦🇷 *¿Viajas a Argentina?*
+
+Argentina pide seguro médico a los extranjeros que ingresan al país. Con SegurosFly lo tienes resuelto.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Cobertura médica y asistencia 24/7
+✅ eSIM gratis en planes seleccionados
+
+¿Me cuentas tus fechas y te cotizo? 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="11">🇦🇷 *¿Viajas a Argentina?*
+
+Argentina pide seguro médico a los extranjeros que ingresan al país. Con SegurosFly lo tienes resuelto.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Cobertura médica y asistencia 24/7
+✅ eSIM gratis en planes seleccionados
+
+¿Me cuentas tus fechas y te cotizo? 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>Llega conectado (eSIM) <span class="tag">eSIM</span><small>Todo noviembre</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_esim_chat.jpg" target="_blank"><img src="piezas/bf_esim_chat.jpg" alt="Llega conectado (eSIM) · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_esim_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_esim_chat.jpg" download="SegurosFly-bf_esim_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_esim_estado.jpg" target="_blank"><img src="piezas/bf_esim_estado.jpg" alt="Llega conectado (eSIM) · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_esim_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_esim_estado.jpg" download="SegurosFly-bf_esim_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="📶 *Llega conectado*
+
+Con tu asistencia de viaje SegurosFly tienes *eSIM gratis* en planes seleccionados: datos desde que aterrizas, sin buscar wifi ni comprar chip.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Asistencia médica y emergencias 24/7
+✅ Salas VIP en planes seleccionados
+
+¿A dónde viajas? Te cotizo 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="11">📶 *Llega conectado*
+
+Con tu asistencia de viaje SegurosFly tienes *eSIM gratis* en planes seleccionados: datos desde que aterrizas, sin buscar wifi ni comprar chip.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ Asistencia médica y emergencias 24/7
+✅ Salas VIP en planes seleccionados
+
+¿A dónde viajas? Te cotizo 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>¿Estrenas laptop o celular? <span class="tag">Semana 4</span><small>S4 · 23–29 nov (lo que trae tu caja)</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_dispositivos_chat.jpg" target="_blank"><img src="piezas/bf_dispositivos_chat.jpg" alt="¿Estrenas laptop o celular? · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_dispositivos_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_dispositivos_chat.jpg" download="SegurosFly-bf_dispositivos_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_dispositivos_estado.jpg" target="_blank"><img src="piezas/bf_dispositivos_estado.jpg" alt="¿Estrenas laptop o celular? · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_dispositivos_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_dispositivos_estado.jpg" download="SegurosFly-bf_dispositivos_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="💻 *¿Estrenas laptop o celular este Black Friday?*
+
+Protégelo en tu viaje: añade *Tech Protection* a tu asistencia por *USD 22 por viajero* y cubre hasta USD 2.000 por pérdida, robo o hurto de celulares, computadores, tablets y cámaras (no cubre daños).
+
+🖤 Y tu asistencia de viaje con *hasta 75% OFF*, según la anticipación de tu compra.
+
+¿Me cuentas destino y fechas y te cotizo? 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="8">💻 *¿Estrenas laptop o celular este Black Friday?*
+
+Protégelo en tu viaje: añade *Tech Protection* a tu asistencia por *USD 22 por viajero* y cubre hasta USD 2.000 por pérdida, robo o hurto de celulares, computadores, tablets y cámaras (no cubre daños).
+
+🖤 Y tu asistencia de viaje con *hasta 75% OFF*, según la anticipación de tu compra.
+
+¿Me cuentas destino y fechas y te cotizo? 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>¿Viajan en familia en diciembre? <span class="tag">Grupo</span><small>Todo noviembre</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_familia_chat.jpg" target="_blank"><img src="piezas/bf_familia_chat.jpg" alt="¿Viajan en familia en diciembre? · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_familia_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_familia_chat.jpg" download="SegurosFly-bf_familia_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_familia_estado.jpg" target="_blank"><img src="piezas/bf_familia_estado.jpg" alt="¿Viajan en familia en diciembre? · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_familia_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_familia_estado.jpg" download="SegurosFly-bf_familia_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="👨‍👩‍👧 *¿Viajan en familia en diciembre?*
+
+Asegúralos a todos en una sola compra, con *asistencia médica y emergencias 24/7* para cada viajero.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ eSIM gratis en planes seleccionados
+
+¿Cuántos viajan, a dónde y en qué fechas? Te cotizo 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="10">👨‍👩‍👧 *¿Viajan en familia en diciembre?*
+
+Asegúralos a todos en una sola compra, con *asistencia médica y emergencias 24/7* para cada viajero.
+
+🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.
+
+✅ eSIM gratis en planes seleccionados
+
+¿Cuántos viajan, a dónde y en qué fechas? Te cotizo 👉 segurosfly.com</textarea></div></article><article class="tema"><h3>Cyber Monday: último día <span class="tag">Solo 30 nov</span><small>S5 · 30 nov (solo ese día)</small></h3><div class="fmts"><div class="fmt fmt-chat"><a href="piezas/bf_ultimo_chat.jpg" target="_blank"><img src="piezas/bf_ultimo_chat.jpg" alt="Cyber Monday: último día · Chat" loading="lazy"></a><div class="kb"><b>Chat</b><span>1080 × 1080</span><p>Para enviar a un prospecto.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_ultimo_chat.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_ultimo_chat.jpg" download="SegurosFly-bf_ultimo_chat.jpg">Descargar</a></div></div></div><div class="fmt fmt-estado"><a href="piezas/bf_ultimo_estado.jpg" target="_blank"><img src="piezas/bf_ultimo_estado.jpg" alt="Cyber Monday: último día · Estados" loading="lazy"></a><div class="kb"><b>Estados</b><span>1080 × 1920</span><p>Para estados de WhatsApp.</p><div class="acciones no-print"><button data-copiar-img="piezas/bf_ultimo_estado.jpg">Copiar imagen</button><a class="btn" href="piezas/bf_ultimo_estado.jpg" download="SegurosFly-bf_ultimo_estado.jpg">Descargar</a></div></div></div></div><div class="msg"><div class="mh"><b>Mensaje sugerido</b><button class="no-print" data-copiar-txt="⏰ *Último día de Black Friday*
+
+Hoy, *30 de noviembre*, cierra el descuento de *hasta 75% OFF* en tu asistencia de viaje (según la anticipación de tu compra).
+
+✅ Asistencia médica y emergencias 24/7
+✅ eSIM gratis y Salas VIP en planes seleccionados
+
+¿Te cotizo ahora y lo dejas listo hoy? 👉 segurosfly.com">Copiar texto</button></div><textarea readonly rows="9">⏰ *Último día de Black Friday*
+
+Hoy, *30 de noviembre*, cierra el descuento de *hasta 75% OFF* en tu asistencia de viaje (según la anticipación de tu compra).
+
+✅ Asistencia médica y emergencias 24/7
+✅ eSIM gratis y Salas VIP en planes seleccionados
+
+¿Te cotizo ahora y lo dejas listo hoy? 👉 segurosfly.com</textarea></div></article></div></section>
 
 <section id="cupon"><h2><span class="num">4</span> Generador de cupón adicional</h2>
 <p>Para el prospecto que necesita un empujón: un pase de abordar con un <b class="oro">descuento ADICIONAL</b> al de la web
@@ -135,7 +289,7 @@ se suma al 75%. Si el cupón no existe, no envíes la imagen.</div>
 <section id="datos"><h2><span class="num">9</span> Los datos, para lo que viene</h2>
 <p>Todo lo de esta página sale de <code>campana.json</code>: textos, oferta, legal, piezas, semanas y colores.
 Así la misma fuente alimenta la web, las piezas, este PDF y, más adelante, los correos de email marketing
-(bloques listos: título, H1, bajada, oferta, pilares 1–4, CTA y legal largo; imagen de cabecera: el pase de abordar).</p>
+(bloques listos: título, H1, bajada, oferta, pilares 1–4, CTA y legal largo; imagen de cabecera: la plantilla 1600×837 del tema general).</p>
 </section>
 </main>
 <footer class="wrap"><p>SegurosFly · Black Friday 2026 · 2026-11-01 · maqueta 1 · uso interno</p></footer>
@@ -373,5 +527,7 @@ Así la misma fuente alimenta la web, las piezas, este PDF y, más adelante, los
 </script>
 <script>
 document.querySelectorAll('[data-copiar-txt]').forEach(b=>b.onclick=async()=>{await navigator.clipboard.writeText(b.dataset.copiarTxt);b.textContent='¡Copiado!';setTimeout(()=>b.textContent='Copiar texto',1500)});
-document.querySelectorAll('[data-copiar-img]').forEach(b=>b.onclick=async()=>{try{const r=await fetch(b.dataset.copiarImg);const bl=await r.blob();await navigator.clipboard.write([new ClipboardItem({[bl.type]:bl})]);b.textContent='¡Copiada!'}catch(x){b.textContent='Usa Descargar'}setTimeout(()=>b.textContent='Copiar imagen',1800)});
+// El portapapeles del navegador solo acepta PNG: la JPG se pasa a PNG antes de copiarla.
+const aPng=async(src)=>{const bm=await createImageBitmap(await (await fetch(src)).blob());const c=document.createElement('canvas');c.width=bm.width;c.height=bm.height;c.getContext('2d').drawImage(bm,0,0);return new Promise(ok=>c.toBlob(ok,'image/png'))};
+document.querySelectorAll('[data-copiar-img]').forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':aPng(b.dataset.copiarImg)})]);b.textContent='¡Copiada!'}catch(x){b.textContent='Usa Descargar'}setTimeout(()=>b.textContent='Copiar imagen',1800)});
 </script></body></html>

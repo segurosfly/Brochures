@@ -2,7 +2,7 @@
 """
 Genera los recursos de la campaña Black Friday 2026 a partir de campana.json.
 
-  python3 generar.py            → piezas/*.png + index.html
+  python3 generar.py            → kit de WhatsApp (piezas/bf_*.jpg, vía kit.py) + index.html
   python3 generar.py --pdf      → además recursos-black-friday-2026.pdf (requiere Chromium; ver LEEME.md)
 
 Todo texto sale de campana.json: para cambiar algo se cambia allí, no aquí.
@@ -166,6 +166,8 @@ def generar_piezas():
 
 if __name__ == '__main__':
     print('piezas:', generar_piezas())
+    import kit
+    print('kit de WhatsApp:', len(kit.generar(D, AQUI)), 'imágenes')
     import pagina
     pagina.generar(D, AQUI)
     print('index.html listo')

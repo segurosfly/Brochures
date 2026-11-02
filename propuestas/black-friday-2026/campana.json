@@ -1,5 +1,5 @@
 {
-  "_leeme": "Fuente ÚNICA de datos de la campaña Black Friday 2026. De aquí salen la página de recursos (index.html), las piezas (piezas/*.png), el PDF descargable y, más adelante, los correos de email marketing. Para cambiar un texto, se cambia AQUÍ y se vuelve a correr generar.py. Especificación visual: paginaweb-nextjs/docs/temporadas/BLACK-FRIDAY-2026.md.",
+  "_leeme": "Fuente ÚNICA de datos de la campaña Black Friday 2026. De aquí salen la página de recursos (index.html), las piezas del kit de WhatsApp (piezas/*.jpg), el PDF descargable y, más adelante, los correos de email marketing. Para cambiar un texto, se cambia AQUÍ y se vuelve a correr generar.py. Especificación visual: paginaweb-nextjs/docs/temporadas/BLACK-FRIDAY-2026.md.",
   "version": "2026-11-01 · maqueta 1",
   "campana": {
     "id": "black-friday-2026",
@@ -305,53 +305,6 @@
       },
       "mensaje_sugerido": "¡Hola! 👋 Llegó Black Friday en SegurosFly: hasta 75% OFF en tu asistencia de viaje, todo noviembre. Mientras antes compres, más ahorras. Asistencia médica 24/7, y además eSIM gratis y Salas VIP en planes seleccionados. ¿Me compartes origen, destino y fechas y te envío tu cotización? ✈️",
       "motivo_descarte": "Repetía el descuento de la campaña (hasta 75%). El pase de abordar es para un descuento ADICIONAL al macro (cupón), como el de Halloween (40% adicional hoy hasta las 8 PM). Se rehace en la central de materiales HSM: docs/CENTRAL-MATERIALES-HSM.md."
-    },
-    {
-      "id": "kit-chat",
-      "nombre": "Kit · chat",
-      "estado": "por_generar",
-      "formato": "Chat",
-      "tamano": [
-        1080,
-        1080
-      ],
-      "archivo": null,
-      "usos": [
-        "whatsapp_chat",
-        "instagram"
-      ],
-      "nota": "Se genera aquí con generar.py, como el kit de Halloween."
-    },
-    {
-      "id": "kit-estado",
-      "nombre": "Kit · estado",
-      "estado": "por_generar",
-      "formato": "Estado",
-      "tamano": [
-        1080,
-        1920
-      ],
-      "archivo": null,
-      "usos": [
-        "whatsapp_estado",
-        "historias"
-      ],
-      "nota": "Se genera aquí con generar.py, como el kit de Halloween."
-    },
-    {
-      "id": "kit-plantilla",
-      "nombre": "Kit · plantilla",
-      "estado": "por_generar",
-      "formato": "Plantilla de mensaje",
-      "tamano": [
-        1600,
-        837
-      ],
-      "archivo": null,
-      "usos": [
-        "whatsapp_hsm"
-      ],
-      "nota": "Se genera aquí con generar.py, como el kit de Halloween."
     }
   ],
   "email": {
@@ -365,7 +318,281 @@
       "cta",
       "legal.largo"
     ],
-    "imagen_cabecera": "pase-hsm",
+    "imagen_cabecera": "kit.general.plantilla (piezas/bf_general_1600x837.jpg)",
     "remitente_sugerido": "SegurosFly"
+  },
+  "kit": {
+    "_nota": "Kit de WhatsApp para el equipo comercial. Lo dibuja kit.py (llamado por generar.py) en JPG: chat 1080×1080 y estado 1080×1920 por tema; el tema con plantilla:true también sale en 1600×837 (cabecera de HSM y de correo). Para cambiar un texto se cambia aquí y se regenera. Las piezas se hacen aquí: nadie externo las entrega.",
+    "oferta": {
+      "arriba": "HASTA",
+      "grande": "75%",
+      "abajo": "OFF",
+      "linea1": "en tu asistencia de viaje",
+      "linea2": "según la anticipación de tu compra"
+    },
+    "temas": [
+      {
+        "id": "general",
+        "titulo": "Black Friday: más que un seguro de viaje",
+        "etiqueta": "General",
+        "cuando": "Todo noviembre",
+        "plantilla": true,
+        "pill": "BLACK FRIDAY",
+        "l1": "Más que un seguro de viaje.",
+        "l2": "Para viajar tranquilo.",
+        "sub": [
+          "Asistencia médica y emergencias 24/7,",
+          "estés donde estés."
+        ],
+        "chips": [
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ],
+          [
+            "chip",
+            "eSIM gratis*"
+          ],
+          [
+            "vip",
+            "Salas VIP*"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026",
+        "mensaje": "🖤 *Black Friday en SegurosFly*\n\nMás que un seguro de viaje: *asistencia médica y emergencias 24/7* para que viajes tranquilo.\n\n✅ *Hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra\n✅ eSIM gratis y Salas VIP en planes seleccionados\n\nVálido todo noviembre. ¿Me compartes origen, destino y fechas y te cotizo? 👉 segurosfly.com"
+      },
+      {
+        "id": "anticipa",
+        "titulo": "¿Ya tienes fecha de viaje?",
+        "etiqueta": "Más ahorro",
+        "cuando": "Todo noviembre",
+        "pill": "BLACK FRIDAY",
+        "l1": "¿Ya tienes fecha de viaje?",
+        "l2": "Mientras antes, más ahorras.",
+        "sub": [
+          "El descuento sube según la anticipación",
+          "de tu compra: hasta 75% en noviembre."
+        ],
+        "chips": [
+          [
+            "calendario",
+            "Compra con tiempo"
+          ],
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ],
+          [
+            "chip",
+            "eSIM gratis*"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026",
+        "mensaje": "🖤 *Black Friday en SegurosFly*\n\n¿Ya tienes fecha de viaje? *Mientras antes compres, más ahorras*: el descuento de tu asistencia de viaje sube según la anticipación de tu compra, *hasta 75%* este noviembre.\n\n✅ Asistencia médica y emergencias 24/7\n✅ eSIM gratis y Salas VIP en planes seleccionados\n\n¿Me pasas destino y fechas y te cotizo? 👉 segurosfly.com"
+      },
+      {
+        "id": "vuelo",
+        "titulo": "¿Compraste tu vuelo en oferta?",
+        "etiqueta": "Semana 2",
+        "cuando": "S2 · 9–15 nov (sirve todo el mes)",
+        "pill": "BLACK FRIDAY",
+        "l1": "¿Compraste tu vuelo en oferta?",
+        "l2": "Ahora viaja tranquilo.",
+        "sub": [
+          "Asistencia médica y emergencias 24/7",
+          "desde que sales hasta que vuelves."
+        ],
+        "chips": [
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ],
+          [
+            "maleta",
+            "Equipaje protegido*"
+          ],
+          [
+            "chip",
+            "eSIM gratis*"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *Según el plan · Válido del 1 al 30 nov 2026",
+        "mensaje": "✈️ *¿Compraste tu vuelo en oferta?*\n\nAhora protege el viaje: con SegurosFly tienes *asistencia médica y emergencias 24/7* desde que sales hasta que vuelves.\n\n🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.\n\n✅ Equipaje protegido según tu plan\n✅ eSIM gratis en planes seleccionados\n\n¿Me cuentas destino y fechas y te cotizo? 👉 segurosfly.com"
+      },
+      {
+        "id": "europa",
+        "titulo": "¿Viajas a Europa?",
+        "etiqueta": "Destino",
+        "cuando": "S3 · 16–22 nov (sirve todo el mes)",
+        "pill": "BLACK FRIDAY",
+        "l1": "¿Viajas a Europa?",
+        "l2": "Cumple los requisitos.",
+        "sub": [
+          "Asistencia válida para tu visa",
+          "y tu viaje por la Zona Schengen."
+        ],
+        "chips": [
+          [
+            "eu",
+            "Zona Schengen"
+          ],
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ],
+          [
+            "chip",
+            "eSIM en Europa*"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026",
+        "mensaje": "🇪🇺 *¿Viajas a Europa?*\n\nNuestra asistencia de viaje cumple los requisitos para pedir tu visa y viajar por la Zona Schengen.\n\n🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.\n\n✅ Asistencia médica y emergencias 24/7\n✅ eSIM en Europa en planes seleccionados\n\n¿Me cuentas tus fechas y te cotizo? 👉 segurosfly.com"
+      },
+      {
+        "id": "argentina",
+        "titulo": "¿Viajas a Argentina?",
+        "etiqueta": "Destino",
+        "cuando": "Todo noviembre",
+        "pill": "BLACK FRIDAY",
+        "l1": "¿Viajas a Argentina?",
+        "l2": "Cumple el requisito.",
+        "sub": [
+          "Argentina pide seguro médico a los",
+          "extranjeros que ingresan al país."
+        ],
+        "chips": [
+          [
+            "pasaporte",
+            "Requisito de ingreso"
+          ],
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ],
+          [
+            "chip",
+            "eSIM gratis*"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026",
+        "mensaje": "🇦🇷 *¿Viajas a Argentina?*\n\nArgentina pide seguro médico a los extranjeros que ingresan al país. Con SegurosFly lo tienes resuelto.\n\n🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.\n\n✅ Cobertura médica y asistencia 24/7\n✅ eSIM gratis en planes seleccionados\n\n¿Me cuentas tus fechas y te cotizo? 👉 segurosfly.com"
+      },
+      {
+        "id": "esim",
+        "titulo": "Llega conectado (eSIM)",
+        "etiqueta": "eSIM",
+        "cuando": "Todo noviembre",
+        "pill": "BLACK FRIDAY",
+        "l1": "Llega conectado.",
+        "l2": "eSIM gratis en tu plan*.",
+        "sub": [
+          "Datos desde que aterrizas, sin buscar",
+          "wifi ni comprar chip en el aeropuerto."
+        ],
+        "chips": [
+          [
+            "chip",
+            "eSIM gratis*"
+          ],
+          [
+            "avion",
+            "Datos al aterrizar"
+          ],
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026",
+        "mensaje": "📶 *Llega conectado*\n\nCon tu asistencia de viaje SegurosFly tienes *eSIM gratis* en planes seleccionados: datos desde que aterrizas, sin buscar wifi ni comprar chip.\n\n🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.\n\n✅ Asistencia médica y emergencias 24/7\n✅ Salas VIP en planes seleccionados\n\n¿A dónde viajas? Te cotizo 👉 segurosfly.com"
+      },
+      {
+        "id": "dispositivos",
+        "titulo": "¿Estrenas laptop o celular?",
+        "etiqueta": "Semana 4",
+        "cuando": "S4 · 23–29 nov (lo que trae tu caja)",
+        "pill": "BLACK FRIDAY",
+        "l1": "¿Estrenas laptop o celular?",
+        "l2": "Protégelo en tu viaje.",
+        "sub": [
+          "Tech Protection: hasta USD 2.000 por pérdida,",
+          "robo o hurto. USD 22 por viajero."
+        ],
+        "chips": [
+          [
+            "laptop",
+            "Tech Protection"
+          ],
+          [
+            "escudo",
+            "Hasta USD 2.000"
+          ],
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ]
+        ],
+        "legal": "Tech Protection es un complemento opcional en planes seleccionados · No cubre daños · Válido del 1 al 30 nov 2026",
+        "mensaje": "💻 *¿Estrenas laptop o celular este Black Friday?*\n\nProtégelo en tu viaje: añade *Tech Protection* a tu asistencia por *USD 22 por viajero* y cubre hasta USD 2.000 por pérdida, robo o hurto de celulares, computadores, tablets y cámaras (no cubre daños).\n\n🖤 Y tu asistencia de viaje con *hasta 75% OFF*, según la anticipación de tu compra.\n\n¿Me cuentas destino y fechas y te cotizo? 👉 segurosfly.com"
+      },
+      {
+        "id": "familia",
+        "titulo": "¿Viajan en familia en diciembre?",
+        "etiqueta": "Grupo",
+        "cuando": "Todo noviembre",
+        "pill": "BLACK FRIDAY",
+        "l1": "¿Viajan en familia en diciembre?",
+        "l2": "Asegúralos a todos.",
+        "sub": [
+          "Una sola compra para todo el grupo, con",
+          "asistencia 24/7 para cada viajero."
+        ],
+        "chips": [
+          [
+            "familia",
+            "Todo el grupo"
+          ],
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ],
+          [
+            "chip",
+            "eSIM gratis*"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido del 1 al 30 nov 2026",
+        "mensaje": "👨‍👩‍👧 *¿Viajan en familia en diciembre?*\n\nAsegúralos a todos en una sola compra, con *asistencia médica y emergencias 24/7* para cada viajero.\n\n🖤 Este Black Friday tienes *hasta 75% OFF* en tu asistencia de viaje, según la anticipación de tu compra.\n\n✅ eSIM gratis en planes seleccionados\n\n¿Cuántos viajan, a dónde y en qué fechas? Te cotizo 👉 segurosfly.com"
+      },
+      {
+        "id": "ultimo",
+        "titulo": "Cyber Monday: último día",
+        "etiqueta": "Solo 30 nov",
+        "cuando": "S5 · 30 nov (solo ese día)",
+        "pill": "ÚLTIMO DÍA",
+        "l1": "Cyber Monday: último día.",
+        "l2": "Hoy cierra Black Friday.",
+        "sub": [
+          "Hasta 75% OFF en tu asistencia de viaje,",
+          "solo hasta hoy 30 de noviembre."
+        ],
+        "chips": [
+          [
+            "reloj",
+            "Solo hoy"
+          ],
+          [
+            "cruz",
+            "Asistencia 24/7"
+          ],
+          [
+            "chip",
+            "eSIM gratis*"
+          ]
+        ],
+        "legal": "Descuento según la anticipación de tu compra · *En planes seleccionados · Válido hasta el 30 nov 2026",
+        "mensaje": "⏰ *Último día de Black Friday*\n\nHoy, *30 de noviembre*, cierra el descuento de *hasta 75% OFF* en tu asistencia de viaje (según la anticipación de tu compra).\n\n✅ Asistencia médica y emergencias 24/7\n✅ eSIM gratis y Salas VIP en planes seleccionados\n\n¿Te cotizo ahora y lo dejas listo hoy? 👉 segurosfly.com"
+      }
+    ]
   }
 }
